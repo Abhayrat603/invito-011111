@@ -5,20 +5,20 @@ import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Mail, Phone, MapPin, Send, Building, Clock, Users } from "lucide-react";
+import { ArrowLeft, Mail, Phone, MapPin, Send, Clock, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const InfoCard = ({ icon: Icon, title, children }: { icon: React.ElementType, title: string, children: React.ReactNode }) => (
-    <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50">
-        <div className="flex items-start mb-3">
+    <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50 transition-all hover:shadow-lg hover:border-primary/50">
+        <div className="flex items-start mb-4">
             <div className="bg-primary/10 p-3 rounded-full mr-4 mt-1">
                 <Icon className="h-6 w-6 text-primary" />
             </div>
             <div>
-                <h3 className="text-xl font-headline text-primary">{title}</h3>
+                <h3 className="text-2xl font-headline text-primary">{title}</h3>
             </div>
         </div>
-        <div className="text-foreground/80 space-y-3 leading-relaxed pl-2">
+        <div className="text-foreground/80 space-y-4 leading-relaxed pl-2">
             {children}
         </div>
     </div>

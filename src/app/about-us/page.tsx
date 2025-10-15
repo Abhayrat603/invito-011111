@@ -19,6 +19,22 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementTy
     </div>
 );
 
+const InfoCard = ({ icon: Icon, title, children }: { icon: React.ElementType, title: string, children: React.ReactNode }) => (
+    <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50 transition-all hover:shadow-lg hover:border-primary/50">
+        <div className="flex items-start mb-4">
+            <div className="bg-primary/10 p-3 rounded-full mr-4 mt-1">
+                <Icon className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+                <h3 className="text-2xl font-headline text-primary">{title}</h3>
+            </div>
+        </div>
+        <div className="text-foreground/80 space-y-4 leading-relaxed pl-2">
+            {children}
+        </div>
+    </div>
+);
+
 
 export default function AboutUsPage() {
     const router = useRouter();
@@ -51,7 +67,7 @@ export default function AboutUsPage() {
                         </div>
                     </div>
 
-                    <div className="p-6 md:p-8 space-y-12">
+                    <div className="p-6 md:p-8 space-y-8">
                         <div className="text-center">
                             <p className="text-lg text-foreground/80 leading-relaxed">
                                 At Invite Designer, we believe every great event starts with a beautiful invitation. It's the first glimpse your guests have of the special day you're planning. We're dedicated to providing stunning, customizable digital and print invitations crafted with quality and passion.
@@ -64,36 +80,24 @@ export default function AboutUsPage() {
                             <FeatureCard icon={Heart} title="Our Values" description="Creativity, Quality, and Customer Happiness are at the core of everything we design." />
                         </div>
 
-                        <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50">
-                            <div className="flex items-center mb-3">
-                                <Users className="h-8 w-8 text-primary mr-4" />
-                                <h3 className="text-2xl font-headline text-primary">Our Story</h3>
-                            </div>
+                        <InfoCard icon={Users} title="Our Story">
                             <div className="text-foreground/80 space-y-3 leading-relaxed">
                                 <p>Founded in 2023, Invite Designer was born from a desire to make high-quality design accessible to everyone. We saw a need for invitations that were not only beautiful but also easy to customize and affordable. We wanted to build a brand that helps people celebrate their special moments in style, without the hassle.</p>
                                 <p>From a small design studio to a growing online platform, our growth is driven by our amazing customers and their stories. Every invitation we create is a part of a celebration, and we're honored to be included.</p>
                             </div>
-                        </div>
+                        </InfoCard>
 
-                         <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50">
-                            <div className="flex items-center mb-3">
-                                <Award className="h-8 w-8 text-primary mr-4" />
-                                <h3 className="text-2xl font-headline text-primary">Commitment to Quality</h3>
-                            </div>
+                         <InfoCard icon={Award} title="Commitment to Quality">
                             <div className="text-foreground/80 space-y-3 leading-relaxed">
                                 <p>We are obsessed with quality. From the digital templates we design to the paper we recommend for printing, every detail is meticulously considered. We partner with talented designers and artists who share our commitment to excellence, ensuring every Invite Designer piece is a work of art.</p>
                             </div>
-                        </div>
+                        </InfoCard>
 
-                        <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50">
-                            <div className="flex items-center mb-3">
-                                <Leaf className="h-8 w-8 text-primary mr-4" />
-                                <h3 className="text-2xl font-headline text-primary">Sustainability</h3>
-                            </div>
+                        <InfoCard icon={Leaf} title="Sustainability">
                             <div className="text-foreground/80 space-y-3 leading-relaxed">
                                 <p>We encourage digital invitations as a beautiful, eco-friendly alternative to paper. For those who love print, we recommend using recycled paper and sustainable printing practices. It's a journey of constant improvement, and we are committed to making a positive impact.</p>
                             </div>
-                        </div>
+                        </InfoCard>
                         
                         <div className="text-center space-y-4">
                              <h3 className="text-3xl font-headline text-primary">Join Our Journey</h3>

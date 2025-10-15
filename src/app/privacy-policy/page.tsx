@@ -7,8 +7,8 @@ import { ArrowLeft, Shield, CheckCircle, FileText, User, Mail, Database, Cookie,
 import { useRouter } from "next/navigation";
 
 const InfoCard = ({ icon: Icon, title, children }: { icon: React.ElementType, title: string, children: React.ReactNode }) => (
-    <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50">
-        <div className="flex items-start mb-3">
+    <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50 transition-all hover:shadow-lg hover:border-primary/50">
+        <div className="flex items-start mb-4">
             <div className="bg-primary/10 p-3 rounded-full mr-4 mt-1">
                 <Icon className="h-6 w-6 text-primary" />
             </div>
@@ -16,7 +16,7 @@ const InfoCard = ({ icon: Icon, title, children }: { icon: React.ElementType, ti
                 <h3 className="text-2xl font-headline text-primary">{title}</h3>
             </div>
         </div>
-        <div className="text-foreground/80 space-y-3 leading-relaxed pl-2">
+        <div className="text-foreground/80 space-y-4 leading-relaxed pl-2">
             {children}
         </div>
     </div>
@@ -38,8 +38,8 @@ export default function PrivacyPolicyPage() {
                     </div>
                     <div className="w-10"></div>
                 </header>
-                <main className="flex-grow p-4 md:p-6 space-y-6">
-                    <div className="text-center mb-6">
+                <main className="flex-grow p-4 md:p-6 space-y-8">
+                    <div className="text-center mb-4">
                         <p className="text-muted-foreground">Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                     </div>
 

@@ -4,7 +4,7 @@
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, LifeBuoy, BookOpen, Shield, Truck, RotateCw, Search, CreditCard, Globe, Gift, FileText as FileTextIcon } from "lucide-react";
+import { ArrowLeft, LifeBuoy, BookOpen, Shield, Search, CreditCard, Gift, FileText as FileTextIcon, Edit } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -54,10 +54,12 @@ const faqs = [
 ];
 
 const HelpCategory = ({ icon: Icon, title, description, href }: { icon: React.ElementType, title: string, description: string, href: string }) => (
-    <Link href={href}>
-        <div className="bg-card p-4 rounded-lg shadow-sm hover:bg-accent transition-colors">
+    <Link href={href} className="block">
+        <div className="bg-card p-4 rounded-lg shadow-sm hover:bg-accent transition-colors border border-border/50">
             <div className="flex items-center">
-                <Icon className="h-8 w-8 text-primary mr-4"/>
+                <div className="bg-primary/10 p-3 rounded-full mr-4">
+                    <Icon className="h-6 w-6 text-primary"/>
+                </div>
                 <div>
                     <h3 className="font-semibold text-foreground">{title}</h3>
                     <p className="text-sm text-muted-foreground">{description}</p>
@@ -72,7 +74,7 @@ export default function HelpCenterPage() {
 
     return (
         <MainLayout>
-            <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col">
+            <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
                 <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
                     <Button variant="ghost" size="icon" onClick={() => router.back()}>
                         <ArrowLeft />
@@ -85,14 +87,14 @@ export default function HelpCenterPage() {
                 </header>
                 <main className="flex-grow p-4 md:p-6 space-y-8">
                     <div className="relative">
-                        <Input placeholder="Search for help..." className="pr-10 h-11" />
-                        <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input placeholder="Search for help..." className="pr-10 h-12 rounded-full pl-5 bg-card" />
+                        <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     </div>
 
                     <div className="space-y-4">
-                        <h2 className="text-lg font-semibold">Help Categories</h2>
+                        <h2 className="text-2xl font-headline text-primary">Help Categories</h2>
                          <div className="grid grid-cols-1 gap-3">
-                            <HelpCategory icon={RotateCw} title="Editing & Customization" description="How to request edits and changes" href="/request-edit" />
+                            <HelpCategory icon={Edit} title="Editing & Customization" description="How to request edits and changes" href="/request-edit" />
                             <HelpCategory icon={FileTextIcon} title="File Formats & Downloads" description="JPG, PDF, and how to download" href="#" />
                             <HelpCategory icon={CreditCard} title="Payment & Pricing" description="Accepted methods and currency" href="#" />
                             <HelpCategory icon={Gift} title="Gift Cards & Promotions" description="Using gift cards and promo codes" href="#" />
@@ -102,12 +104,12 @@ export default function HelpCenterPage() {
                     </div>
 
                     <div>
-                        <h2 className="text-lg font-semibold mb-2">Frequently Asked Questions</h2>
-                         <Accordion type="single" collapsible className="w-full">
+                        <h2 className="text-2xl font-headline text-primary mb-4">Frequently Asked Questions</h2>
+                         <Accordion type="single" collapsible className="w-full bg-card rounded-lg border p-2">
                             {faqs.map((faq, index) => (
-                                <AccordionItem value={`item-${index}`} key={index}>
-                                    <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
-                                    <AccordionContent>
+                                <AccordionItem value={`item-${index}`} key={index} className="border-b-border/50">
+                                    <AccordionTrigger className="text-left font-semibold text-base p-4 hover:no-underline">{faq.question}</AccordionTrigger>
+                                    <AccordionContent className="p-4 pt-0 text-muted-foreground">
                                         {faq.answer}
                                     </AccordionContent>
                                 </AccordionItem>
