@@ -22,14 +22,15 @@ import { Loader2, User, ArrowLeft, Mail, Lock, ChevronRight, Phone } from "lucid
 import { MainLayout } from "@/components/main-layout";
 import Link from "next/link";
 import React from "react";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
 });
 
-const SettingsMenuItem = ({ icon: Icon, text, href }: { icon: React.ElementType, text: string, href: string }) => {
+const SettingsMenuItem = ({ icon: Icon, text, href, className }: { icon: React.ElementType, text: string, href: string, className?: string }) => {
   return (
-    <Link href={href} className="w-full">
+    <Link href={href} className={cn("w-full", className)}>
       <div className="flex items-center bg-card p-4 rounded-lg shadow-sm hover:bg-accent transition-colors">
         <Icon className="h-6 w-6 mr-4 text-primary" />
         <span className="font-medium flex-grow text-foreground">{text}</span>
@@ -117,7 +118,7 @@ export default function EditProfilePage() {
                 <div>
                   <h2 className="text-lg font-semibold mb-4">Account Settings</h2>
                   <div className="space-y-4">
-                      <SettingsMenuItem icon={Mail} text="Change Email" href="/profile/settings/email" />
+                      <SettingsMenuItem icon={Mail} text="Change Email" href="/profile/settings/email" className="mb-2" />
                       <SettingsMenuItem icon={Lock} text="Change Password" href="/profile/settings/password" />
                       <SettingsMenuItem icon={Phone} text="Change Phone Number" href="/profile/settings/phone" />
                   </div>
