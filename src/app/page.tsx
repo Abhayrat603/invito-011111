@@ -13,7 +13,26 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
 
 function getPlaceholderImage(id: string) {
-    return PlaceHolderImages.find(img => img.id === id);
+    const image = PlaceHolderImages.find(img => img.id === id);
+    if (image) {
+        return image;
+    }
+    // Fallback for images that might not be in the JSON file from mock data
+    const productImages: {[key: string]: {url: string, hint: string}} = {
+        'product-tee-1': { url: 'https://picsum.photos/seed/tee1/800/800', hint: 'gray t-shirt' },
+        'product-shorts-1': { url: 'https://picsum.photos/seed/shorts1/800/800', hint: 'running shorts' },
+        'product-sneakers-1': { url: 'https://picsum.photos/seed/sneaker1/800/800', hint: 'white sneakers' },
+        'product-hoodie-1': { url: 'https://picsum.photos/seed/hoodie1/800/800', hint: 'gray hoodie' },
+    };
+    if (productImages[id]) {
+        return {
+            id: id,
+            imageUrl: productImages[id].url,
+            imageHint: productImages[id].hint,
+            description: "Product image"
+        }
+    }
+    return undefined;
 }
 
 export default function ServicesPage() {
@@ -59,8 +78,8 @@ export default function ServicesPage() {
                           </div>
                        </div>
                        <div className="p-4 text-left">
-                          <p className="text-sm text-primary font-bold uppercase tracking-wider">{product.category}</p>
-                          <h3 className="font-semibold text-foreground mt-1 truncate text-lg">{product.name}</h3>
+                          <p className="text-sm text-muted-foreground font-bold uppercase tracking-wider">{product.category}</p>
+                          <h3 className="font-semibold text-primary mt-1 truncate text-lg">{product.name}</h3>
                           <div className="flex items-center mt-2">
                             {[...Array(5)].map((_, i) => (
                                 <Star key={i} className={cn("h-5 w-5", i < 3 ? "text-yellow-400 fill-yellow-400" : "text-gray-300")} />
@@ -82,4 +101,3 @@ export default function ServicesPage() {
     </AuthRedirect>
   );
 }
-
