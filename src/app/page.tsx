@@ -72,21 +72,6 @@ export default function EcommerceHomePage() {
             </header>
 
             <main className="px-4 mt-4">
-                <section className="relative mb-6 rounded-lg overflow-hidden">
-                    <div className="relative h-[400px] w-full">
-                       <Image src="https://picsum.photos/seed/invitation-hero/800/600" layout="fill" objectFit="cover" alt="Beautifully designed invitation cards" data-ai-hint="invitation cards spread" className="rounded-lg" />
-                       <div className="absolute inset-0 bg-black/10 rounded-lg"></div>
-                       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                            <div className="bg-white/80 backdrop-blur-sm p-8 rounded-lg">
-                                <h2 className="text-3xl font-bold my-2 leading-tight text-foreground">BEAUTIFUL INVITATIONS<br/>FOR ANY OCCASION</h2>
-                            </div>
-                       </div>
-                       <div className="absolute top-4 right-4 text-orange-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2c-4 0-4 4-8 4s-4-4-8-4-4 4-4 4v10c0 4 4 4 4s4-4 8-4 8 4 8 4 4-4 4-4V6c0-4-4-4-4-4zM14 6s-1.5 2-4 2-4-2-4-2M10 18s1.5-2 4-2 4 2 4 2"/></svg>
-                       </div>
-                    </div>
-                </section>
-                
                 <section className="mb-8">
                     <div className="bg-card p-3 rounded-lg shadow-sm flex items-center space-x-4">
                         <div className="bg-gray-100 p-3 rounded-lg">
