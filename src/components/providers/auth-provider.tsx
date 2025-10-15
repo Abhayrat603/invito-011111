@@ -12,7 +12,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   signUp: (email: string, pass: string, name: string) => Promise<any>;
-  signIn: (email: string, pass: string) => Promise<any>;
+  signIn: (email: string, pass:string) => Promise<any>;
   signOut: () => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
   sendPasswordReset: (email: string) => Promise<void>;
@@ -30,10 +30,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setLoading(true);
       const isJustVerified = currentUser && currentUser.emailVerified && user && !user.emailVerified;
       
-      setUser(currentUser ? { ...currentUser } : null);
-      setLoading(false);
+      setUser(currentUser);
       
       if(currentUser) {
         if (currentUser.emailVerified) {
@@ -49,16 +49,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         await clearSessionCookie();
       }
+      setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [auth, toast, user]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth]);
 
   const signUp = async (email: string, pass: string, name: string) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
     if (userCredential.user) {
       await updateProfile(userCredential.user, { displayName: name });
-      setUser({ ...userCredential.user, displayName: name });
+      // The onAuthStateChanged listener will handle setting the user state.
+      // We trigger a refresh of the user object to get the latest profile data.
+      await userCredential.user.reload();
+      setUser(auth.currentUser);
     }
     return userCredential;
   };
@@ -69,6 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     await firebaseSignOut(auth);
+    setUser(null);
     router.push('/login');
   };
 
@@ -98,14 +104,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     await updateProfile(auth.currentUser, { photoURL: newPhotoURL });
     
-    // Create a new user object to force a re-render in consuming components.
-    setUser(prevUser => {
-      if (!prevUser) return null;
-      // This ensures we are creating a new object reference, which React will detect.
-      return { ...prevUser, photoURL: newPhotoURL };
-    });
+    // To ensure the UI updates, we create a new user object that React will recognize as a state change.
+    // The auth.currentUser object itself might not be a new reference after updateProfile.
+    if (auth.currentUser) {
+        setUser({ ...auth.currentUser, photoURL: newPhotoURL });
+    }
   };
-
 
   const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset, updateUserProfilePicture };
 
