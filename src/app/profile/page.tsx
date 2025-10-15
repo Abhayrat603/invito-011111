@@ -10,6 +10,8 @@ import Image from "next/image";
 import { User, Bell, Settings, HelpCircle, LogOut, ChevronRight, Camera } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import React, { useRef } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const ProfileMenuItem = ({ icon: Icon, text, href, onClick, isLogout = false, className }: { icon: React.ElementType, text: string, href?: string, onClick?: () => void, isLogout?: boolean, className?: string }) => {
   const content = (
@@ -31,7 +33,33 @@ const ProfileMenuItem = ({ icon: Icon, text, href, onClick, isLogout = false, cl
 
 export default function ProfilePage() {
     const router = useRouter();
-    const { signOut, user } = useAuth();
+    const { signOut, user, updateUserProfilePicture } = useAuth();
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { toast } = useToast();
+
+    const handleCameraClick = () => {
+      fileInputRef.current?.click();
+    };
+
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            try {
+                await updateUserProfilePicture(file);
+                toast({
+                    title: "Profile Picture Updated",
+                    description: "Your new profile picture has been saved.",
+                });
+            } catch (error: any) {
+                toast({
+                    variant: "destructive",
+                    title: "Update Failed",
+                    description: error.message || "Could not update profile picture.",
+                });
+            }
+        }
+    };
+
 
   return (
     <AuthRedirect to="/login" condition="is-not-auth">
@@ -52,7 +80,14 @@ export default function ProfilePage() {
                         className="rounded-full border-4 border-card object-cover"
                         data-ai-hint="man portrait"
                     />
-                    <Button variant="ghost" size="icon" className="absolute bottom-1 right-1 bg-white/80 hover:bg-white rounded-full h-9 w-9 shadow-md">
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
+                        accept="image/*"
+                    />
+                    <Button variant="ghost" size="icon" className="absolute bottom-1 right-1 bg-white/80 hover:bg-white rounded-full h-9 w-9 shadow-md" onClick={handleCameraClick}>
                         <Camera className="h-5 w-5 text-muted-foreground" />
                     </Button>
                 </div>
@@ -69,7 +104,7 @@ export default function ProfilePage() {
                     <div className="mb-2">
                         <ProfileMenuItem icon={Settings} text="Settings" href="#" />
                     </div>
-                    <div className="mb-2">
+                    <div className="mb-4">
                         <ProfileMenuItem icon={HelpCircle} text="Help Center" href="#" />
                     </div>
                     <ProfileMenuItem icon={LogOut} text="Log Out" onClick={signOut} isLogout />

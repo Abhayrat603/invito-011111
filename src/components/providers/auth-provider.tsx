@@ -16,6 +16,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
   sendPasswordReset: (email: string) => Promise<void>;
+  updateUserProfilePicture: (file: File) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -83,8 +84,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return sendPasswordResetEmail(auth, email);
   }
 
+  const updateUserProfilePicture = async (file: File) => {
+    if (!auth.currentUser) {
+      throw new Error("No user is signed in.");
+    }
+    
+    // In a real app, you would upload the file to a service like Firebase Storage
+    // and get a URL. For this example, we'll use a placeholder.
+    const newPhotoURL = `https://picsum.photos/seed/${auth.currentUser.uid}/${Date.now()}/200/200`;
 
-  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset };
+    await updateProfile(auth.currentUser, { photoURL: newPhotoURL });
+    
+    // Manually update the user state to reflect the new photoURL immediately
+    setUser(auth.currentUser);
+  };
+
+
+  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset, updateUserProfilePicture };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
