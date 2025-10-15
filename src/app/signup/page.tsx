@@ -28,9 +28,11 @@ import Image from "next/image";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  phone: z.string().min(10, { message: "Please enter a valid 10-digit phone number." }).max(10, { message: "Please enter a valid 10-digit phone number." }),
+  phone: z.string().length(10, { message: "Please enter a valid 10-digit phone number." }),
   email: z.string().email({ message: "Invalid email address." }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters, and include uppercase, lowercase, a number, and a special character." }).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/, {
+    message: "Password must include uppercase, lowercase, a number, and a special character.",
+  }),
   confirmPassword: z.string(),
 }).refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",
