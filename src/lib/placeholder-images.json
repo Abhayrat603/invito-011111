@@ -1,106 +1,130 @@
 {
   "placeholderImages": [
     {
+      "id": "product-wedding-1",
+      "description": "Elegant classic wedding invitation",
+      "imageUrl": "https://picsum.photos/seed/wed1/500/500",
+      "imageHint": "classic wedding"
+    },
+    {
+      "id": "product-wedding-2",
+      "description": "Elegant classic wedding invitation detail",
+      "imageUrl": "https://picsum.photos/seed/wed2/500/500",
+      "imageHint": "invitation detail"
+    },
+    {
+      "id": "product-birthday-1",
+      "description": "Modern and fun birthday invitation",
+      "imageUrl": "https://picsum.photos/seed/bday1/500/500",
+      "imageHint": "birthday party"
+    },
+    {
+      "id": "product-birthday-2",
+      "description": "Modern and fun birthday invitation back",
+      "imageUrl": "https://picsum.photos/seed/bday2/500/500",
+      "imageHint": "colorful pattern"
+    },
+    {
+      "id": "product-corporate-1",
+      "description": "Professional corporate gala invitation",
+      "imageUrl": "https://picsum.photos/seed/corp1/500/500",
+      "imageHint": "corporate event"
+    },
+    {
+      "id": "product-corporate-2",
+      "description": "Professional corporate gala invitation close-up",
+      "imageUrl": "https://picsum.photos/seed/corp2/500/500",
+      "imageHint": "formal invitation"
+    },
+    {
+      "id": "product-party-1",
+      "description": "Colorful summer pool party invitation",
+      "imageUrl": "https://picsum.photos/seed/party1/500/500",
+      "imageHint": "pool party"
+    },
+    {
+      "id": "product-party-2",
+      "description": "Colorful summer pool party invitation elements",
+      "imageUrl": "https://picsum.photos/seed/party2/500/500",
+      "imageHint": "summer fun"
+    },
+    {
+      "id": "product-bridal-1",
+      "description": "Floral bridal shower invitation",
+      "imageUrl": "https://picsum.photos/seed/bridal1/500/500",
+      "imageHint": "bridal shower"
+    },
+    {
+      "id": "product-bridal-2",
+      "description": "Floral bridal shower invitation detail",
+      "imageUrl": "https://picsum.photos/seed/bridal2/500/500",
+      "imageHint": "flower pattern"
+    },
+    {
+      "id": "product-dino-1",
+      "description": "Kids dinosaur birthday party invitation",
+      "imageUrl": "https://picsum.photos/seed/dino1/500/500",
+      "imageHint": "dinosaur cartoon"
+    },
+    {
+      "id": "product-dino-2",
+      "description": "Kids dinosaur birthday party invitation characters",
+      "imageUrl": "https://picsum.photos/seed/dino2/500/500",
+      "imageHint": "cute dinosaurs"
+    },
+    {
+      "id": "product-anniversary-1",
+      "description": "Elegant anniversary party invitation",
+      "imageUrl": "https://picsum.photos/seed/anniv1/500/500",
+      "imageHint": "anniversary celebration"
+    },
+    {
+      "id": "product-anniversary-2",
+      "description": "Elegant anniversary party invitation script",
+      "imageUrl": "https://picsum.photos/seed/anniv2/500/500",
+      "imageHint": "gold script"
+    },
+    {
+      "id": "product-conference-1",
+      "description": "Modern business conference invitation",
+      "imageUrl": "https://picsum.photos/seed/conf1/500/500",
+      "imageHint": "business conference"
+    },
+    {
+      "id": "product-conference-2",
+      "description": "Modern business conference invitation schedule",
+      "imageUrl": "https://picsum.photos/seed/conf2/500/500",
+      "imageHint": "event schedule"
+    },
+    {
+      "id": "product-visiting-card-1",
+      "description": "Modern shop visiting card design",
+      "imageUrl": "https://picsum.photos/seed/visit1/500/500",
+      "imageHint": "visiting card"
+    },
+    {
+      "id": "product-visiting-card-2",
+      "description": "Modern shop visiting card back",
+      "imageUrl": "https://picsum.photos/seed/visit2/500/500",
+      "imageHint": "card texture"
+    },
+    {
+      "id": "product-rustic-wedding-1",
+      "description": "Charming rustic wedding invitation",
+      "imageUrl": "https://picsum.photos/seed/rustic1/500/500",
+      "imageHint": "rustic wedding"
+    },
+    {
+      "id": "product-rustic-wedding-2",
+      "description": "Charming rustic wedding invitation details",
+      "imageUrl": "https://picsum.photos/seed/rustic2/500/500",
+      "imageHint": "wood background"
+    },
+    {
       "id": "hero",
-      "description": "Athlete running on a modern, abstract background",
-      "imageUrl": "https://picsum.photos/seed/hero-run/1800/1200",
-      "imageHint": "runner athlete"
-    },
-    {
-      "id": "product-tee-1",
-      "description": "Front view of a performance t-shirt on a mannequin",
-      "imageUrl": "https://picsum.photos/seed/tee1/800/800",
-      "imageHint": "gray t-shirt"
-    },
-    {
-      "id": "product-tee-2",
-      "description": "Back view of a performance t-shirt showing fabric detail",
-      "imageUrl": "https://picsum.photos/seed/tee2/800/800",
-      "imageHint": "shirt fabric"
-    },
-    {
-      "id": "product-shorts-1",
-      "description": "Black running shorts laid flat",
-      "imageUrl": "https://picsum.photos/seed/shorts1/800/800",
-      "imageHint": "running shorts"
-    },
-    {
-      "id": "product-shorts-2",
-      "description": "Side view of running shorts showing pocket detail",
-      "imageUrl": "https://picsum.photos/seed/shorts2/800/800",
-      "imageHint": "black shorts"
-    },
-    {
-      "id": "product-sneakers-1",
-      "description": "Side profile of modern athletic sneakers",
-      "imageUrl": "https://picsum.photos/seed/sneaker1/800/800",
-      "imageHint": "white sneakers"
-    },
-    {
-      "id": "product-sneakers-2",
-      "description": "Top-down view of a pair of athletic sneakers",
-      "imageUrl": "https://picsum.photos/seed/sneaker2/800/800",
-      "imageHint": "pair sneakers"
-    },
-    {
-      "id": "product-hoodie-1",
-      "description": "Dark grey hoodie on a hanger",
-      "imageUrl": "https://picsum.photos/seed/hoodie1/800/800",
-      "imageHint": "gray hoodie"
-    },
-    {
-      "id": "product-hoodie-2",
-      "description": "Close-up of the hoodie's zipper and fabric texture",
-      "imageUrl": "https://picsum.photos/seed/hoodie2/800/800",
-      "imageHint": "hoodie fabric"
-    },
-    {
-      "id": "product-backpack-1",
-      "description": "Sleek, modern black backpack",
-      "imageUrl": "https://picsum.photos/seed/pack1/800/800",
-      "imageHint": "black backpack"
-    },
-    {
-      "id": "product-backpack-2",
-      "description": "Backpack opened to show internal compartments",
-      "imageUrl": "https://picsum.photos/seed/pack2/800/800",
-      "imageHint": "open backpack"
-    },
-    {
-      "id": "product-bottle-1",
-      "description": "Matte black stainless steel water bottle",
-      "imageUrl": "https://picsum.photos/seed/bottle1/800/800",
-      "imageHint": "water bottle"
-    },
-    {
-      "id": "product-cap-1",
-      "description": "Side view of a black baseball cap",
-      "imageUrl": "https://picsum.photos/seed/cap1/800/800",
-      "imageHint": "black cap"
-    },
-    {
-      "id": "product-cap-2",
-      "description": "Top view of a black baseball cap",
-      "imageUrl": "https://picsum.photos/seed/cap2/800/800",
-      "imageHint": "baseball cap"
-    },
-    {
-      "id": "product-boots-1",
-      "description": "Pair of durable hiking boots",
-      "imageUrl": "https://picsum.photos/seed/boots1/800/800",
-      "imageHint": "hiking boots"
-    },
-    {
-      "id": "product-boots-2",
-      "description": "Close-up of the sole of a hiking boot",
-      "imageUrl": "https://picsum.photos/seed/boots2/800/800",
-      "imageHint": "boot sole"
-    },
-    {
-      "id": "category-all",
-      "description": "Grid of various invitation styles",
-      "imageUrl": "https://picsum.photos/seed/cat-all/100/100",
-      "imageHint": "invitations grid"
+      "description": "Artist designing an invitation card on a tablet",
+      "imageUrl": "https://picsum.photos/seed/hero-invite/1800/1200",
+      "imageHint": "designer working"
     },
     {
       "id": "category-wedding",
