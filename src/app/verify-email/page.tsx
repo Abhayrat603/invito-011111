@@ -98,10 +98,6 @@ export default function VerifyEmailPage() {
             {isResending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {countdown > 0 ? `Resend link in ${countdown}s` : "Resend link"}
           </Button>
-          <div className="text-sm text-muted-foreground">
-             <p>Clicked the link? <Button variant="link" className="p-0 h-auto" onClick={() => window.location.reload()}>Refresh this page</Button>.</p>
-             <p className="mt-4">Wrong account? <Button variant="link" className="p-0 h-auto" onClick={signOut}>Log out</Button>.</p>
-          </div>
         </CardContent>
       </Card>
     </div>
