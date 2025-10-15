@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import { products } from '@/lib/mock-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { MainLayout } from '@/components/main-layout';
@@ -105,10 +106,10 @@ export default function ProductDetailPage() {
           
           <div className="space-y-4">
             {onSale && <Badge variant="outline" className="text-sm font-semibold border-yellow-500 text-yellow-600">Paid</Badge>}
-            <h1 className="text-2xl font-bold">{product.name}</h1>
+            <h1 className="text-2xl font-bold leading-tight">{product.name}</h1>
             
             <div className="flex items-center justify-between">
-              <span className="text-2xl font-bold text-foreground">₹{product.price.toFixed(2)}</span>
+              <span className="text-3xl font-bold text-foreground">₹{product.price.toFixed(2)}</span>
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" onClick={() => setQuantity(q => Math.max(1, q - 1))}>
                   <Minus className="h-4 w-4" />
@@ -135,7 +136,7 @@ export default function ProductDetailPage() {
             <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                     <p className="font-semibold text-foreground">File Type</p>
-                    <p className="text-muted-foreground">CDR, PSD</p>
+                    <p className="text-muted-foreground">JPG, PDF</p>
                 </div>
                 <div>
                     <p className="font-semibold text-foreground">Dimension</p>
@@ -153,7 +154,9 @@ export default function ProductDetailPage() {
                 </div>
             </div>
             <Separator className="my-4"/>
-            <Button className="w-full" variant="secondary">Request For Edit</Button>
+            <Link href="/request-edit" className="w-full">
+              <Button className="w-full" variant="secondary">Request For Edit</Button>
+            </Link>
           </div>
           
           <div className="space-y-3 text-muted-foreground text-sm">
@@ -170,3 +173,5 @@ export default function ProductDetailPage() {
     </MainLayout>
   );
 }
+
+    

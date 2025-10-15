@@ -88,4 +88,16 @@ export const products: Product[] = [
     category: 'Footwear',
     createdAt: new Date(),
   },
+   {
+    id: 'prod9',
+    slug: 'shop-visiting-card',
+    name: 'Shop Visiting Card',
+    description: 'A professional and eye-catching visiting card for your shop. Designed in a modern, attractive style.',
+    price: 10.00,
+    images: ['product-visiting-card-1', 'product-visiting-card-2'],
+    category: 'Stationery',
+    createdAt: new Date(),
+  }
 ];
+
+    
