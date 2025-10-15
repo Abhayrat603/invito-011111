@@ -60,12 +60,22 @@ export default function ProfilePage() {
     const onCropComplete = useCallback(async (croppedAreaPixels: Area) => {
         if (imageToCrop) {
             try {
-                const croppedImage = await getCroppedImg(imageToCrop, croppedAreaPixels);
-                await updateUserProfilePicture(croppedImage);
-                toast({
-                    title: "Profile Picture Updated",
-                    description: "Your new profile picture has been saved.",
-                });
+                const croppedImageBlobUrl = await getCroppedImg(imageToCrop, croppedAreaPixels);
+                // To properly display and save, convert blob URL to data URL
+                const response = await fetch(croppedImageBlobUrl);
+                const blob = await response.blob();
+                const reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = async () => {
+                    const base64data = reader.result as string;
+                    await updateUserProfilePicture(base64data);
+                    toast({
+                        title: "Profile Picture Updated",
+                        description: "Your new profile picture has been saved.",
+                    });
+                     // Revoke the blob URL to free up memory
+                    URL.revokeObjectURL(croppedImageBlobUrl);
+                };
             } catch (error: any) {
                 toast({
                     variant: "destructive",
