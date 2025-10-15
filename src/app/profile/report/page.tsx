@@ -71,7 +71,7 @@ export default function ReportPage() {
                 let newImgHeight = newImgWidth / ratio;
 
                 // If the height is still too large for the page,
-                // recalculate based on the page height.
+                // recalculate based on the page height. This prevents overflow.
                 if (newImgHeight > pdfHeight) {
                     newImgHeight = pdfHeight;
                     newImgWidth = newImgHeight * ratio;
