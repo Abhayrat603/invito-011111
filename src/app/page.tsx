@@ -4,7 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AuthRedirect } from "@/components/auth-redirect";
-import { Search, Heart, User, ShoppingBag, Star, ChevronDown, Plus, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { Search, Heart, User, ShoppingBag, Star, ChevronDown, Plus, Facebook, Twitter, Instagram, Linkedin, Eye, Repeat } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MainLayout } from "@/components/main-layout";
@@ -67,13 +67,27 @@ const BestSellerItem = ({product}: {product: (typeof products)[0]}) => {
 const ProductListItem = ({product}: {product: (typeof products)[0]}) => {
     const image = getPlaceholderImage(product.images[0]);
     return (
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 group">
             <div className="w-24 h-24 relative rounded-md overflow-hidden">
                  {image && <Image src={image.imageUrl} alt={product.name} layout="fill" objectFit="cover" />}
+                 <div className="absolute top-2 right-2 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <Button variant="outline" size="icon" className="h-8 w-8 bg-white/80 backdrop-blur-sm">
+                        <Heart className="w-4 h-4"/>
+                    </Button>
+                    <Button variant="outline" size="icon" className="h-8 w-8 bg-white/80 backdrop-blur-sm">
+                        <Eye className="w-4 h-4"/>
+                    </Button>
+                    <Button variant="outline" size="icon" className="h-8 w-8 bg-white/80 backdrop-blur-sm">
+                        <Repeat className="w-4 h-4"/>
+                    </Button>
+                     <Button variant="outline" size="icon" className="h-8 w-8 bg-white/80 backdrop-blur-sm">
+                        <ShoppingBag className="w-4 h-4"/>
+                    </Button>
+                 </div>
             </div>
             <div>
-                <h4 className="text-base font-semibold text-foreground hover:text-primary transition-colors">{product.name}</h4>
-                <p className="text-sm text-muted-foreground">{product.category}</p>
+                <p className="text-sm text-muted-foreground">{product.category.toUpperCase()}</p>
+                <h4 className="text-base font-semibold text-primary hover:text-primary transition-colors">{product.name}</h4>
                  <div className="flex items-baseline gap-2 mt-1">
                     <p className="text-base font-bold text-primary">${product.price.toFixed(2)}</p>
                     <p className="text-sm text-muted-foreground line-through">${(product.price * 1.2).toFixed(2)}</p>
@@ -299,5 +313,3 @@ export default function EcommerceHomePage() {
     </AuthRedirect>
   );
 }
-
-  
