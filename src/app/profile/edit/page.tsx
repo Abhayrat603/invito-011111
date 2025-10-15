@@ -117,10 +117,10 @@ export default function EditProfilePage() {
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold mb-4">Account Settings</h2>
-                  <div className="space-y-2">
+                  <div className="space-y-0">
                       <SettingsMenuItem icon={Mail} text="Change Email" href="/profile/settings/email" className="mb-2"/>
                       <SettingsMenuItem icon={Lock} text="Change Password" href="/profile/settings/password" className="mb-2"/>
-                      <SettingsMenuItem icon={Phone} text="Change Phone Number" href="/profile/settings/phone" />
+                      <SettingsMenuItem icon={Phone} text="Change Phone Number" href="/profile/settings/phone" className="mb-2" />
                   </div>
                 </div>
               </div>
