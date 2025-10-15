@@ -6,7 +6,7 @@ import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/providers/auth-provider";
 import Image from "next/image";
-import { User, Bell, HelpCircle, LogOut, ChevronRight, Camera, Pencil, Shield, FileText, Info, Mail } from "lucide-react";
+import { User, Bell, HelpCircle, LogOut, ChevronRight, Camera, Pencil, Shield, FileText, Info, Mail, UserCog } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import React, { useRef, useState, useCallback } from "react";
@@ -78,6 +78,8 @@ export default function ProfilePage() {
         }
     }, [imageToCrop, updateUserProfilePicture, toast]);
 
+    const isAdmin = user?.email === 'abhayrat603@gmail.com';
+
 
   return (
     <AuthRedirect to="/login" condition="is-not-auth">
@@ -116,10 +118,15 @@ export default function ProfilePage() {
                     </Button>
                 </div>
                 
-                {user?.displayName && <h2 className="text-2xl font-bold mb-6">{user.displayName}</h2>}
+                {user?.displayName && <h2 className="text-2xl font-bold">{user.displayName}</h2>}
 
 
-                <div className="w-full space-y-2">
+                <div className="w-full space-y-2 mt-6">
+                    {isAdmin && (
+                        <div className="mb-4">
+                            <ProfileMenuItem icon={UserCog} text="Admin Panel" href="/admin" />
+                        </div>
+                    )}
                     <ProfileMenuItem icon={Pencil} text="Edit Profile" href="/profile/edit" />
                     <ProfileMenuItem icon={Bell} text="Notifications" href="#" />
                     <ProfileMenuItem icon={HelpCircle} text="Help Center" href="#" />
