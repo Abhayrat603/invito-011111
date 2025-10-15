@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ShoppingBag, Heart, LayoutGrid, Menu as MenuIcon } from "lucide-react";
+import { Home, ShoppingBag, Heart, User, Menu as MenuIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -38,7 +38,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     { href: "/cart", icon: ShoppingBag, label: "Cart", hasNotification: true },
     { href: "/", icon: Home, label: "Home" },
     { href: "/wishlist", icon: Heart, label: "Wishlist", hasNotification: true },
-    { href: "/profile", icon: LayoutGrid, label: "Profile" },
+    { href: "/profile", icon: User, label: "Profile" },
   ];
 
   return (
