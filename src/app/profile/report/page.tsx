@@ -45,33 +45,56 @@ export default function ReportPage() {
     const handleDownload = () => {
         const input = reportRef.current;
         if (input) {
-            html2canvas(input, { scale: 4 }).then((canvas) => {
+            toast({
+                title: "Generating Report...",
+                description: "Please wait while your PDF is being created.",
+            });
+            html2canvas(input, {
+                scale: 2, // Use a higher scale for better resolution
+                useCORS: true,
+                logging: false, 
+            }).then((canvas) => {
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jsPDF('p', 'mm', 'a4');
+                
                 const pdfWidth = pdf.internal.pageSize.getWidth();
                 const pdfHeight = pdf.internal.pageSize.getHeight();
-                const canvasWidth = canvas.width;
-                const canvasHeight = canvas.height;
-                const ratio = canvasWidth / canvasHeight;
-                let width = pdfWidth;
-                let height = width / ratio;
 
-                if (height > pdfHeight) {
-                    height = pdfHeight;
-                    width = height * ratio;
-                }
+                const imgProps= pdf.getImageProperties(imgData);
+                const imgWidth = imgProps.width;
+                const imgHeight = imgProps.height;
                 
-                const x = (pdfWidth - width) / 2;
-                const y = (pdfHeight - height) / 2;
+                // Calculate the aspect ratio
+                const ratio = imgWidth / imgHeight;
 
+                let newImgWidth = pdfWidth;
+                let newImgHeight = newImgWidth / ratio;
 
-                pdf.addImage(imgData, 'PNG', x, y, width, height);
+                // If the height is still too large for the page,
+                // recalculate based on the page height.
+                if (newImgHeight > pdfHeight) {
+                    newImgHeight = pdfHeight;
+                    newImgWidth = newImgHeight * ratio;
+                }
+
+                // Center the image on the page
+                const x = (pdfWidth - newImgWidth) / 2;
+                const y = 0; // Start from top
+
+                pdf.addImage(imgData, 'PNG', x, y, newImgWidth, newImgHeight);
                 pdf.save("user-report.pdf");
 
                 toast({
                     title: "Download Successful",
                     description: "Your report has been saved as a PDF.",
                 });
+            }).catch(err => {
+                 toast({
+                    variant: "destructive",
+                    title: "Download Failed",
+                    description: "Could not generate the PDF. Please try again.",
+                });
+                console.error("PDF generation failed:", err);
             });
         }
     };
@@ -96,100 +119,102 @@ export default function ReportPage() {
                         <Download />
                     </Button>
                 </header>
+                {/* The ref is now on a wrapper div to avoid capturing the main layout */}
+                <div ref={reportRef} className="bg-background"> 
+                    <main className="p-4 md:p-6 space-y-8">
+                        {/* User Details Section */}
+                        <section>
+                             <h2 className="text-lg font-semibold flex items-center mb-4"><User className="h-5 w-5 mr-2 text-primary"/> User Details</h2>
+                             <Card>
+                                <CardContent className="pt-6">
+                                    <div className="space-y-2 text-sm">
+                                        <p><strong>Name:</strong> {user?.displayName || 'N/A'}</p>
+                                        <p><strong>Email:</strong> {user?.email || 'N/A'}</p>
+                                        <p><strong>Phone:</strong> {user?.phoneNumber || 'N/A'}</p>
+                                    </div>
+                                </CardContent>
+                             </Card>
+                        </section>
 
-                <main ref={reportRef} className="flex-grow p-4 md:p-6 space-y-8">
-                    {/* User Details Section */}
-                    <section>
-                         <h2 className="text-lg font-semibold flex items-center mb-4"><User className="h-5 w-5 mr-2 text-primary"/> User Details</h2>
-                         <Card>
-                            <CardContent className="pt-6">
-                                <div className="space-y-2 text-sm">
-                                    <p><strong>Name:</strong> {user?.displayName || 'N/A'}</p>
-                                    <p><strong>Email:</strong> {user?.email || 'N/A'}</p>
-                                    <p><strong>Phone:</strong> {user?.phoneNumber || 'N/A'}</p>
-                                </div>
-                            </CardContent>
-                         </Card>
-                    </section>
-
-                    {/* Order History Section */}
-                    <section>
-                         <h2 className="text-lg font-semibold flex items-center mb-4"><ShoppingCart className="h-5 w-5 mr-2 text-primary"/> Completed Purchase History</h2>
-                         {deliveredOrders.length === 0 ? (
-                            <p className="text-muted-foreground text-sm">No completed orders found.</p>
-                         ) : (
-                            <div className="space-y-4">
-                                {deliveredOrders.map(order => (
-                                    <Card key={order.id} className="overflow-hidden">
-                                        <CardHeader className="p-4 bg-card">
-                                            <div className="flex justify-between items-center">
-                                                <div>
-                                                    <CardTitle className="text-base font-semibold">Order #{order.id}</CardTitle>
-                                                    <CardDescription className="text-xs">
-                                                        {format(order.createdAt, "MMM d, yyyy 'at' h:mm a")}
-                                                    </CardDescription>
+                        {/* Order History Section */}
+                        <section>
+                             <h2 className="text-lg font-semibold flex items-center mb-4"><ShoppingCart className="h-5 w-5 mr-2 text-primary"/> Completed Purchase History</h2>
+                             {deliveredOrders.length === 0 ? (
+                                <p className="text-muted-foreground text-sm">No completed orders found.</p>
+                             ) : (
+                                <div className="space-y-4">
+                                    {deliveredOrders.map(order => (
+                                        <Card key={order.id} className="overflow-hidden">
+                                            <CardHeader className="p-4 bg-card">
+                                                <div className="flex justify-between items-center">
+                                                    <div>
+                                                        <CardTitle className="text-base font-semibold">Order #{order.id}</CardTitle>
+                                                        <CardDescription className="text-xs">
+                                                            {format(order.createdAt, "MMM d, yyyy 'at' h:mm a")}
+                                                        </CardDescription>
+                                                    </div>
+                                                    <Badge className={cn("text-xs font-bold", orderStatusConfig[order.status].color, orderStatusConfig[order.status].text)}>
+                                                        {order.status}
+                                                    </Badge>
                                                 </div>
-                                                <Badge className={cn("text-xs font-bold", orderStatusConfig[order.status].color, orderStatusConfig[order.status].text)}>
-                                                    {order.status}
-                                                </Badge>
-                                            </div>
-                                        </CardHeader>
-                                        <Separator />
-                                        <CardContent className="p-4">
-                                            <ul className="space-y-2 text-sm">
-                                                {order.items.map(item => (
-                                                    <li key={item.productId} className="flex justify-between">
-                                                        <span>{item.productName} (x{item.quantity})</span>
-                                                        <span className="font-medium">₹{(item.price * item.quantity).toFixed(2)}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                            <Separator className="my-2"/>
-                                             <div className="flex justify-between font-bold text-base">
-                                                <span>Total</span>
-                                                <span>₹{order.total.toFixed(2)}</span>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                ))}
-                            </div>
-                         )}
-                    </section>
-                    
-                    {/* Edit Request History Section */}
-                    <section>
-                        <h2 className="text-lg font-semibold flex items-center mb-4"><FileText className="h-5 w-5 mr-2 text-primary"/> Approved Edit Request History</h2>
-                        {approvedRequests.length === 0 ? (
-                             <p className="text-muted-foreground text-sm">No approved edit requests found.</p>
-                        ) : (
-                            <div className="space-y-4">
-                                {approvedRequests.map(request => {
-                                    const { icon: Icon, color, text } = editStatusConfig[request.status];
-                                    return (
-                                        <Card key={request.id} className="overflow-hidden">
-                                            <CardHeader className="flex flex-row items-center justify-between p-4 bg-card">
-                                                <div className="flex-grow">
-                                                    <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
-                                                    <CardDescription className="text-xs">
-                                                        Requested: {format(request.requestedAt, "MMM d, yyyy 'at' h:mm a")}
-                                                    </CardDescription>
-                                                </div>
-                                                <Badge className={cn("text-xs font-bold", color, text)}>
-                                                    <Icon className="h-3 w-3 mr-1.5" />
-                                                    {request.status}
-                                                </Badge>
                                             </CardHeader>
                                             <Separator />
                                             <CardContent className="p-4">
-                                                <p className="text-sm text-foreground/80">{request.requestDetails}</p>
+                                                <ul className="space-y-2 text-sm">
+                                                    {order.items.map(item => (
+                                                        <li key={item.productId} className="flex justify-between">
+                                                            <span>{item.productName} (x{item.quantity})</span>
+                                                            <span className="font-medium">₹{(item.price * item.quantity).toFixed(2)}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                                <Separator className="my-2"/>
+                                                 <div className="flex justify-between font-bold text-base">
+                                                    <span>Total</span>
+                                                    <span>₹{order.total.toFixed(2)}</span>
+                                                </div>
                                             </CardContent>
                                         </Card>
-                                    )
-                                })}
-                            </div>
-                        )}
-                    </section>
-                </main>
+                                    ))}
+                                </div>
+                             )}
+                        </section>
+                        
+                        {/* Edit Request History Section */}
+                        <section>
+                            <h2 className="text-lg font-semibold flex items-center mb-4"><FileText className="h-5 w-5 mr-2 text-primary"/> Approved Edit Request History</h2>
+                            {approvedRequests.length === 0 ? (
+                                 <p className="text-muted-foreground text-sm">No approved edit requests found.</p>
+                            ) : (
+                                <div className="space-y-4">
+                                    {approvedRequests.map(request => {
+                                        const { icon: Icon, color, text } = editStatusConfig[request.status];
+                                        return (
+                                            <Card key={request.id} className="overflow-hidden">
+                                                <CardHeader className="flex flex-row items-center justify-between p-4 bg-card">
+                                                    <div className="flex-grow">
+                                                        <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
+                                                        <CardDescription className="text-xs">
+                                                            Requested: {format(request.requestedAt, "MMM d, yyyy 'at' h:mm a")}
+                                                        </CardDescription>
+                                                    </div>
+                                                    <Badge className={cn("text-xs font-bold", color, text)}>
+                                                        <Icon className="h-3 w-3 mr-1.5" />
+                                                        {request.status}
+                                                    </Badge>
+                                                </CardHeader>
+                                                <Separator />
+                                                <CardContent className="p-4">
+                                                    <p className="text-sm text-foreground/80">{request.requestDetails}</p>
+                                                </CardContent>
+                                            </Card>
+                                        )
+                                    })}
+                                </div>
+                            )}
+                        </section>
+                    </main>
+                </div>
             </div>
         </MainLayout>
     );
