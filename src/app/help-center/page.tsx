@@ -4,7 +4,7 @@
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, HelpCircle, Send, User, Bot, Sparkles } from "lucide-react";
+import { ArrowLeft, Send, User, Bot, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
@@ -91,7 +91,7 @@ export default function HelpCenterPage() {
                 </header>
                 <main className="flex-grow flex flex-col overflow-hidden bg-secondary/30">
                     <ScrollArea className="flex-grow p-4">
-                         <div className="space-y-6" ref={scrollAreaRef}>
+                         <div className="space-y-4" ref={scrollAreaRef}>
                             {messages.map((message, index) => (
                                 <div key={index} className={cn("flex items-end gap-3 w-full", message.role === 'user' ? 'justify-end' : 'justify-start')}>
                                     {message.role === 'model' && (
@@ -159,3 +159,5 @@ export default function HelpCenterPage() {
         </MainLayout>
     );
 }
+
+    
