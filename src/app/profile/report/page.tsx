@@ -19,8 +19,6 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import { useToast } from "@/hooks/use-toast";
 
 const orderStatusConfig = {
@@ -39,64 +37,10 @@ const editStatusConfig = {
 export default function ReportPage() {
     const router = useRouter();
     const { user } = useAuth();
-    const reportRef = useRef<HTMLDivElement>(null);
     const { toast } = useToast();
 
-    const handleDownload = () => {
-        const input = reportRef.current;
-        if (input) {
-            toast({
-                title: "Generating Report...",
-                description: "Please wait while your PDF is being created.",
-            });
-            html2canvas(input, {
-                scale: 2, // Use a higher scale for better resolution
-                useCORS: true,
-                logging: false, 
-            }).then((canvas) => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-
-                const imgProps= pdf.getImageProperties(imgData);
-                const imgWidth = imgProps.width;
-                const imgHeight = imgProps.height;
-                
-                // Calculate the aspect ratio
-                const ratio = imgWidth / imgHeight;
-
-                let newImgWidth = pdfWidth;
-                let newImgHeight = newImgWidth / ratio;
-
-                // If the height is still too large for the page,
-                // recalculate based on the page height. This prevents overflow.
-                if (newImgHeight > pdfHeight) {
-                    newImgHeight = pdfHeight;
-                    newImgWidth = newImgHeight * ratio;
-                }
-
-                // Center the image on the page
-                const x = 0;
-                const y = 0; 
-
-                pdf.addImage(imgData, 'PNG', x, y, newImgWidth, newImgHeight);
-                pdf.save("user-report.pdf");
-
-                toast({
-                    title: "Download Successful",
-                    description: "Your report has been saved as a PDF.",
-                });
-            }).catch(err => {
-                 toast({
-                    variant: "destructive",
-                    title: "Download Failed",
-                    description: "Could not generate the PDF. Please try again.",
-                });
-                console.error("PDF generation failed:", err);
-            });
-        }
+    const handlePrint = () => {
+        window.print();
     };
 
     // Filter for delivered orders only
@@ -115,13 +59,13 @@ export default function ReportPage() {
                        <FileText className="h-6 w-6 text-primary mr-2"/>
                        <h1 className="text-xl font-bold">User Report</h1>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={handleDownload}>
+                    <Button variant="ghost" size="icon" onClick={handlePrint}>
                         <Download />
                     </Button>
                 </header>
-                {/* The ref is now on a wrapper div to avoid capturing the main layout */}
-                <div ref={reportRef} className="bg-background"> 
-                    <main className="p-4 md:p-6 space-y-8">
+                
+                <div id="print-area"> 
+                    <main className="p-4 md:p-6 space-y-8 bg-background">
                         {/* User Details Section */}
                         <section>
                              <h2 className="text-lg font-semibold flex items-center mb-4"><User className="h-5 w-5 mr-2 text-primary"/> User Details</h2>
@@ -219,5 +163,3 @@ export default function ReportPage() {
         </MainLayout>
     );
 }
-
-    
