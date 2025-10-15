@@ -1,10 +1,18 @@
 import type { Product, Category, EditRequest, Order } from './types';
 
 export const categories: Category[] = [
-  { id: 'cat1', name: 'Wedding Invitations', imageId: 'category-wedding' },
-  { id: 'cat2', name: 'Birthday Invitations', imageId: 'category-birthday' },
-  { id: 'cat3', name: 'Corporate Events', imageId: 'category-corporate' },
-  { id: 'cat4', name: 'Party Invitations', imageId: 'category-party' },
+  { id: 'cat-all', name: 'All', imageId: 'category-all' },
+  { id: 'cat1', name: 'Wedding', imageId: 'category-wedding' },
+  { id: 'cat2', name: 'Birthday', imageId: 'category-birthday' },
+  { id: 'cat5', name: 'Engagement', imageId: 'category-engagement' },
+  { id: 'cat6', name: 'Anniversary', imageId: 'category-anniversary' },
+  { id: 'cat7', name: 'Housewarming', imageId: 'category-housewarming' },
+  { id: 'cat8', name: 'Baby Shower', imageId: 'category-baby-shower' },
+  { id: 'cat9', name: 'Graduation', imageId: 'category-graduation' },
+  { id: 'cat3', name: 'Corporate', imageId: 'category-corporate' },
+  { id: 'cat4', name: 'Party', imageId: 'category-party' },
+  { id: 'cat10', name: 'E-Invite', imageId: 'category-e-invite' },
+  { id: 'cat11', name: 'Save the Date', imageId: 'category-save-the-date' },
 ];
 
 export const products: Product[] = [
@@ -15,7 +23,7 @@ export const products: Product[] = [
     description: 'A timeless and elegant wedding invitation with beautiful calligraphy.',
     price: 5.99,
     images: ['product-wedding-1', 'product-wedding-2'],
-    category: 'Wedding Invitations',
+    category: 'Wedding',
     createdAt: new Date(),
   },
   {
@@ -25,7 +33,7 @@ export const products: Product[] = [
     description: 'A fun and vibrant birthday invitation perfect for any age.',
     price: 4.50,
     images: ['product-birthday-1', 'product-birthday-2'],
-    category: 'Birthday Invitations',
+    category: 'Birthday',
     createdAt: new Date(),
   },
   {
@@ -35,7 +43,7 @@ export const products: Product[] = [
     description: 'A professional and sophisticated invitation for your next corporate event.',
     price: 7.00,
     images: ['product-corporate-1', 'product-corporate-2'],
-    category: 'Corporate Events',
+    category: 'Corporate',
     createdAt: new Date(),
   },
   {
@@ -45,7 +53,7 @@ export const products: Product[] = [
     description: 'A playful and colorful invitation for a summer pool party.',
     price: 3.99,
     images: ['product-party-1', 'product-party-2'],
-    category: 'Party Invitations',
+    category: 'Party',
     createdAt: new Date(),
   },
   {
@@ -55,7 +63,7 @@ export const products: Product[] = [
     description: 'A beautiful and delicate invitation for a bridal shower, featuring floral designs.',
     price: 5.50,
     images: ['product-bridal-1', 'product-bridal-2'],
-    category: 'Wedding Invitations',
+    category: 'Wedding',
     createdAt: new Date(),
   },
   {
@@ -65,7 +73,7 @@ export const products: Product[] = [
     description: 'A roaring fun invitation for a child\'s dinosaur-themed birthday party.',
     price: 4.25,
     images: ['product-dino-1', 'product-dino-2'],
-    category: 'Birthday Invitations',
+    category: 'Birthday',
     createdAt: new Date(),
   },
   {
@@ -75,7 +83,7 @@ export const products: Product[] = [
     description: 'Celebrate a milestone with this elegant anniversary invitation.',
     price: 6.50,
     images: ['product-anniversary-1', 'product-anniversary-2'],
-    category: 'Party Invitations',
+    category: 'Anniversary',
     createdAt: new Date(),
   },
   {
@@ -85,7 +93,7 @@ export const products: Product[] = [
     description: 'A clean and modern design for a business conference or seminar.',
     price: 8.00,
     images: ['product-conference-1', 'product-conference-2'],
-    category: 'Corporate Events',
+    category: 'Corporate',
     createdAt: new Date(),
   },
   {
@@ -95,7 +103,7 @@ export const products: Product[] = [
     description: 'A professional and eye-catching visiting card for your shop. Designed in a modern, attractive style.',
     price: 10,
     images: ['product-visiting-card-1', 'product-visiting-card-2'],
-    category: 'Corporate Events',
+    category: 'Corporate',
     createdAt: new Date(),
   },
   {
@@ -105,7 +113,7 @@ export const products: Product[] = [
     description: 'A charming rustic-themed wedding invitation perfect for a countryside wedding.',
     price: 6.25,
     images: ['product-rustic-wedding-1', 'product-rustic-wedding-2'],
-    category: 'Wedding Invitations',
+    category: 'Wedding',
     createdAt: new Date(),
   }
 ];

@@ -97,6 +97,12 @@
       "imageHint": "boot sole"
     },
     {
+      "id": "category-all",
+      "description": "Grid of various invitation styles",
+      "imageUrl": "https://picsum.photos/seed/cat-all/100/100",
+      "imageHint": "invitations grid"
+    },
+    {
       "id": "category-wedding",
       "description": "Elegant wedding invitation design",
       "imageUrl": "https://picsum.photos/seed/cat-wedding/100/100",
@@ -119,6 +125,48 @@
       "description": "Confetti and streamers for a party",
       "imageUrl": "https://picsum.photos/seed/cat-party/100/100",
       "imageHint": "party confetti"
+    },
+    {
+      "id": "category-engagement",
+      "description": "Diamond ring for engagement",
+      "imageUrl": "https://picsum.photos/seed/cat-engage/100/100",
+      "imageHint": "diamond ring"
+    },
+    {
+      "id": "category-anniversary",
+      "description": "Two champagne glasses toasting",
+      "imageUrl": "https://picsum.photos/seed/cat-anniv/100/100",
+      "imageHint": "champagne toast"
+    },
+    {
+      "id": "category-housewarming",
+      "description": "A new house with a sold sign",
+      "imageUrl": "https://picsum.photos/seed/cat-house/100/100",
+      "imageHint": "new house"
+    },
+    {
+      "id": "category-baby-shower",
+      "description": "A cute baby mobile",
+      "imageUrl": "https://picsum.photos/seed/cat-baby/100/100",
+      "imageHint": "baby mobile"
+    },
+    {
+      "id": "category-graduation",
+      "description": "A graduation cap and diploma",
+      "imageUrl": "https://picsum.photos/seed/cat-grad/100/100",
+      "imageHint": "graduation cap"
+    },
+    {
+      "id": "category-e-invite",
+      "description": "A smartphone displaying an invitation",
+      "imageUrl": "https://picsum.photos/seed/cat-e-invite/100/100",
+      "imageHint": "digital invite"
+    },
+    {
+      "id": "category-save-the-date",
+      "description": "A calendar with a heart on a date",
+      "imageUrl": "https://picsum.photos/seed/cat-save-date/100/100",
+      "imageHint": "calendar date"
     }
   ]
 }

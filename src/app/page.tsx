@@ -56,6 +56,14 @@ export default function EcommerceHomePage() {
     setCurrentPage(0); // Reset to first page on new search
   }, [searchQuery, selectedCategory]);
 
+  const handleCategorySelect = (categoryName: string | null) => {
+    if (categoryName === 'All') {
+        setSelectedCategory(null);
+    } else {
+        setSelectedCategory(prev => prev === categoryName ? null : categoryName);
+    }
+  }
+
   if (loading || (user && !user.emailVerified)) {
     return (
         <div className="flex items-center justify-center min-h-screen">
@@ -105,7 +113,7 @@ export default function EcommerceHomePage() {
                       <div className="flex w-max space-x-2 p-4">
                         {categories.map((category) => {
                           const image = findImage(category.imageId);
-                          const isSelected = selectedCategory === category.name;
+                          const isSelected = selectedCategory === category.name || (category.name === 'All' && selectedCategory === null);
                           return (
                             <figure 
                                 key={category.name} 
@@ -113,7 +121,7 @@ export default function EcommerceHomePage() {
                                     "shrink-0 rounded-full bg-secondary/80 flex items-center p-1.5 pr-5 gap-2 cursor-pointer transition-all duration-300",
                                     isSelected ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : "hover:bg-secondary"
                                 )}
-                                onClick={() => setSelectedCategory(prev => prev === category.name ? null : category.name)}
+                                onClick={() => handleCategorySelect(category.name)}
                             >
                               <div className="relative h-10 w-10 shrink-0">
                                 <Image
