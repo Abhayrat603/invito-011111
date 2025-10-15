@@ -9,8 +9,10 @@ import Image from "next/image";
 import { User, Bell, Settings, HelpCircle, LogOut, ChevronRight, Camera, Pencil, Mail, Lock } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import React, { useRef } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { ImageCropper, getCroppedImg } from "@/components/image-cropper";
+import type { Area } from 'react-easy-crop';
 
 const ProfileMenuItem = ({ icon: Icon, text, href, onClick, isLogout = false, className }: { icon: React.ElementType, text: string, href?: string, onClick?: () => void, isLogout?: boolean, className?: string }) => {
   const content = (
@@ -34,16 +36,32 @@ export default function ProfilePage() {
     const { signOut, user, updateUserProfilePicture } = useAuth();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { toast } = useToast();
+    const [imageToCrop, setImageToCrop] = useState<string | null>(null);
 
     const handleCameraClick = () => {
       fileInputRef.current?.click();
     };
 
-    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImageToCrop(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+        // Reset file input to allow re-selection of the same file
+        if(event.target) {
+            event.target.value = "";
+        }
+    };
+
+    const onCropComplete = useCallback(async (croppedAreaPixels: Area) => {
+        if (imageToCrop) {
             try {
-                await updateUserProfilePicture(file);
+                const croppedImage = await getCroppedImg(imageToCrop, croppedAreaPixels);
+                await updateUserProfilePicture(croppedImage);
                 toast({
                     title: "Profile Picture Updated",
                     description: "Your new profile picture has been saved.",
@@ -54,9 +72,11 @@ export default function ProfilePage() {
                     title: "Update Failed",
                     description: error.message || "Could not update profile picture.",
                 });
+            } finally {
+                setImageToCrop(null);
             }
         }
-    };
+    }, [imageToCrop, updateUserProfilePicture, toast]);
 
 
   return (
@@ -68,6 +88,11 @@ export default function ProfilePage() {
           </header>
 
           <main className="flex-grow p-4">
+            <ImageCropper 
+              image={imageToCrop}
+              onCropComplete={onCropComplete}
+              onClose={() => setImageToCrop(null)}
+            />
             <div className="flex flex-col items-center">
                 <div className="relative mb-4">
                     <Image
@@ -75,7 +100,7 @@ export default function ProfilePage() {
                         alt="Profile Picture"
                         width={128}
                         height={128}
-                        className="rounded-full border-4 border-card object-cover"
+                        className="rounded-full border-4 border-card object-cover w-32 h-32"
                         data-ai-hint="man portrait"
                         key={user?.photoURL} // Add key to force re-render on URL change
                     />

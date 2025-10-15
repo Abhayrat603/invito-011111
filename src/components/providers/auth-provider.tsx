@@ -18,7 +18,7 @@ interface AuthContextType {
   sendVerificationEmail: () => Promise<void>;
   sendPasswordReset: (email: string) => Promise<void>;
   updateUserProfile: (profileData: { displayName?: string; photoURL?: string }) => Promise<void>;
-  updateUserProfilePicture: (file: File) => Promise<void>;
+  updateUserProfilePicture: (photoDataUrl: string) => Promise<void>;
   updateUserEmail: (email: string) => Promise<void>;
   updateUserPassword: (password: string) => Promise<void>;
   updateUserPhoneNumber: (phoneNumber: string) => Promise<void>;
@@ -27,7 +27,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = React.useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const auth = getAuth(app);
@@ -97,8 +97,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error("No user is signed in.");
     }
     await updateProfile(currentUser, profileData);
-    await currentUser.reload();
-    setUser({ ...currentUser });
+    // Create a new user object to force a state update in React
+    setUser({ ...currentUser }); 
   };
   
   const updateUserEmail = async (email: string) => {
@@ -126,9 +126,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
 
-  const updateUserProfilePicture = async (file: File) => {
-    const newPhotoURL = URL.createObjectURL(file);
-    await updateUserProfile({ photoURL: newPhotoURL });
+  const updateUserProfilePicture = async (photoDataUrl: string) => {
+    await updateUserProfile({ photoURL: photoDataUrl });
   };
 
   const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset, updateUserProfile, updateUserProfilePicture, updateUserEmail, updateUserPassword, updateUserPhoneNumber };
