@@ -16,6 +16,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
   sendPasswordReset: (email: string) => Promise<void>;
+  updateUserProfile: (profileData: { displayName?: string; photoURL?: string }) => Promise<void>;
   updateUserProfilePicture: (file: File) => Promise<void>;
 }
 
@@ -92,26 +93,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   }
 
-  const updateUserProfilePicture = async (file: File) => {
+  const updateUserProfile = async (profileData: { displayName?: string; photoURL?: string }) => {
     if (!auth.currentUser) {
       throw new Error("No user is signed in.");
     }
+    await updateProfile(auth.currentUser, profileData);
     
-    // In a real app, you would upload the file to a service like Firebase Storage
-    // and get a URL back. For this placeholder, we'll generate a new picsum URL
-    // to simulate an update. We use the UID and current time to ensure a new image.
-    const newPhotoURL = `https://picsum.photos/seed/${auth.currentUser.uid}/${Date.now()}/200/200`;
-
-    await updateProfile(auth.currentUser, { photoURL: newPhotoURL });
-    
-    // To ensure the UI updates, we create a new user object that React will recognize as a state change.
-    // The auth.currentUser object itself might not be a new reference after updateProfile.
+    // Create a new user object to force a re-render in React components
     if (auth.currentUser) {
-        setUser({ ...auth.currentUser, photoURL: newPhotoURL });
+       setUser(Object.assign(Object.create(auth.currentUser), auth.currentUser));
     }
   };
 
-  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset, updateUserProfilePicture };
+  const updateUserProfilePicture = async (file: File) => {
+    // In a real app, you would upload the file to a service like Firebase Storage
+    // and get a URL back. For this placeholder, we'll generate a new picsum URL
+    // to simulate an update. We use the UID and current time to ensure a new image.
+    const newPhotoURL = `https://picsum.photos/seed/${auth.currentUser?.uid}/${Date.now()}/200/200`;
+    await updateUserProfile({ photoURL: newPhotoURL });
+  };
+
+  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset, updateUserProfile, updateUserProfilePicture };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

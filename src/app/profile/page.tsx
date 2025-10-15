@@ -5,7 +5,6 @@ import { AuthRedirect } from "@/components/auth-redirect";
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/providers/auth-provider";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { User, Bell, Settings, HelpCircle, LogOut, ChevronRight, Camera } from "lucide-react";
 import Link from "next/link";
@@ -32,7 +31,6 @@ const ProfileMenuItem = ({ icon: Icon, text, href, onClick, isLogout = false, cl
 };
 
 export default function ProfilePage() {
-    const router = useRouter();
     const { signOut, user, updateUserProfilePicture } = useAuth();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { toast } = useToast();
@@ -97,7 +95,7 @@ export default function ProfilePage() {
 
                 <div className="w-full">
                     <div className="mb-2">
-                        <ProfileMenuItem icon={User} text="My Account" href="#" />
+                        <ProfileMenuItem icon={User} text="My Account" href="/profile/edit" />
                     </div>
                     <div className="mb-2">
                         <ProfileMenuItem icon={Bell} text="Notifications" href="#" />
