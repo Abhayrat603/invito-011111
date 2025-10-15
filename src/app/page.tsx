@@ -12,14 +12,21 @@ import { products } from "@/lib/mock-data";
 import { ProductCard } from "@/components/product-card";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function EcommerceHomePage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
 
-  if (user && !user.emailVerified) {
-    router.replace('/verify-email');
-    return null;
+  useEffect(() => {
+    if (!loading && user && !user.emailVerified) {
+      router.replace('/verify-email');
+    }
+  }, [user, loading, router]);
+
+  if (loading || (user && !user.emailVerified)) {
+    // Render a loading state or null while checking auth or redirecting
+    return null; 
   }
 
   return (
