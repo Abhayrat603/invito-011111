@@ -33,6 +33,24 @@ export default function EcommerceHomePage() {
   const productsPerPage = 4;
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  const scrollViewportRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const scrollInterval = setInterval(() => {
+        if (scrollViewportRef.current) {
+            const { scrollLeft, scrollWidth, clientWidth } = scrollViewportRef.current;
+            const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 1;
+            if (isAtEnd) {
+                scrollViewportRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                scrollViewportRef.current.scrollBy({ left: clientWidth, behavior: 'smooth' });
+            }
+        }
+    }, 3000);
+
+    return () => clearInterval(scrollInterval);
+  }, []);
+
   useEffect(() => {
     if (!loading && user && !user.emailVerified) {
       router.replace('/verify-email');
@@ -57,11 +75,7 @@ export default function EcommerceHomePage() {
   }, [searchQuery, selectedCategory]);
 
   const handleCategorySelect = (categoryName: string | null) => {
-    if (categoryName === 'All') {
-        setSelectedCategory(null);
-    } else {
-        setSelectedCategory(prev => prev === categoryName ? null : categoryName);
-    }
+    setSelectedCategory(prev => prev === categoryName ? null : categoryName);
   }
 
   if (loading || (user && !user.emailVerified)) {
@@ -109,11 +123,11 @@ export default function EcommerceHomePage() {
 
             <main className="pb-4">
                 <section className="mb-6">
-                    <ScrollArea className="w-full whitespace-nowrap">
+                    <ScrollArea className="w-full whitespace-nowrap" viewportRef={scrollViewportRef}>
                       <div className="flex w-max space-x-2 p-4">
                         {categories.map((category) => {
                           const image = findImage(category.imageId);
-                          const isSelected = selectedCategory === category.name || (category.name === 'All' && selectedCategory === null);
+                          const isSelected = selectedCategory === category.name;
                           return (
                             <figure 
                                 key={category.name} 
@@ -145,7 +159,7 @@ export default function EcommerceHomePage() {
                 </section>
 
                 <section className="px-4">
-                    <h2 className="text-2xl font-bold text-center mb-6">{searchQuery ? `Results for "${searchQuery}"` : "Our Designs"}</h2>
+                    <h2 className="text-2xl font-bold text-center mb-6">{searchQuery ? `Results for "${searchQuery}"` : (selectedCategory ? selectedCategory : "Our Designs")}</h2>
                     
                     {displayedProducts.length > 0 ? (
                         <>

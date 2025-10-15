@@ -1,7 +1,6 @@
 import type { Product, Category, EditRequest, Order } from './types';
 
 export const categories: Category[] = [
-  { id: 'cat-all', name: 'All', imageId: 'category-all' },
   { id: 'cat1', name: 'Wedding', imageId: 'category-wedding' },
   { id: 'cat2', name: 'Birthday', imageId: 'category-birthday' },
   { id: 'cat5', name: 'Engagement', imageId: 'category-engagement' },
