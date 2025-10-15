@@ -47,7 +47,7 @@ export default function ServicesPage() {
             </Link>
 
             <section>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 {products.slice(0, 4).map((product) => {
                   const image = getPlaceholderImage(product.images[0]);
                   return (
