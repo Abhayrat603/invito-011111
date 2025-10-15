@@ -20,6 +20,7 @@ interface AuthContextType {
   updateUserProfilePicture: (file: File) => Promise<void>;
   updateUserEmail: (email: string) => Promise<void>;
   updateUserPassword: (password: string) => Promise<void>;
+  updateUserPhoneNumber: (phoneNumber: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -57,14 +58,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => unsubscribe();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth]);
+  }, []);
 
   const signUp = async (email: string, pass: string, name: string) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-    if (userCredential.user) {
-      await updateProfile(userCredential.user, { displayName: name });
-      setUser({ ...userCredential.user, displayName: name });
-    }
+    await updateUserProfile({ displayName: name });
     return userCredential;
   };
 
@@ -98,8 +96,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error("No user is signed in.");
     }
     await updateProfile(currentUser, profileData);
-    // Create a new user object to trigger re-render
-    setUser(Object.assign(Object.create(currentUser), currentUser));
+    // Force a reload of the user to get the updated profile
+    await currentUser.reload();
+    // Create a new user object to trigger re-render in components
+    setUser(auth.currentUser ? { ...auth.currentUser } : null);
   };
   
   const updateUserEmail = async (email: string) => {
@@ -114,16 +114,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await updatePassword(auth.currentUser, password);
     await updateUserProfile({}); 
   };
+  
+  const updateUserPhoneNumber = async (phoneNumber: string) => {
+    // This is a placeholder. In a real app, this would involve phone number verification.
+    // For now, we'll just show a success toast.
+    console.log("Updating phone number to:", phoneNumber);
+    if (!auth.currentUser) throw new Error("No user is signed in.");
+
+    // In a real Firebase app, you would use RecaptchaVerifier and link/update phone number.
+    // This is a simplified version for demonstration.
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate async operation
+  };
+
 
   const updateUserProfilePicture = async (file: File) => {
     // In a real app, you would upload the file to a service like Firebase Storage
-    // and get a URL back. For this placeholder, we'll generate a new picsum URL
-    // to simulate an update. We use the UID and current time to ensure a new image.
-    const newPhotoURL = `https://picsum.photos/seed/${auth.currentUser?.uid}/${Date.now()}/200/200`;
+    // and get a URL back. For this placeholder, we'll use a local object URL.
+    const newPhotoURL = URL.createObjectURL(file);
     await updateUserProfile({ photoURL: newPhotoURL });
   };
 
-  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset, updateUserProfile, updateUserProfilePicture, updateUserEmail, updateUserPassword };
+  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset, updateUserProfile, updateUserProfilePicture, updateUserEmail, updateUserPassword, updateUserPhoneNumber };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

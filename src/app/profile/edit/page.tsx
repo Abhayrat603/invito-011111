@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { AuthRedirect } from "@/components/auth-redirect";
-import { Loader2, User, ArrowLeft, Mail, Lock, ChevronRight } from "lucide-react";
+import { Loader2, User, ArrowLeft, Mail, Lock, ChevronRight, Phone } from "lucide-react";
 import { MainLayout } from "@/components/main-layout";
 import Link from "next/link";
 import React from "react";
@@ -119,6 +119,7 @@ export default function EditProfilePage() {
                   <div className="space-y-4">
                       <SettingsMenuItem icon={Mail} text="Change Email" href="/profile/settings/email" />
                       <SettingsMenuItem icon={Lock} text="Change Password" href="/profile/settings/password" />
+                      <SettingsMenuItem icon={Phone} text="Change Phone Number" href="/profile/settings/phone" />
                   </div>
                 </div>
               </div>
