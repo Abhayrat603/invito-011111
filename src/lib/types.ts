@@ -27,6 +27,11 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface WishlistItem {
+  productId: string;
+  addedAt: Date;
+}
+
 export interface Cart {
   items: CartItem[];
   updatedAt: Date;

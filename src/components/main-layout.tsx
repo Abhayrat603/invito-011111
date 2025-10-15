@@ -13,15 +13,16 @@ import {
 } from "@/components/ui/sheet";
 import { MenuPageContent } from "@/app/menu/page";
 import { cn } from "@/lib/utils";
+import { useAppState } from "./providers/app-state-provider";
 
-const NavItem = ({ href, icon: Icon, label, pathname, hasNotification }: { href: string, icon: React.ElementType, label: string, pathname: string, hasNotification?: boolean }) => (
+const NavItem = ({ href, icon: Icon, label, pathname, count }: { href: string, icon: React.ElementType, label: string, pathname: string, count?: number }) => (
     <Link href={href}>
         <div className={cn("flex flex-col items-center justify-center gap-1 relative", pathname === href ? "text-primary" : "text-amber-900/60 dark:text-amber-200/70")}>
             <Icon className="w-5 h-5" />
             <span className="text-[10px] font-medium">{label}</span>
-            {hasNotification && (
+            {count !== undefined && count > 0 && (
                 <div className="absolute top-0 right-1.5 w-4 h-4 bg-red-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                    0
+                    {count}
                 </div>
             )}
         </div>
@@ -31,12 +32,13 @@ const NavItem = ({ href, icon: Icon, label, pathname, hasNotification }: { href:
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { cart, wishlist } = useAppState();
 
   const navItems = [
     { href: "/menu", icon: MenuIcon, label: "Menu" },
-    { href: "/cart", icon: ShoppingBag, label: "Cart", hasNotification: true },
+    { href: "/cart", icon: ShoppingBag, label: "Cart", count: cart.reduce((acc, item) => acc + item.quantity, 0) },
     { href: "/", icon: Home, label: "Home" },
-    { href: "/wishlist", icon: Heart, label: "Wishlist", hasNotification: true },
+    { href: "/wishlist", icon: Heart, label: "Wishlist", count: wishlist.length },
     { href: "/profile", icon: User, label: "Profile" },
   ];
 

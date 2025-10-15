@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, ChevronRight, Heart, Minus, Plus, Download } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { useAppState } from '@/components/providers/app-state-provider';
+import { useToast } from '@/hooks/use-toast';
 
 const findImage = (id: string) => {
   return PlaceHolderImages.find(img => img.id === id);
@@ -20,6 +22,9 @@ export default function ProductDetailPage() {
   const router = useRouter();
   const params = useParams();
   const { slug } = params;
+
+  const { addToCart, toggleWishlist, isInWishlist } = useAppState();
+  const { toast } = useToast();
 
   const product = products.find(p => p.slug === slug);
   const [quantity, setQuantity] = useState(1);
@@ -34,6 +39,23 @@ export default function ProductDetailPage() {
     );
   }
 
+  const handleAddToCart = () => {
+    addToCart(product.id, quantity);
+    toast({
+        title: "Added to Cart",
+        description: `${quantity} x ${product.name} has been added to your cart.`
+    });
+  }
+
+  const handleToggleWishlist = () => {
+    toggleWishlist(product.id);
+    toast({
+        title: isInWishlist(product.id) ? "Removed from Wishlist" : "Added to Wishlist",
+        description: `${product.name} has been ${isInWishlist(product.id) ? 'removed from' : 'added to'} your wishlist.`
+    });
+  }
+
+  const isLiked = isInWishlist(product.id);
   const mainImage = findImage(product.images[0]);
   const thumbnailImage = findImage(product.images[1] || product.images[0]);
   const onSale = true; // Based on the user image
@@ -99,12 +121,12 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="flex items-stretch gap-3">
-              <Button size="lg" className="flex-1 bg-amber-800 hover:bg-amber-900 h-12">
+              <Button size="lg" className="flex-1 bg-amber-800 hover:bg-amber-900 h-12" onClick={handleAddToCart}>
                 <Download className="mr-2 h-5 w-5" /> Download
               </Button>
-              <Button size="lg" variant="outline" className="flex-1 h-12">Buy now</Button>
-              <Button variant="outline" size="icon" className="h-12 w-12 shrink-0">
-                <Heart className="h-6 w-6" />
+              <Button size="lg" variant="outline" className="flex-1 h-12" onClick={handleAddToCart}>Buy now</Button>
+              <Button variant="outline" size="icon" className="h-12 w-12 shrink-0" onClick={handleToggleWishlist}>
+                <Heart className={`h-6 w-6 ${isLiked ? 'text-red-500 fill-current' : ''}`} />
               </Button>
             </div>
           </div>

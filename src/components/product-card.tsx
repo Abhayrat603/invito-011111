@@ -6,18 +6,41 @@ import Link from "next/link";
 import { Heart, ShoppingCart } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-
-// Find an image from the placeholder data
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
+import { useAppState } from "./providers/app-state-provider";
+import { useToast } from "@/hooks/use-toast";
 
 const findImage = (id: string) => {
     return PlaceHolderImages.find(img => img.id === id);
 }
 
-
 export function ProductCard({ product, onSale = false }: { product: Product, onSale?: boolean }) {
-    const salePrice = product.price * 0.9;
+    const { addToCart, toggleWishlist, isInWishlist } = useAppState();
+    const { toast } = useToast();
+    
+    const isLiked = isInWishlist(product.id);
+
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        addToCart(product.id);
+        toast({
+            title: "Added to Cart",
+            description: `${product.name} has been added to your cart.`,
+        });
+    };
+
+    const handleToggleWishlist = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        toggleWishlist(product.id);
+        toast({
+            title: isLiked ? "Removed from Wishlist" : "Added to Wishlist",
+            description: `${product.name} has been ${isLiked ? 'removed from' : 'added to'} your wishlist.`,
+        });
+    };
+
     const productImage = findImage(product.images[0]);
 
     return (
@@ -29,8 +52,8 @@ export function ProductCard({ product, onSale = false }: { product: Product, onS
                 </div>
             )}
 
-            <Button variant="ghost" size="icon" className="absolute top-3 right-3 z-10 rounded-full bg-white/50 backdrop-blur-sm hover:bg-white/80">
-                <Heart className="w-5 h-5 text-muted-foreground" />
+            <Button variant="ghost" size="icon" className="absolute top-3 right-3 z-10 rounded-full bg-white/50 backdrop-blur-sm hover:bg-white/80" onClick={handleToggleWishlist}>
+                <Heart className={cn("w-5 h-5 text-muted-foreground", isLiked && "text-red-500 fill-current")} />
             </Button>
             
             <Link href={`/products/${product.slug}`} passHref>
@@ -58,7 +81,7 @@ export function ProductCard({ product, onSale = false }: { product: Product, onS
                 <div className="flex items-center justify-between mt-4">
                     <span className="font-bold text-2xl text-foreground">₹{product.price.toFixed(0)}</span>
                     <div className="flex items-center gap-2">
-                         <Button variant="outline" className="bg-white hover:bg-gray-100 rounded-full shadow-sm text-foreground">
+                         <Button variant="outline" className="bg-white hover:bg-gray-100 rounded-full shadow-sm text-foreground" onClick={handleAddToCart}>
                             <ShoppingCart className="mr-2 h-4 w-4"/>
                             Add
                         </Button>
