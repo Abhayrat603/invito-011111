@@ -79,7 +79,7 @@ export function ProductCard({ product, onSale = false }: { product: Product, onS
                 </h3>
                 <p className="text-sm text-muted-foreground text-center mb-4">{product.category}</p>
                 <div className="flex items-center justify-between mt-4">
-                    <span className="font-bold text-2xl text-foreground">₹{product.price.toFixed(0)}</span>
+                    <span className="font-bold text-2xl text-destructive">₹{product.price.toFixed(0)}</span>
                     <div className="flex items-center gap-2">
                          <Button variant="outline" className="bg-white hover:bg-gray-100 rounded-full shadow-sm text-foreground" onClick={handleAddToCart}>
                             <ShoppingCart className="mr-2 h-4 w-4"/>

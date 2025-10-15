@@ -106,10 +106,10 @@ export default function ProductDetailPage() {
           
           <div className="space-y-4">
             {onSale && <Badge variant="outline" className="text-sm font-semibold border-yellow-500 text-yellow-600">Paid</Badge>}
-            <h1 className="text-xl font-bold leading-tight">{product.name}</h1>
+            <h1 className="text-lg font-bold leading-tight">{product.name}</h1>
             
             <div className="flex items-center justify-between">
-              <span className="text-2xl font-bold text-foreground">₹{product.price.toFixed(2)}</span>
+              <span className="text-xl font-bold text-destructive">₹{product.price.toFixed(2)}</span>
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" onClick={() => setQuantity(q => Math.max(1, q - 1))}>
                   <Minus className="h-4 w-4" />

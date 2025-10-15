@@ -66,7 +66,7 @@ export default function CartPage() {
                                 <div className="flex-grow">
                                     <h3 className="font-semibold text-sm line-clamp-1">{product.name}</h3>
                                     <p className="text-xs text-muted-foreground">{product.category}</p>
-                                    <p className="font-bold text-lg mt-1">₹{product.price.toFixed(2)}</p>
+                                    <p className="font-bold text-lg mt-1 text-destructive">₹{product.price.toFixed(2)}</p>
                                 </div>
                                 <div className="flex flex-col items-end gap-2">
                                      <div className="flex items-center gap-2">
@@ -88,7 +88,7 @@ export default function CartPage() {
                      <div className="mt-6 pt-4 border-t">
                         <div className="flex justify-between items-center text-lg font-bold">
                             <span>Total</span>
-                            <span>₹{cartProducts.reduce((acc, p) => acc + (p?.price || 0) * (p?.quantity || 0), 0).toFixed(2)}</span>
+                            <span className="text-destructive">₹{cartProducts.reduce((acc, p) => acc + (p?.price || 0) * (p?.quantity || 0), 0).toFixed(2)}</span>
                         </div>
                         <Button className="w-full mt-4 h-12">Proceed to Checkout</Button>
                     </div>
