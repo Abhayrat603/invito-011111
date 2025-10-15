@@ -33,28 +33,30 @@ export function ProductCard({ product, onSale = false }: { product: Product, onS
                 <Heart className="w-5 h-5 text-muted-foreground" />
             </Button>
             
-            <div className="p-4">
-                <div className="bg-emerald-100/50 rounded-lg p-3 flex flex-col items-center">
-                    {productImage && (
-                        <Image
-                            src="https://picsum.photos/seed/wedding-invite/600/600"
-                            alt={product.name}
-                            width={500}
-                            height={500}
-                            className="object-cover rounded-md shadow-sm"
-                            data-ai-hint="wedding invitation card"
-                        />
-                    )}
-                </div>
-            </div>
+            <Link href={`/products/${product.slug}`} passHref>
+              <div className="p-4 cursor-pointer">
+                  <div className="bg-emerald-100/50 rounded-lg p-3 flex flex-col items-center">
+                      {productImage && (
+                          <Image
+                              src="https://picsum.photos/seed/wedding-invite/600/600"
+                              alt={product.name}
+                              width={500}
+                              height={500}
+                              className="object-cover rounded-md shadow-sm"
+                              data-ai-hint="wedding invitation card"
+                          />
+                      )}
+                  </div>
+              </div>
+            </Link>
 
             <div className="px-5 pb-5">
-                 <h3 className="font-semibold text-lg my-1 text-foreground text-center">
-                    Namkaran Card
+                 <h3 className="font-headline text-xl my-1 text-foreground text-center truncate">
+                    {product.name}
                 </h3>
-                <p className="text-sm text-muted-foreground text-center mb-4">Namkaran Invitation</p>
+                <p className="text-sm text-muted-foreground text-center mb-4">{product.category}</p>
                 <div className="flex items-center justify-between mt-4">
-                    <span className="font-bold text-2xl text-foreground">₹70</span>
+                    <span className="font-bold text-2xl text-foreground">₹{product.price.toFixed(0)}</span>
                     <div className="flex items-center gap-2">
                          <Button variant="outline" className="bg-white hover:bg-gray-100 rounded-full shadow-sm text-foreground">
                             <ShoppingCart className="mr-2 h-4 w-4"/>
