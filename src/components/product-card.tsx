@@ -3,13 +3,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Download } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Heart, ShoppingCart } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 
 // Find an image from the placeholder data
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { cn } from "@/lib/utils";
 
 const findImage = (id: string) => {
     return PlaceHolderImages.find(img => img.id === id);
@@ -21,44 +21,53 @@ export function ProductCard({ product, onSale = false }: { product: Product, onS
     const productImage = findImage(product.images[0]);
 
     return (
-        <Link href={`/products/${product.slug}`} className="group/card">
-            <div className="bg-card text-card-foreground rounded-lg shadow-sm overflow-hidden border relative transition-all group-hover/card:shadow-md">
-                
-                {onSale && (
-                     <div className="absolute top-0 left-0 bg-yellow-500 text-white font-bold px-4 py-1 rounded-br-lg z-10 text-sm">
-                        Paid
-                    </div>
-                )}
-                
-                <div className="p-4">
-                    <div className="bg-teal-400 rounded-lg p-4 flex flex-col items-center">
-                        {productImage && (
-                            <Image
-                                src="https://picsum.photos/seed/mundan/600/800"
-                                alt={product.name}
-                                width={400}
-                                height={550}
-                                className="object-cover rounded-md shadow-lg"
-                                data-ai-hint="invitation card"
-                            />
-                        )}
-                        <p className="mt-2 text-white font-semibold text-sm">FREE HINDI DESIGN</p>
-                    </div>
+        <div className="group/card bg-amber-50/20 text-card-foreground rounded-xl shadow-sm overflow-hidden border relative transition-all group-hover/card:shadow-lg">
+            
+            {onSale && (
+                 <div className="absolute top-3 left-3 bg-yellow-500 text-white font-bold px-3 py-1 rounded-md z-10 text-sm shadow-md">
+                    Paid
                 </div>
+            )}
 
-                <div className="px-6 pb-4">
-                     <h3 className="font-medium text-base my-1 text-foreground text-center">
-                        Namkaran Card
-                    </h3>
-                    <div className="flex items-center justify-between mt-4">
-                        <span className="font-bold text-2xl text-foreground">₹70</span>
-                        <Button variant="outline" className="bg-green-100 border-green-200 text-green-800 hover:bg-green-200 hover:text-green-900">
-                            <Download className="mr-2 h-5 w-5"/>
-                            Download
+            <Button variant="ghost" size="icon" className="absolute top-3 right-3 z-10 rounded-full bg-white/50 backdrop-blur-sm hover:bg-white/80">
+                <Heart className="w-5 h-5 text-muted-foreground" />
+            </Button>
+            
+            <div className="p-4">
+                <div className="bg-emerald-100/50 rounded-lg p-3 flex flex-col items-center">
+                    {productImage && (
+                        <Image
+                            src="https://picsum.photos/seed/wedding-invite/600/600"
+                            alt={product.name}
+                            width={500}
+                            height={500}
+                            className="object-cover rounded-md shadow-sm"
+                            data-ai-hint="wedding invitation card"
+                        />
+                    )}
+                </div>
+            </div>
+
+            <div className="px-5 pb-5">
+                 <h3 className="font-semibold text-lg my-1 text-foreground text-center">
+                    Namkaran Card
+                </h3>
+                <p className="text-sm text-muted-foreground text-center mb-4">Namkaran Invitation</p>
+                <div className="flex items-center justify-between mt-4">
+                    <span className="font-bold text-2xl text-foreground">₹70</span>
+                    <div className="flex items-center gap-2">
+                         <Button variant="outline" className="bg-white hover:bg-gray-100 rounded-full shadow-sm text-foreground">
+                            <ShoppingCart className="mr-2 h-4 w-4"/>
+                            Add
                         </Button>
+                        <Link href={`/products/${product.slug}`} passHref>
+                             <Button className="bg-amber-800 hover:bg-amber-900 rounded-full shadow-sm">
+                                View
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 }

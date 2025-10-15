@@ -58,7 +58,7 @@ export default function EcommerceHomePage() {
                             </div>
                        </div>
                        <div className="absolute top-4 right-4 text-orange-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2c-4 0-4 4-8 4s-4-4-8-4-4 4-4 4v10c0 4 4 4 4 4s4-4 8-4 8 4 8 4 4-4 4-4V6c0-4-4-4-4-4zM14 6s-1.5 2-4 2-4-2-4-2M10 18s1.5-2 4-2 4 2 4 2"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2c-4 0-4 4-8 4s-4-4-8-4-4 4-4 4v10c0 4 4 4 4s4-4 8-4 8 4 8 4 4-4 4-4V6c0-4-4-4-4-4zM14 6s-1.5 2-4 2-4-2-4-2M10 18s1.5-2 4-2 4 2 4 2"/></svg>
                        </div>
                     </div>
                 </section>
@@ -82,9 +82,9 @@ export default function EcommerceHomePage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-center mb-6">Our Products</h2>
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {products.slice(0, 4).map((product, index) => (
-                           <ProductCard key={product.id} product={product} onSale={index === 2} />
+                           <ProductCard key={product.id} product={product} onSale={index % 2 === 0} />
                         ))}
                     </div>
                 </section>
