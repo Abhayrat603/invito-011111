@@ -42,6 +42,8 @@ export default function ReportPage() {
 
     // Filter for delivered orders only
     const deliveredOrders = orders.filter(order => order.status === 'Delivered');
+    // Filter for approved edit requests only
+    const approvedRequests = editRequests.filter(request => request.status === 'Approved');
 
     return (
         <MainLayout>
@@ -76,7 +78,7 @@ export default function ReportPage() {
 
                     {/* Order History Section */}
                     <section>
-                         <h2 className="text-lg font-semibold flex items-center mb-4"><ShoppingCart className="h-5 w-5 mr-2 text-primary"/> Purchase History (Completed)</h2>
+                         <h2 className="text-lg font-semibold flex items-center mb-4"><ShoppingCart className="h-5 w-5 mr-2 text-primary"/> Completed Purchase History</h2>
                          {deliveredOrders.length === 0 ? (
                             <p className="text-muted-foreground text-sm">No completed orders found.</p>
                          ) : (
@@ -120,12 +122,12 @@ export default function ReportPage() {
                     
                     {/* Edit Request History Section */}
                     <section>
-                        <h2 className="text-lg font-semibold flex items-center mb-4"><FileText className="h-5 w-5 mr-2 text-primary"/> Edit Request History</h2>
-                        {editRequests.length === 0 ? (
-                             <p className="text-muted-foreground text-sm">No edit requests found.</p>
+                        <h2 className="text-lg font-semibold flex items-center mb-4"><FileText className="h-5 w-5 mr-2 text-primary"/> Approved Edit Request History</h2>
+                        {approvedRequests.length === 0 ? (
+                             <p className="text-muted-foreground text-sm">No approved edit requests found.</p>
                         ) : (
                             <div className="space-y-4">
-                                {editRequests.map(request => {
+                                {approvedRequests.map(request => {
                                     const { icon: Icon, color, text } = editStatusConfig[request.status];
                                     return (
                                         <Card key={request.id} className="overflow-hidden">
