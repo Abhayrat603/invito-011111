@@ -8,22 +8,31 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MainLayout } from "@/components/main-layout";
-import { products } from "@/lib/mock-data";
+import { products, categories } from "@/lib/mock-data";
 import { ProductCard } from "@/components/product-card";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
 export default function EcommerceHomePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
 
   useEffect(() => {
     if (!loading && user && !user.emailVerified) {
       router.replace('/verify-email');
     }
   }, [user, loading, router]);
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentCategoryIndex(prevIndex => (prevIndex + 1) % categories.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   if (loading || (user && !user.emailVerified)) {
     return (
@@ -32,6 +41,9 @@ export default function EcommerceHomePage() {
         </div>
     );
   }
+
+  const currentCategory = categories[currentCategoryIndex];
+  const productsInCategory = products.filter(p => p.category === currentCategory.name);
 
   return (
     <AuthRedirect to="/login" condition="is-not-auth">
@@ -70,8 +82,8 @@ export default function EcommerceHomePage() {
                         </div>
                         <div className="flex-grow">
                             <div className="flex justify-between items-baseline">
-                                <h3 className="font-semibold text-foreground">DRESS & FROCK</h3>
-                                <span className="text-sm text-muted-foreground">(53)</span>
+                                <h3 className="font-semibold text-foreground uppercase">{currentCategory.name}</h3>
+                                <span className="text-sm text-muted-foreground">({productsInCategory.length})</span>
                             </div>
                             <Link href="#">
                                 <div className="text-sm text-primary hover:underline">Show All</div>
