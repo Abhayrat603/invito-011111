@@ -49,7 +49,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       </main>
 
        <Sheet>
-        <SheetContent side="left" className="p-0 w-[85vw]">
+        <SheetContent side="left" className="p-0 w-[90vw]">
           <SheetTitle className="sr-only">Menu</SheetTitle>
           <SheetDescription className="sr-only">The main navigation menu for the application.</SheetDescription>
           <MenuPageContent />

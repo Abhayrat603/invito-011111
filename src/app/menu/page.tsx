@@ -68,14 +68,14 @@ export function MenuPageContent() {
                             <SheetClose asChild>
                                 <Link href={item.href} passHref>
                                     <div className={cn(
-                                        "flex justify-between items-center py-3 px-3 text-base rounded-md transition-colors",
+                                        "flex justify-between items-center py-3 px-3 rounded-md transition-colors",
                                         pathname === item.href ? "bg-primary/10 text-primary font-semibold" : "hover:bg-accent"
                                     )}>
-                                        <div className="flex items-center">
-                                            <item.icon className="h-5 w-5 mr-3 text-primary/80" />
-                                            <span>{item.name}</span>
+                                        <div className="flex items-center overflow-hidden">
+                                            <item.icon className="h-5 w-5 mr-3 text-primary/80 shrink-0" />
+                                            <span className="text-sm truncate">{item.name}</span>
                                         </div>
-                                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                                        <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
                                     </div>
                                 </Link>
                             </SheetClose>
