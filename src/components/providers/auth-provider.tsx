@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, [auth, toast]);
+  }, [auth, toast, user]);
 
   const signUp = async (email: string, pass: string, name: string) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
@@ -91,6 +91,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error("No user is signed in.");
     }
     
+    // In a real app, you would upload the file to a service like Firebase Storage
+    // and get a URL back. For this placeholder, we'll generate a new picsum URL
+    // to simulate an update. We use the UID and current time to ensure a new image.
     const newPhotoURL = `https://picsum.photos/seed/${auth.currentUser.uid}/${Date.now()}/200/200`;
 
     await updateProfile(auth.currentUser, { photoURL: newPhotoURL });
@@ -98,6 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Create a new user object to force a re-render in consuming components.
     setUser(prevUser => {
       if (!prevUser) return null;
+      // This ensures we are creating a new object reference, which React will detect.
       return { ...prevUser, photoURL: newPhotoURL };
     });
   };
