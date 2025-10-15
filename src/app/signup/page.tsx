@@ -99,8 +99,8 @@ export default function SignupPage() {
                         <FormItem>
                           <FormControl>
                              <div className="relative">
-                               <User className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground opacity-50" />
-                               <Input placeholder="Name" {...field} className="bg-secondary rounded-full border-none h-12 pl-14" />
+                               <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 opacity-50" />
+                               <Input placeholder="Name" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 pl-12 pr-4 focus-visible:ring-primary/50" />
                              </div>
                           </FormControl>
                           <FormMessage />
@@ -113,10 +113,10 @@ export default function SignupPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <div className="relative flex items-center bg-secondary rounded-full border-none h-12 px-6">
-                               <Phone className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground opacity-50" />
-                               <span className="text-foreground/80 pl-10 pr-2">+91</span>
-                               <Input placeholder="Phone Number" {...field} className="bg-transparent border-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0" />
+                            <div className="relative flex items-center bg-transparent rounded-lg border border-primary/50 h-12 px-4 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background">
+                               <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 opacity-50" />
+                               <span className="text-primary/80 pl-8 pr-2">+91</span>
+                               <Input placeholder="Phone Number" {...field} className="bg-transparent border-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 text-primary placeholder:text-primary/50" />
                             </div>
                           </FormControl>
                           <FormMessage />
@@ -130,8 +130,8 @@ export default function SignupPage() {
                         <FormItem>
                           <FormControl>
                              <div className="relative">
-                               <Mail className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground opacity-50" />
-                               <Input placeholder="Email" {...field} className="bg-secondary rounded-full border-none h-12 pl-14" />
+                               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 opacity-50" />
+                               <Input placeholder="Email" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 pl-12 pr-4 focus-visible:ring-primary/50" />
                              </div>
                           </FormControl>
                           <FormMessage />
@@ -145,9 +145,9 @@ export default function SignupPage() {
                         <FormItem>
                           <FormControl>
                             <div className="relative">
-                               <Lock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground opacity-50" />
-                               <Input type={showPassword ? "text" : "password"} placeholder="Password" {...field} className="bg-secondary rounded-full border-none h-12 pl-14 pr-12" />
-                               <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground/50 hover:bg-secondary" onClick={() => setShowPassword(p => !p)}>
+                               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 opacity-50" />
+                               <Input type={showPassword ? "text" : "password"} placeholder="Password" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 pl-12 pr-12 focus-visible:ring-primary/50" />
+                               <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground/50 hover:bg-transparent" onClick={() => setShowPassword(p => !p)}>
                                 {showPassword ? <EyeOff className="h-5 w-5 opacity-50"/> : <Eye className="h-5 w-5 opacity-50"/>}
                                </Button>
                             </div>
@@ -163,9 +163,9 @@ export default function SignupPage() {
                         <FormItem>
                           <FormControl>
                              <div className="relative">
-                               <Lock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground opacity-50" />
-                               <Input type={showPassword ? "text" : "password"} placeholder="Confirm Password" {...field} className="bg-secondary rounded-full border-none h-12 pl-14 pr-12" />
-                               <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground/50 hover:bg-secondary" onClick={() => setShowPassword(p => !p)}>
+                               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 opacity-50" />
+                               <Input type={showPassword ? "text" : "password"} placeholder="Confirm Password" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 pl-12 pr-12 focus-visible:ring-primary/50" />
+                               <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground/50 hover:bg-transparent" onClick={() => setShowPassword(p => !p)}>
                                 {showPassword ? <EyeOff className="h-5 w-5 opacity-50"/> : <Eye className="h-5 w-5 opacity-50"/>}
                                </Button>
                             </div>
@@ -174,7 +174,7 @@ export default function SignupPage() {
                         </FormItem>
                       )}
                     />
-                    <Button type="submit" className="w-full rounded-full h-12 text-base" disabled={form.formState.isSubmitting}>
+                    <Button type="submit" className="w-full rounded-lg h-12 text-base bg-primary/90 hover:bg-primary text-primary-foreground" disabled={form.formState.isSubmitting}>
                        {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin text-foreground/50"/>}
                       Sign Up
                     </Button>
