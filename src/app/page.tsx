@@ -61,9 +61,11 @@ export default function EcommerceHomePage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-center mb-6">Our Products</h2>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="flex overflow-x-auto space-x-4 pb-4">
                         {products.slice(0, 4).map((product, index) => (
-                           <ProductCard key={product.id} product={product} onSale={index === 2} />
+                           <div key={product.id} className="min-w-[180px] flex-shrink-0">
+                             <ProductCard product={product} onSale={index === 2} />
+                           </div>
                         ))}
                     </div>
                 </section>
