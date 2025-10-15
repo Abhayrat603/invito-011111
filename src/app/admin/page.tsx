@@ -5,10 +5,27 @@ import { MainLayout } from "@/components/main-layout";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Loader2, Shield } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Loader2, Shield, Users, ShoppingCart, CreditCard, Edit } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import Link from "next/link";
 
 const ADMIN_EMAIL = "abhayrat603@gmail.com";
+
+const AdminCard = ({ icon: Icon, title, description, href }: { icon: React.ElementType, title: string, description: string, href: string }) => (
+    <Link href={href} className="block">
+        <Card className="hover:bg-accent hover:border-primary/50 transition-all">
+            <CardHeader className="flex flex-row items-center gap-4">
+                <div className="bg-primary/10 p-3 rounded-lg">
+                   <Icon className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                    <CardTitle>{title}</CardTitle>
+                    <CardDescription>{description}</CardDescription>
+                </div>
+            </CardHeader>
+        </Card>
+    </Link>
+);
 
 export default function AdminPage() {
   const { user, loading } = useAuth();
@@ -31,22 +48,35 @@ export default function AdminPage() {
   return (
     <MainLayout>
       <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
-        <header className="p-4 flex items-center justify-center border-b">
+        <header className="p-4 flex items-center justify-center border-b sticky top-0 bg-background z-10">
             <Shield className="h-6 w-6 text-primary mr-2" />
             <h1 className="text-xl font-bold">Admin Panel</h1>
         </header>
-        <main className="flex-grow p-4">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Welcome, Admin!</CardTitle>
-                    <CardDescription>This is your control center. Be careful!</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-muted-foreground">
-                        You can add admin-specific components and functionality here. This page is only visible to you.
-                    </p>
-                </CardContent>
-            </Card>
+        <main className="flex-grow p-4 space-y-4">
+            <AdminCard 
+                href="/admin/products"
+                icon={ShoppingCart}
+                title="Manage Products"
+                description="Add, edit, or remove products"
+            />
+             <AdminCard 
+                href="/admin/users"
+                icon={Users}
+                title="View Users"
+                description="See registered user details"
+            />
+             <AdminCard 
+                href="/admin/payments"
+                icon={CreditCard}
+                title="Payment History"
+                description="View all transaction records"
+            />
+             <AdminCard 
+                href="/admin/requests"
+                icon={Edit}
+                title="Edit Requests"
+                description="Manage user customization requests"
+            />
         </main>
       </div>
     </MainLayout>
