@@ -11,10 +11,10 @@ import { User, Bell, Settings, HelpCircle, LogOut, ChevronRight, Camera } from "
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-const ProfileMenuItem = ({ icon: Icon, text, href, onClick, isLogout = false }: { icon: React.ElementType, text: string, href?: string, onClick?: () => void, isLogout?: boolean }) => {
+const ProfileMenuItem = ({ icon: Icon, text, href, onClick, isLogout = false, className }: { icon: React.ElementType, text: string, href?: string, onClick?: () => void, isLogout?: boolean, className?: string }) => {
   const content = (
     <div 
-        className={cn("flex items-center w-full bg-card p-4 rounded-xl shadow-sm", isLogout ? "text-destructive" : "text-foreground")}
+        className={cn("flex items-center w-full bg-card p-4 rounded-xl shadow-sm", isLogout ? "text-destructive" : "text-foreground", className)}
         onClick={onClick}
     >
         <Icon className={cn("h-6 w-6 mr-4", isLogout ? "text-destructive/80" : "text-primary")} />
@@ -58,7 +58,9 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="w-full space-y-4">
-                    <ProfileMenuItem icon={User} text="My Account" href="#" />
+                    <div className="mb-6">
+                        <ProfileMenuItem icon={User} text="My Account" href="#" />
+                    </div>
                     <ProfileMenuItem icon={Bell} text="Notifications" href="#" />
                     <ProfileMenuItem icon={Settings} text="Settings" href="#" />
                     <ProfileMenuItem icon={HelpCircle} text="Help Center" href="#" />
