@@ -4,104 +4,149 @@
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ArrowLeft, HelpCircle, Search, User, ShoppingCart, Truck, RefreshCw, Star, Info } from "lucide-react";
+import { ArrowLeft, HelpCircle, Send, User, Bot } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useState, useRef, useEffect } from "react";
+import { helpChat } from "@/ai/flows/help-chat-flow";
+import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/components/providers/auth-provider";
 
-const faqData = {
-    "Account & Profile": {
-        icon: User,
-        questions: [
-            { q: "How do I create an account?", a: "To create an account, click on the 'Sign Up' button on the login page and fill in your details. You'll receive a verification email to activate your account." },
-            { q: "How can I change my password?", a: "You can change your password by navigating to 'Profile' > 'Edit Profile' > 'Change Password'. Follow the instructions to set a new password." },
-            { q: "How do I update my profile information?", a: "Go to 'Profile' > 'Edit Profile' to update your name, profile picture, and other details." },
-        ],
-    },
-    "Orders & Shipping": {
-        icon: ShoppingCart,
-        questions: [
-            { q: "How can I track my order?", a: "Once your order is shipped, you will receive an email with a tracking number and a link to the courier's website. You can also find tracking information in your order history." },
-            { q: "What are the shipping costs and delivery times?", a: "Shipping costs and delivery times vary depending on your location. Standard shipping usually takes 3-5 business days. You can see the exact details at checkout." },
-            { q: "Can I change my shipping address after placing an order?", a: "If your order has not yet been shipped, you can contact our customer support to request a change of address. We cannot change the address once the order is in transit." },
-        ],
-    },
-    "Returns & Exchanges": {
-        icon: RefreshCw,
-        questions: [
-            { q: "What is your return policy?", a: "We accept returns within 30 days of delivery for a full refund or exchange. Items must be in their original condition, unworn, with all tags attached." },
-            { q: "How do I initiate a return or exchange?", a: "Please visit our 'Returns' section in your account to start the process. You will need your order number and email address." },
-        ],
-    },
-    "Products & Sizing": {
-        icon: Star,
-        questions: [
-            { q: "How do I find the right size?", a: "Each product page has a detailed size guide with measurements. If you are still unsure, feel free to contact our support team for a recommendation." },
-            { q: "Are your products ethically sourced?", a: "Yes, we are committed to ethical manufacturing and sustainable sourcing. You can read more about our efforts on our 'About Us' page." },
-        ],
-    },
+type Message = {
+    role: 'user' | 'model';
+    content: string;
 };
-
-type FaqCategory = keyof typeof faqData;
 
 export default function HelpCenterPage() {
     const router = useRouter();
+    const { user } = useAuth();
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [input, setInput] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (scrollAreaRef.current) {
+            scrollAreaRef.current.scrollTo({
+                top: scrollAreaRef.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    }, [messages]);
+    
+    useEffect(() => {
+        // Initial bot message
+        setMessages([{ role: 'model', content: 'Hello! How can I assist you today?' }]);
+    }, []);
+
+    const handleSendMessage = async () => {
+        if (input.trim() === "" || isLoading) return;
+
+        const userMessage: Message = { role: 'user', content: input };
+        setMessages(prev => [...prev, userMessage]);
+        setInput("");
+        setIsLoading(true);
+        
+        // Format history for the AI flow
+        const historyForAI = messages.map(msg => ({
+            role: msg.role as 'user' | 'model',
+            content: [{ text: msg.content }]
+        }));
+
+        try {
+            const botResponse = await helpChat({
+                history: historyForAI,
+                message: input,
+            });
+
+            const botMessage: Message = { role: 'model', content: botResponse };
+            setMessages(prev => [...prev, botMessage]);
+        } catch (error) {
+            console.error("AI Error:", error);
+            const errorMessage: Message = { role: 'model', content: "Sorry, I'm having trouble connecting. Please try again later." };
+            setMessages(prev => [...prev, errorMessage]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
 
     return (
         <MainLayout>
-            <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
+            <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col h-screen">
                 <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
                     <Button variant="ghost" size="icon" onClick={() => router.back()}>
                         <ArrowLeft />
                     </Button>
                     <div className="flex-grow flex items-center justify-center">
                        <HelpCircle className="h-6 w-6 text-primary mr-2"/>
-                       <h1 className="text-xl font-bold">Help Center</h1>
+                       <h1 className="text-xl font-bold">AI Help Assistant</h1>
                     </div>
                     <div className="w-10"></div>
                 </header>
-                <main className="flex-grow p-4 md:p-6 space-y-8">
-                    <div className="text-center space-y-2">
-                        <h2 className="text-2xl font-headline text-foreground">How can we help?</h2>
-                        <div className="relative">
-                            <Input placeholder="Search for help..." className="pr-10" />
-                            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"/>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <h3 className="text-lg font-semibold mb-4">Frequently Asked Questions</h3>
-                        {Object.entries(faqData).map(([category, data]) => {
-                            const Icon = data.icon;
-                            return (
-                                <div key={category} className="mb-6 bg-card p-4 rounded-lg border">
-                                    <div className="flex items-center mb-4">
-                                        <Icon className="h-6 w-6 text-primary mr-3" />
-                                        <h4 className="text-xl font-semibold text-foreground">{category}</h4>
+                <main className="flex-grow flex flex-col overflow-hidden">
+                    <ScrollArea className="flex-grow p-4" ref={scrollAreaRef}>
+                         <div className="space-y-4">
+                            {messages.map((message, index) => (
+                                <div key={index} className={cn("flex items-end gap-2", message.role === 'user' ? 'justify-end' : 'justify-start')}>
+                                    {message.role === 'model' && (
+                                        <Avatar className="h-8 w-8">
+                                            <AvatarFallback><Bot/></AvatarFallback>
+                                        </Avatar>
+                                    )}
+                                    <div className={cn("rounded-lg px-4 py-2 max-w-[80%]", message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted')}>
+                                        <p className="text-sm">{message.content}</p>
                                     </div>
-                                    <Accordion type="single" collapsible className="w-full">
-                                        {data.questions.map((faq, index) => (
-                                            <AccordionItem value={`item-${index}`} key={index}>
-                                                <AccordionTrigger className="text-left hover:no-underline">{faq.q}</AccordionTrigger>
-                                                <AccordionContent className="text-muted-foreground">
-                                                    {faq.a}
-                                                </AccordionContent>
-                                            </AccordionItem>
-                                        ))}
-                                    </Accordion>
+                                    {message.role === 'user' && (
+                                        <Avatar className="h-8 w-8">
+                                            <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'User'}/>
+                                            <AvatarFallback><User/></AvatarFallback>
+                                        </Avatar>
+                                    )}
                                 </div>
-                            );
-                        })}
+                            ))}
+                            {isLoading && (
+                                <div className="flex items-end gap-2 justify-start">
+                                    <Avatar className="h-8 w-8">
+                                        <AvatarFallback><Bot/></AvatarFallback>
+                                    </Avatar>
+                                    <div className="rounded-lg px-4 py-2 bg-muted">
+                                        <div className="flex items-center space-x-1">
+                                           <span className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                                           <span className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                                           <span className="h-2 w-2 bg-primary rounded-full animate-bounce"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </ScrollArea>
+                    <div className="p-4 border-t bg-background">
+                        <div className="relative">
+                            <Input 
+                                placeholder="Ask me anything..." 
+                                className="pr-12" 
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                                disabled={isLoading}
+                            />
+                            <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                                onClick={handleSendMessage}
+                                disabled={isLoading || input.trim() === ""}
+                            >
+                                <Send className="h-5 w-5 text-primary"/>
+                            </Button>
+                        </div>
+                         <div className="text-center mt-4">
+                            <p className="text-xs text-muted-foreground">Can't find your answer? <Link href="/contact-us" className="text-primary underline">Contact Support</Link></p>
+                         </div>
                     </div>
-
-                    <div className="bg-accent/30 text-center p-6 rounded-lg border border-primary/20">
-                        <h3 className="text-xl font-semibold mb-2">Can't find what you're looking for?</h3>
-                        <p className="text-muted-foreground mb-4">Our support team is here to help. Get in touch with us for any questions.</p>
-                        <Link href="/contact-us" passHref>
-                           <Button>Contact Support</Button>
-                        </Link>
-                    </div>
-
                 </main>
             </div>
         </MainLayout>
