@@ -61,57 +61,62 @@ export default function LoginPage() {
 
   return (
     <AuthRedirect to="/" condition="is-auth">
-      <div className="flex items-center justify-center min-h-full py-12">
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
         <div className="w-full max-w-sm">
-            <Card className="rounded-3xl shadow-2xl overflow-hidden border-none">
-              <div className="relative h-48 w-full">
-                <Image 
-                  src="https://picsum.photos/seed/makeup/600/400"
-                  alt="Makeup items"
-                  layout="fill"
-                  objectFit="cover"
-                  data-ai-hint="makeup cosmetics"
-                />
-              </div>
-              <CardContent className="p-8 text-center bg-card">
-                 <h1 className="text-4xl font-bold font-headline text-primary mb-2">HELLO!</h1>
-                 <p className="text-muted-foreground mb-8">Find the best beauty services near you.</p>
+            <div className="relative h-48 w-full rounded-t-3xl overflow-hidden">
+              <Image 
+                src="https://picsum.photos/seed/makeup/600/400"
+                alt="Makeup items"
+                layout="fill"
+                objectFit="cover"
+                data-ai-hint="makeup cosmetics"
+              />
+            </div>
+            <Card className="rounded-b-3xl shadow-2xl border-none pt-8">
+              <CardContent className="relative p-8 text-center bg-card">
+                 <div className="absolute top-0 left-0 w-32 h-32 bg-primary/10 rounded-full -translate-x-1/3 -translate-y-1/2"></div>
+                 <div className="absolute bottom-0 right-0 w-48 h-48 bg-primary/10 rounded-full translate-x-1/4 translate-y-1/4"></div>
 
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 text-left">
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input placeholder="Username" {...field} className="bg-secondary rounded-full border-none h-12 px-6" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input type="password" placeholder="Password" {...field} className="bg-secondary rounded-full border-none h-12 px-6" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button type="submit" className="w-full rounded-full h-12 text-base" disabled={form.formState.isSubmitting}>
-                      {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
-                      Log In
-                    </Button>
-                  </form>
-                </Form>
-                 <Link href="/signup" className="mt-6 inline-block text-sm text-primary hover:underline">
-                  Create an account
-                </Link>
+                 <div className="relative z-10">
+                   <h1 className="text-5xl font-bold font-headline text-primary mb-2">HELLO!</h1>
+                   <p className="text-primary/80 mb-8">Find the best beauty services near you.</p>
+
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 text-left">
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input placeholder="Username" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 px-4 focus-visible:ring-primary/50" />
+                            </FormControl>
+                            <FormMessage className="text-destructive/80 text-xs"/>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input type="password" placeholder="Password" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 px-4 focus-visible:ring-primary/50" />
+                            </FormControl>
+                            <FormMessage className="text-destructive/80 text-xs"/>
+                          </FormItem>
+                        )}
+                      />
+                      <Button type="submit" className="w-full rounded-lg h-12 text-base bg-primary/90 hover:bg-primary text-primary-foreground" disabled={form.formState.isSubmitting}>
+                        {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
+                        Log In
+                      </Button>
+                    </form>
+                  </Form>
+                   <Link href="/signup" className="mt-6 inline-block text-sm text-primary/80 hover:underline">
+                    Create an account
+                  </Link>
+                </div>
               </CardContent>
             </Card>
         </div>
