@@ -1,7 +1,7 @@
 import admin from 'firebase-admin';
 
-let auth: admin.auth.Auth;
-let db: admin.firestore.Firestore;
+let auth: admin.auth.Auth | undefined;
+let db: admin.firestore.Firestore | undefined;
 
 if (!admin.apps.length) {
   const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
@@ -13,6 +13,8 @@ if (!admin.apps.length) {
         credential: admin.credential.cert(serviceAccount),
         databaseURL: 'https://abhay-67783-default-rtdb.firebaseio.com',
       });
+      auth = admin.auth();
+      db = admin.firestore();
     } catch (e) {
       console.error('Failed to parse Firebase service account key:', e);
     }
@@ -21,18 +23,10 @@ if (!admin.apps.length) {
       'Firebase Admin SDK service account not found. Skipping initialization.'
     );
   }
+} else {
+    auth = admin.auth();
+    db = admin.firestore();
 }
 
-// Only assign auth and db if the app was initialized
-if (admin.apps.length > 0) {
-  auth = admin.auth();
-  db = admin.firestore();
-} else {
-  // Provide mock instances if not initialized to prevent app from crashing on import
-  // @ts-ignore
-  auth = {};
-  // @ts-ignore
-  db = {};
-}
 
 export { auth, db };
