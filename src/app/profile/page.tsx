@@ -131,11 +131,9 @@ export default function ProfilePage() {
                 {user?.displayName && <h2 className="text-2xl font-bold">{user.displayName}</h2>}
 
 
-                <div className="w-full space-y-2 mt-6">
+                <div className="w-full space-y-3 mt-6">
                     {isAdmin && (
-                        <div className="mb-4">
-                            <ProfileMenuItem icon={UserCog} text="Admin Panel" href="/admin" />
-                        </div>
+                        <ProfileMenuItem icon={UserCog} text="Admin Panel" href="/admin" />
                     )}
                     <ProfileMenuItem icon={Pencil} text="Edit Profile" href="/profile/edit" />
                     <ProfileMenuItem icon={Sparkles} text="Help with AI" href="/ai-help" />
@@ -143,14 +141,14 @@ export default function ProfilePage() {
                     <ProfileMenuItem icon={Edit} text="Request For Edit" href="/request-edit" />
                     <ProfileMenuItem icon={HelpCircle} text="Help Center" href="/help-center" />
                     
-                    <div className="pt-2">
+                    <div className="pt-1">
                         <ProfileMenuItem icon={Shield} text="Privacy Policy" href="/privacy-policy"/>
                     </div>
                     <ProfileMenuItem icon={FileText} text="Terms & Conditions" href="/terms-and-conditions"/>
                     <ProfileMenuItem icon={Info} text="About Us" href="/about-us"/>
                     <ProfileMenuItem icon={Mail} text="Contact Us" href="/contact-us" />
 
-                    <div className="pt-4">
+                    <div className="pt-3">
                         <ProfileMenuItem icon={LogOut} text="Log Out" onClick={signOut} isLogout />
                     </div>
                 </div>
