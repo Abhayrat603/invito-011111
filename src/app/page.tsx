@@ -12,19 +12,26 @@ import { products, categories } from "@/lib/mock-data";
 import { ProductCard } from "@/components/product-card";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+
+const findImage = (id: string) => {
+    return PlaceHolderImages.find(img => img.id === id);
+}
 
 export default function EcommerceHomePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState(products);
 
   const [currentPage, setCurrentPage] = useState(0);
   const productsPerPage = 4;
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && user && !user.emailVerified) {
@@ -33,27 +40,21 @@ export default function EcommerceHomePage() {
   }, [user, loading, router]);
   
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentCategoryIndex(prevIndex => (prevIndex + 1) % categories.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    setCurrentPage(0); // Reset to first page on new search
-    if (query) {
-      const lowercasedQuery = query.toLowerCase();
-      const results = products.filter(product =>
+    let results = products;
+    if (searchQuery) {
+      const lowercasedQuery = searchQuery.toLowerCase();
+      results = results.filter(product =>
         product.name.toLowerCase().includes(lowercasedQuery) ||
         product.description.toLowerCase().includes(lowercasedQuery)
       );
-      setFilteredProducts(results);
-    } else {
-      setFilteredProducts(products);
     }
-  };
+    if (selectedCategory) {
+        results = results.filter(p => p.category === selectedCategory);
+    }
+
+    setFilteredProducts(results);
+    setCurrentPage(0); // Reset to first page on new search
+  }, [searchQuery, selectedCategory]);
 
   if (loading || (user && !user.emailVerified)) {
     return (
@@ -63,9 +64,6 @@ export default function EcommerceHomePage() {
     );
   }
 
-  const currentCategory = categories[currentCategoryIndex];
-  const productsInCategory = products.filter(p => p.category === currentCategory.name);
-  
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const displayedProducts = filteredProducts.slice(currentPage * productsPerPage, (currentPage + 1) * productsPerPage);
 
@@ -83,16 +81,16 @@ export default function EcommerceHomePage() {
       <MainLayout>
         <div className="bg-background text-foreground">
             <header className="p-4">
-                <h1 className="text-4xl font-bold text-center mb-4">Invite Designer</h1>
+                <h1 className="text-4xl font-bold text-center mb-4 font-headline text-primary">Invite Designer</h1>
                 <div className="relative">
                     <Input 
                         placeholder="Search for invitations..." 
                         className="bg-card border-border rounded-lg h-12 pl-4 pr-10 focus-visible:ring-primary/50" 
                         value={searchQuery}
-                        onChange={(e) => handleSearch(e.target.value)}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                     />
                     {searchQuery ? (
-                        <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full" onClick={() => handleSearch('')}>
+                        <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full" onClick={() => setSearchQuery('')}>
                             <X className="h-5 w-5 text-muted-foreground"/>
                         </Button>
                     ) : (
@@ -101,25 +99,44 @@ export default function EcommerceHomePage() {
                 </div>
             </header>
 
-            <main className="px-4 mt-4">
-                <section className="mb-8">
-                    <div className="bg-card p-3 rounded-lg shadow-sm flex items-center space-x-4">
-                        <div className="bg-gray-100 p-3 rounded-lg">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-                        </div>
-                        <div className="flex-grow">
-                            <div className="flex justify-between items-baseline">
-                                <h3 className="font-semibold text-foreground uppercase">{currentCategory.name}</h3>
-                                <span className="text-sm text-muted-foreground">({productsInCategory.length})</span>
-                            </div>
-                            <Link href="#">
-                                <div className="text-sm text-primary hover:underline">Show All</div>
-                            </Link>
-                        </div>
-                    </div>
+            <main className="pb-4">
+                <section className="mb-6">
+                    <ScrollArea className="w-full whitespace-nowrap">
+                      <div className="flex w-max space-x-2 p-4">
+                        {categories.map((category) => {
+                          const image = findImage(category.imageId);
+                          const isSelected = selectedCategory === category.name;
+                          return (
+                            <figure 
+                                key={category.name} 
+                                className={cn(
+                                    "shrink-0 rounded-full bg-secondary/80 flex items-center p-1.5 pr-5 gap-2 cursor-pointer transition-all duration-300",
+                                    isSelected ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : "hover:bg-secondary"
+                                )}
+                                onClick={() => setSelectedCategory(prev => prev === category.name ? null : category.name)}
+                            >
+                              <div className="relative h-10 w-10 shrink-0">
+                                <Image
+                                  src={image?.imageUrl || `https://picsum.photos/seed/${category.id}/100`}
+                                  alt={category.name}
+                                  layout="fill"
+                                  objectFit="cover"
+                                  className="rounded-full"
+                                  data-ai-hint={image?.imageHint}
+                                />
+                              </div>
+                              <figcaption className="text-sm font-medium text-foreground whitespace-nowrap">
+                                {category.name}
+                              </figcaption>
+                            </figure>
+                          );
+                        })}
+                      </div>
+                      <ScrollBar orientation="horizontal" />
+                    </ScrollArea>
                 </section>
 
-                <section>
+                <section className="px-4">
                     <h2 className="text-2xl font-bold text-center mb-6">{searchQuery ? `Results for "${searchQuery}"` : "Our Designs"}</h2>
                     
                     {displayedProducts.length > 0 ? (
@@ -143,8 +160,8 @@ export default function EcommerceHomePage() {
                         </>
                     ) : (
                         <div className="text-center py-10">
-                            <p className="text-lg text-muted-foreground">No results found.</p>
-                            <Button variant="link" onClick={() => handleSearch('')}>Clear search</Button>
+                            <p className="text-lg text-muted-foreground">{selectedCategory ? `No results found in ${selectedCategory}` : 'No results found.'}</p>
+                            <Button variant="link" onClick={() => { setSearchQuery(''); setSelectedCategory(null); }}>Clear filters</Button>
                         </div>
                     )}
                 </section>

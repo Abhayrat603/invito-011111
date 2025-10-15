@@ -97,28 +97,28 @@
       "imageHint": "boot sole"
     },
     {
-      "id": "category-apparel",
-      "description": "A collection of stylish activewear",
-      "imageUrl": "https://picsum.photos/seed/catapparel/600/600",
-      "imageHint": "activewear clothing"
+      "id": "category-wedding",
+      "description": "Elegant wedding invitation design",
+      "imageUrl": "https://picsum.photos/seed/cat-wedding/100/100",
+      "imageHint": "wedding invitation"
     },
     {
-      "id": "category-footwear",
-      "description": "An assortment of athletic shoes",
-      "imageUrl": "https://picsum.photos/seed/catfootwear/600/600",
-      "imageHint": "athletic shoes"
+      "id": "category-birthday",
+      "description": "Colorful birthday party balloons",
+      "imageUrl": "https://picsum.photos/seed/cat-birthday/100/100",
+      "imageHint": "birthday balloons"
     },
     {
-      "id": "category-accessories",
-      "description": "Various sports accessories like caps and backpacks",
-      "imageUrl": "https://picsum.photos/seed/catacc/600/600",
-      "imageHint": "sports accessories"
+      "id": "category-corporate",
+      "description": "Modern city skyline for corporate event",
+      "imageUrl": "https://picsum.photos/seed/cat-corp/100/100",
+      "imageHint": "city skyline"
     },
     {
-      "id": "category-gear",
-      "description": "Performance gear including water bottles and equipment",
-      "imageUrl": "https://picsum.photos/seed/catgear/600/600",
-      "imageHint": "fitness gear"
+      "id": "category-party",
+      "description": "Confetti and streamers for a party",
+      "imageUrl": "https://picsum.photos/seed/cat-party/100/100",
+      "imageHint": "party confetti"
     }
   ]
 }
