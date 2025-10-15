@@ -61,8 +61,12 @@ export default function ProfilePage() {
                     <div className="mb-2">
                         <ProfileMenuItem icon={User} text="My Account" href="#" />
                     </div>
-                    <ProfileMenuItem icon={Bell} text="Notifications" href="#" />
-                    <ProfileMenuItem icon={Settings} text="Settings" href="#" />
+                    <div className="mb-2">
+                        <ProfileMenuItem icon={Bell} text="Notifications" href="#" />
+                    </div>
+                    <div className="mb-2">
+                        <ProfileMenuItem icon={Settings} text="Settings" href="#" />
+                    </div>
                     <ProfileMenuItem icon={HelpCircle} text="Help Center" href="#" />
                     <ProfileMenuItem icon={LogOut} text="Log Out" onClick={signOut} isLogout />
                 </div>
