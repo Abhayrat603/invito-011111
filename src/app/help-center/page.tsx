@@ -25,11 +25,11 @@ export default function HelpCenterPage() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const scrollAreaRef = useRef<HTMLDivElement>(null);
+    const scrollViewportRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
-        if (scrollAreaRef.current) {
-            scrollAreaRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+        if (scrollViewportRef.current) {
+            scrollViewportRef.current.scrollTop = scrollViewportRef.current.scrollHeight;
         }
     }
 
@@ -90,8 +90,8 @@ export default function HelpCenterPage() {
                     <div className="w-10"></div>
                 </header>
                 <main className="flex-grow flex flex-col overflow-hidden bg-secondary/30">
-                    <ScrollArea className="flex-grow p-4">
-                         <div className="space-y-4" ref={scrollAreaRef}>
+                    <ScrollArea className="flex-grow p-4" viewportRef={scrollViewportRef}>
+                         <div className="space-y-2">
                             {messages.map((message, index) => (
                                 <div key={index} className={cn("flex items-end gap-3 w-full", message.role === 'user' ? 'justify-end' : 'justify-start')}>
                                     {message.role === 'model' && (
@@ -110,6 +110,7 @@ export default function HelpCenterPage() {
                                         <Avatar className="h-9 w-9 border-2 border-border">
                                             <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'User'}/>
                                             <AvatarFallback><User/></AvatarFallback>
+
                                         </Avatar>
                                     )}
                                 </div>
@@ -159,5 +160,3 @@ export default function HelpCenterPage() {
         </MainLayout>
     );
 }
-
-    
