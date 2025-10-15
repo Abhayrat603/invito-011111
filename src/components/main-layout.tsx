@@ -18,7 +18,7 @@ const NavItem = ({ href, icon: Icon, label, pathname, hasNotification }: { href:
     <Link href={href}>
         <div className={cn("flex flex-col items-center justify-center gap-1 relative", pathname === href ? "text-primary" : "text-muted-foreground")}>
             <Icon className="w-6 h-6" />
-            <span className="text-xs font-medium">{label}</span>
+            <span className="text-[10px] font-medium">{label}</span>
             {hasNotification && (
                 <div className="absolute top-0 right-1.5 w-4 h-4 bg-red-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
                     0
@@ -48,7 +48,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
        <Sheet>
         <SheetContent side="left" className="p-0 w-[70vw]">
-          <SheetTitle className="hidden">Menu</SheetTitle>
+          <SheetTitle className="sr-only">Menu</SheetTitle>
           <MenuPageContent />
         </SheetContent>
 
@@ -57,7 +57,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               <SheetTrigger asChild>
                 <div className="flex flex-col items-center justify-center gap-1 text-muted-foreground">
                     <MenuIcon className="w-6 h-6" />
-                    <span className="text-xs font-medium">Menu</span>
+                    <span className="text-[10px] font-medium">Menu</span>
                 </div>
               </SheetTrigger>
               {navItems.slice(1).map((item) => (
