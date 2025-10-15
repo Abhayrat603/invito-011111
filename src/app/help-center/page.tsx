@@ -27,16 +27,15 @@ export default function HelpCenterPage() {
     const [isLoading, setIsLoading] = useState(false);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
-    const viewport = useRef<HTMLDivElement>(null);
-
     const scrollToBottom = () => {
-        if (viewport.current) {
-            viewport.current.scrollTop = viewport.current.scrollHeight;
+        if (scrollAreaRef.current) {
+            scrollAreaRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
         }
     }
 
     useEffect(() => {
-        scrollToBottom();
+        // A slight delay to allow the new message to render before scrolling
+        setTimeout(scrollToBottom, 100);
     }, [messages]);
     
     useEffect(() => {
@@ -91,8 +90,8 @@ export default function HelpCenterPage() {
                     <div className="w-10"></div>
                 </header>
                 <main className="flex-grow flex flex-col overflow-hidden bg-secondary/30">
-                    <ScrollArea className="flex-grow p-4" viewportRef={viewport}>
-                         <div className="space-y-6">
+                    <ScrollArea className="flex-grow p-4">
+                         <div className="space-y-6" ref={scrollAreaRef}>
                             {messages.map((message, index) => (
                                 <div key={index} className={cn("flex items-end gap-3 w-full", message.role === 'user' ? 'justify-end' : 'justify-start')}>
                                     {message.role === 'model' && (
