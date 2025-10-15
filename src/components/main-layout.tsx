@@ -17,11 +17,11 @@ import { cn } from "@/lib/utils";
 
 const NavItem = ({ href, icon: Icon, label, pathname, hasNotification }: { href: string, icon: React.ElementType, label: string, pathname: string, hasNotification?: boolean }) => (
     <Link href={href}>
-        <div className={cn("flex flex-col items-center justify-center gap-1 relative", pathname === href ? "text-primary" : "text-muted-foreground")}>
+        <div className={cn("flex flex-col items-center justify-center gap-1 relative", pathname === href ? "text-primary" : "text-amber-900/60 dark:text-amber-200/70")}>
             <Icon className="w-5 h-5" />
             <span className="text-[10px] font-medium">{label}</span>
             {hasNotification && (
-                <div className="absolute top-0 right-1.5 w-4 h-4 bg-red-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                <div className="absolute top-0 right-1.5 w-4 h-4 bg-red-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                     0
                 </div>
             )}
@@ -57,7 +57,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         <footer className="fixed bottom-0 left-0 right-0 bg-card border-t max-w-md mx-auto">
             <div className="flex justify-around items-center h-16">
               <SheetTrigger asChild>
-                <div className="flex flex-col items-center justify-center gap-1 text-muted-foreground cursor-pointer">
+                <div className="flex flex-col items-center justify-center gap-1 text-muted-foreground cursor-pointer text-amber-900/60 dark:text-amber-200/70">
                     <MenuIcon className="w-5 h-5" />
                     <span className="text-[10px] font-medium">Menu</span>
                 </div>
