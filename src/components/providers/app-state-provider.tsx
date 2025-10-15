@@ -10,6 +10,8 @@ interface AppStateContextType {
   wishlist: WishlistItem[];
   addToCart: (productId: string, quantity?: number) => void;
   removeFromCart: (productId: string) => void;
+  increaseCartQuantity: (productId: string) => void;
+  decreaseCartQuantity: (productId: string) => void;
   toggleWishlist: (productId: string) => void;
   isInWishlist: (productId: string) => boolean;
 }
@@ -77,6 +79,32 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const increaseCartQuantity = (productId: string) => {
+    setCart(prevCart => {
+        return prevCart.map(item =>
+          item.productId === productId
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+    });
+  };
+
+  const decreaseCartQuantity = (productId: string) => {
+    setCart(prevCart => {
+        const existingItem = prevCart.find(item => item.productId === productId);
+        if (existingItem && existingItem.quantity > 1) {
+            return prevCart.map(item =>
+                item.productId === productId
+                ? { ...item, quantity: item.quantity - 1 }
+                : item
+            );
+        } else {
+            // Remove the item if quantity is 1 or less
+            return prevCart.filter(item => item.productId !== productId);
+        }
+    });
+  };
+
   const removeFromCart = (productId: string) => {
     setCart(prevCart => prevCart.filter(item => item.productId !== productId));
     toast({
@@ -99,7 +127,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     return wishlist.some(item => item.productId === productId);
   };
 
-  const value = { cart, wishlist, addToCart, removeFromCart, toggleWishlist, isInWishlist };
+  const value = { cart, wishlist, addToCart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, toggleWishlist, isInWishlist };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }

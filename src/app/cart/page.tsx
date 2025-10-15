@@ -4,7 +4,7 @@
 import { AuthRedirect } from "@/components/auth-redirect";
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { ArrowLeft, Trash2, Plus, Minus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/components/providers/app-state-provider";
 import Image from "next/image";
@@ -20,7 +20,7 @@ const findImage = (id: string) => {
 
 export default function CartPage() {
     const router = useRouter();
-    const { cart, removeFromCart } = useAppState();
+    const { cart, removeFromCart, increaseCartQuantity, decreaseCartQuantity } = useAppState();
 
     const cartProducts = cart.map(cartItem => {
         const product = allProducts.find(p => p.id === cartItem.productId);
@@ -41,8 +41,11 @@ export default function CartPage() {
 
           <main className="flex-grow p-4">
             {cartProducts.length === 0 ? (
-                <div className="flex items-center justify-center h-full">
-                    <p className="text-muted-foreground">Your cart is empty.</p>
+                <div className="flex flex-col items-center justify-center h-full">
+                    <p className="text-muted-foreground text-lg mb-4">Your cart is empty.</p>
+                    <Link href="/">
+                      <Button>Continue Shopping</Button>
+                    </Link>
                 </div>
             ) : (
                 <div className="space-y-4">
@@ -66,8 +69,16 @@ export default function CartPage() {
                                     <p className="font-bold text-lg mt-1">₹{product.price.toFixed(2)}</p>
                                 </div>
                                 <div className="flex flex-col items-end gap-2">
-                                     <p className="text-sm">Qty: {product.quantity}</p>
-                                    <Button variant="outline" size="icon" className="h-9 w-9 text-destructive" onClick={() => removeFromCart(product.id)}>
+                                     <div className="flex items-center gap-2">
+                                        <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => decreaseCartQuantity(product.id)}>
+                                            <Minus className="h-4 w-4"/>
+                                        </Button>
+                                        <span className="font-bold text-base w-5 text-center">{product.quantity}</span>
+                                        <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => increaseCartQuantity(product.id)}>
+                                            <Plus className="h-4 w-4"/>
+                                        </Button>
+                                     </div>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/70" onClick={() => removeFromCart(product.id)}>
                                         <Trash2 className="h-4 w-4"/>
                                     </Button>
                                 </div>
