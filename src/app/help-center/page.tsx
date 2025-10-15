@@ -77,8 +77,8 @@ export default function HelpCenterPage() {
 
 
     return (
-        <MainLayout>
-            <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col h-screen">
+        <MainLayout useAlternateLayout>
+            <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col h-full">
                 <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
                     <Button variant="ghost" size="icon" onClick={() => router.back()}>
                         <ArrowLeft />
@@ -89,7 +89,7 @@ export default function HelpCenterPage() {
                     </div>
                     <div className="w-10"></div>
                 </header>
-                <main className="flex-grow flex flex-col overflow-hidden bg-secondary/30">
+                <div className="flex-grow flex flex-col overflow-hidden bg-secondary/30">
                     <ScrollArea className="flex-grow p-4" viewportRef={scrollViewportRef}>
                          <div className="space-y-2">
                             {messages.map((message, index) => (
@@ -155,7 +155,7 @@ export default function HelpCenterPage() {
                             <p className="text-xs text-muted-foreground">Can't find your answer? <Link href="/contact-us" className="text-primary underline">Contact Support</Link></p>
                          </div>
                     </div>
-                </main>
+                </div>
             </div>
         </MainLayout>
     );

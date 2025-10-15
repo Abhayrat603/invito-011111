@@ -30,7 +30,7 @@ const NavItem = ({ href, icon: Icon, label, pathname, hasNotification }: { href:
 );
 
 
-export function MainLayout({ children }: { children: React.ReactNode }) {
+export function MainLayout({ children, useAlternateLayout = false }: { children: React.ReactNode, useAlternateLayout?: boolean }) {
   const pathname = usePathname();
 
   const navItems = [
@@ -40,6 +40,35 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     { href: "/wishlist", icon: Heart, label: "Wishlist", hasNotification: true },
     { href: "/profile", icon: User, label: "Profile" },
   ];
+  
+  if (useAlternateLayout || pathname === '/help-center') {
+    return (
+      <div className="w-full max-w-md mx-auto bg-background text-foreground h-screen flex flex-col">
+        {children}
+        <Sheet>
+          <SheetContent side="left" className="p-0 w-[85vw]">
+            <SheetTitle className="sr-only">Menu</SheetTitle>
+            <SheetDescription className="sr-only">The main navigation menu for the application.</SheetDescription>
+            <MenuPageContent />
+          </SheetContent>
+
+          <footer className="fixed bottom-0 left-0 right-0 bg-card border-t max-w-md mx-auto">
+              <div className="flex justify-around items-center h-16">
+                <SheetTrigger asChild>
+                  <div className="flex flex-col items-center justify-center gap-1 text-muted-foreground cursor-pointer text-amber-900/60 dark:text-amber-200/70">
+                      <MenuIcon className="w-5 h-5" />
+                      <span className="text-[10px] font-medium">Menu</span>
+                  </div>
+                </SheetTrigger>
+                {navItems.slice(1).map((item) => (
+                  <NavItem key={item.href} {...item} pathname={pathname} />
+                ))}
+              </div>
+          </footer>
+        </Sheet>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-md mx-auto bg-background text-foreground min-h-screen flex flex-col">
