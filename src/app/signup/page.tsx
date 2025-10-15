@@ -23,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { AuthRedirect } from "@/components/auth-redirect";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import { Loader2, Eye, EyeOff, User, Phone, Mail, Lock } from "lucide-react";
 import Image from "next/image";
 
 const formSchema = z.object({
@@ -98,7 +98,10 @@ export default function SignupPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <Input placeholder="Name" {...field} className="bg-secondary rounded-full border-none h-12 px-6" />
+                             <div className="relative">
+                               <User className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground opacity-50" />
+                               <Input placeholder="Name" {...field} className="bg-secondary rounded-full border-none h-12 pl-14" />
+                             </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -110,8 +113,9 @@ export default function SignupPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <div className="flex items-center bg-secondary rounded-full border-none h-12 px-6">
-                               <span className="text-foreground/80 pr-2">+91</span>
+                            <div className="relative flex items-center bg-secondary rounded-full border-none h-12 px-6">
+                               <Phone className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground opacity-50" />
+                               <span className="text-foreground/80 pl-10 pr-2">+91</span>
                                <Input placeholder="Phone Number" {...field} className="bg-transparent border-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0" />
                             </div>
                           </FormControl>
@@ -125,7 +129,10 @@ export default function SignupPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <Input placeholder="Email" {...field} className="bg-secondary rounded-full border-none h-12 px-6" />
+                             <div className="relative">
+                               <Mail className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground opacity-50" />
+                               <Input placeholder="Email" {...field} className="bg-secondary rounded-full border-none h-12 pl-14" />
+                             </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -138,7 +145,8 @@ export default function SignupPage() {
                         <FormItem>
                           <FormControl>
                             <div className="relative">
-                               <Input type={showPassword ? "text" : "password"} placeholder="Password" {...field} className="bg-secondary rounded-full border-none h-12 px-6 pr-12" />
+                               <Lock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground opacity-50" />
+                               <Input type={showPassword ? "text" : "password"} placeholder="Password" {...field} className="bg-secondary rounded-full border-none h-12 pl-14 pr-12" />
                                <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground/50 hover:bg-secondary" onClick={() => setShowPassword(p => !p)}>
                                 {showPassword ? <EyeOff className="h-5 w-5 opacity-50"/> : <Eye className="h-5 w-5 opacity-50"/>}
                                </Button>
@@ -155,7 +163,8 @@ export default function SignupPage() {
                         <FormItem>
                           <FormControl>
                              <div className="relative">
-                               <Input type={showPassword ? "text" : "password"} placeholder="Confirm Password" {...field} className="bg-secondary rounded-full border-none h-12 px-6 pr-12" />
+                               <Lock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground opacity-50" />
+                               <Input type={showPassword ? "text" : "password"} placeholder="Confirm Password" {...field} className="bg-secondary rounded-full border-none h-12 pl-14 pr-12" />
                                <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground/50 hover:bg-secondary" onClick={() => setShowPassword(p => !p)}>
                                 {showPassword ? <EyeOff className="h-5 w-5 opacity-50"/> : <Eye className="h-5 w-5 opacity-50"/>}
                                </Button>

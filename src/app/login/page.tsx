@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { AuthRedirect } from "@/components/auth-redirect";
-import { Loader2 } from "lucide-react";
+import { Loader2, User, Lock } from "lucide-react";
 import Image from "next/image";
 
 const formSchema = z.object({
@@ -90,7 +90,10 @@ export default function LoginPage() {
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
-                              <Input placeholder="Username" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 px-4 focus-visible:ring-primary/50" />
+                              <div className="relative">
+                                <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 opacity-50" />
+                                <Input placeholder="Username" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 pl-12 pr-4 focus-visible:ring-primary/50" />
+                              </div>
                             </FormControl>
                             <FormMessage className="text-destructive/80 text-xs"/>
                           </FormItem>
@@ -102,14 +105,17 @@ export default function LoginPage() {
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
-                              <Input type="password" placeholder="Password" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 px-4 focus-visible:ring-primary/50" />
+                               <div className="relative">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 opacity-50" />
+                                <Input type="password" placeholder="Password" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 pl-12 pr-4 focus-visible:ring-primary/50" />
+                              </div>
                             </FormControl>
                             <FormMessage className="text-destructive/80 text-xs"/>
                           </FormItem>
                         )}
                       />
                       <div className="text-right">
-                        <Link href="#" className="text-sm text-primary/80 hover:underline">
+                        <Link href="/forgot-password" className="text-sm text-primary/80 hover:underline">
                             Forgot Password?
                         </Link>
                       </div>

@@ -1,7 +1,8 @@
+
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendEmailVerification, type User } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendEmailVerification, sendPasswordResetEmail, type User } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { app } from '@/lib/firebase';
 import { createSessionCookie, clearSessionCookie } from '@/lib/actions';
@@ -13,6 +14,7 @@ interface AuthContextType {
   signIn: (email: string, pass: string) => Promise<any>;
   signOut: () => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
+  sendPasswordReset: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -61,8 +63,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const sendPasswordReset = (email: string) => {
+    return sendPasswordResetEmail(auth, email);
+  }
 
-  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail };
+
+  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
