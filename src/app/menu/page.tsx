@@ -2,27 +2,36 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Facebook, Instagram, Mail } from "lucide-react";
+import { ChevronRight, Facebook, Instagram, Mail, Heart, Gift, School, Building, PartyPopper, CalendarDays, Edit, Clapperboard, Star, Info, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SheetClose } from "@/components/ui/sheet";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+
+const Home = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+);
 
 const menuItems = [
-    { name: "Wedding Invitation", href: "#" },
-    { name: "Birthday Invitation", href: "#" },
-    { name: "Engagement Invitation", href: "#" },
-    { name: "Anniversary Invitation", href: "#" },
-    { name: "Housewarming Invitation", href: "#" },
-    { name: "Baby Shower Invitation", href: "#" },
-    { name: "Graduation Invitation", href: "#" },
-    { name: "Corporate Invitation", href: "#" },
-    { name: "Party Invitation", href: "#" },
-    { name: "E-Invite / Digital Invitation", href: "#" },
-    { name: "Save-the-Date Card", href: "#" },
-    { name: "Formal Invitation", href: "#" },
-    { name: "Casual Invitation", href: "#" },
-    { name: "Handmade Invitation", href: "#" },
-    { name: "Poster Presentation", href: "#" },
-    { name: "Wedding Invitation Video", href: "#" },
+    { name: "Wedding Invitation", href: "#", icon: Heart },
+    { name: "Birthday Invitation", href: "#", icon: Gift },
+    { name: "Engagement Invitation", href: "#", icon: Star },
+    { name: "Anniversary Invitation", href: "#", icon: CalendarDays },
+    { name: "Housewarming Invitation", href: "#", icon: Home },
+    { name: "Baby Shower Invitation", href: "#", icon: Clapperboard },
+    { name: "Graduation Invitation", href: "#", icon: School },
+    { name: "Corporate Invitation", href: "#", icon: Building },
+    { name: "Party Invitation", href: "#", icon: PartyPopper },
+    { name: "E-Invite / Digital Invitation", href: "#", icon: Mail },
+    { name: "Save-the-Date Card", href: "#", icon: CalendarDays },
+    { name: "Formal Invitation", href: "#", icon: Info },
+    { name: "Casual Invitation", href: "#", icon: PartyPopper },
+    { name: "Handmade Invitation", href: "#", icon: Edit },
+    { name: "Poster Presentation", href: "#", icon: FileText },
+    { name: "Wedding Invitation Video", href: "#", icon: Clapperboard },
 ];
 
 const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -44,6 +53,7 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 
 export function MenuPageContent() {
+    const pathname = usePathname();
     return (
         <div className="w-full h-full bg-background text-foreground flex flex-col">
             <header className="p-4 flex justify-between items-center border-b">
@@ -52,13 +62,19 @@ export function MenuPageContent() {
 
             <main className="flex-grow p-4 overflow-y-auto">
               <nav className="flex flex-col h-full">
-                <ul className="flex-grow space-y-2">
+                <ul className="flex-grow space-y-1">
                     {menuItems.map((item) => (
-                        <li key={item.name} className="border-b">
+                        <li key={item.name}>
                             <SheetClose asChild>
                                 <Link href={item.href} passHref>
-                                    <div className="flex justify-between items-center py-4 text-lg">
-                                        <span>{item.name}</span>
+                                    <div className={cn(
+                                        "flex justify-between items-center py-3 px-3 text-base rounded-md transition-colors",
+                                        pathname === item.href ? "bg-primary/10 text-primary font-semibold" : "hover:bg-accent"
+                                    )}>
+                                        <div className="flex items-center">
+                                            <item.icon className="h-5 w-5 mr-3 text-primary/80" />
+                                            <span>{item.name}</span>
+                                        </div>
                                         <ChevronRight className="h-5 w-5 text-muted-foreground" />
                                     </div>
                                 </Link>
@@ -67,7 +83,7 @@ export function MenuPageContent() {
                     ))}
                 </ul>
                 
-                <div className="flex justify-center items-center space-x-4 py-4">
+                <div className="flex justify-center items-center space-x-4 py-4 mt-4 border-t">
                     <Button variant="ghost" size="icon" className="bg-secondary rounded-full">
                         <Mail className="h-5 w-5 text-muted-foreground" />
                     </Button>

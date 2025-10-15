@@ -4,7 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AuthRedirect } from "@/components/auth-redirect";
-import { Search } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MainLayout } from "@/components/main-layout";
@@ -19,6 +19,8 @@ export default function EcommerceHomePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const productsPerPage = 4;
 
   useEffect(() => {
     if (!loading && user && !user.emailVerified) {
@@ -44,6 +46,18 @@ export default function EcommerceHomePage() {
 
   const currentCategory = categories[currentCategoryIndex];
   const productsInCategory = products.filter(p => p.category === currentCategory.name);
+  
+  const totalPages = Math.ceil(products.length / productsPerPage);
+  const displayedProducts = products.slice(currentPage * productsPerPage, (currentPage + 1) * productsPerPage);
+
+  const handleNext = () => {
+    setCurrentPage((prev) => (prev + 1) % totalPages);
+  };
+
+  const handlePrev = () => {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+  };
+
 
   return (
     <AuthRedirect to="/login" condition="is-not-auth">
@@ -95,9 +109,18 @@ export default function EcommerceHomePage() {
                 <section>
                     <h2 className="text-2xl font-bold text-center mb-6">Our Designs</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {products.slice(0, 4).map((product, index) => (
+                        {displayedProducts.map((product, index) => (
                            <ProductCard key={product.id} product={product} onSale={index % 2 === 0} />
                         ))}
+                    </div>
+
+                    <div className="flex justify-between items-center p-4 mt-4">
+                        <Button variant="outline" onClick={handlePrev}>
+                            <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+                        </Button>
+                        <Button variant="outline" onClick={handleNext}>
+                            Next <ChevronRight className="ml-2 h-4 w-4" />
+                        </Button>
                     </div>
                 </section>
             </main>

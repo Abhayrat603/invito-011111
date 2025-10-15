@@ -27,14 +27,10 @@ export default function ProductDetailPage() {
   const { addToCart, toggleWishlist, isInWishlist } = useAppState();
   const { toast } = useToast();
 
-  const productIndex = products.findIndex(p => p.slug === slug);
-  const product = products[productIndex];
+  const product = products.find(p => p.slug === slug);
   
   const [quantity, setQuantity] = useState(1);
   
-  const prevProduct = productIndex > 0 ? products[productIndex - 1] : products[products.length - 1];
-  const nextProduct = productIndex < products.length - 1 ? products[productIndex + 1] : products[0];
-
 
   if (!product) {
     return (
@@ -127,11 +123,11 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            <div className="flex items-stretch gap-2">
-                <Button size="lg" className="flex-1 bg-amber-800 hover:bg-amber-900 h-11 min-w-[100px] text-xs px-2" onClick={handleAddToCart}>
+            <div className="flex flex-wrap items-stretch gap-2">
+                <Button size="sm" className="flex-1 bg-amber-800 hover:bg-amber-900 h-11 min-w-[100px] text-xs px-2" onClick={handleAddToCart}>
                     <Download className="mr-1.5 h-4 w-4" /> Download
                 </Button>
-                <Button size="lg" variant="outline" className="flex-1 h-11 min-w-[100px] text-xs px-2" onClick={handleAddToCart}>Buy now</Button>
+                <Button size="sm" variant="outline" className="flex-1 h-11 min-w-[100px] text-xs px-2" onClick={handleAddToCart}>Buy now</Button>
                 <Button variant="outline" size="icon" className="h-11 w-11 shrink-0" onClick={handleToggleWishlist}>
                     <Heart className={`h-5 w-5 ${isLiked ? 'text-red-500 fill-current' : ''}`} />
                 </Button>
@@ -175,20 +171,6 @@ export default function ProductDetailPage() {
              </ul>
           </div>
         </main>
-
-        <div className="flex justify-between items-center p-4 border-t sticky bottom-0 bg-background z-10">
-            <Link href={`/products/${prevProduct.slug}`} passHref>
-                <Button variant="outline">
-                    <ChevronLeft className="mr-2 h-4 w-4" /> Previous
-                </Button>
-            </Link>
-            <Link href={`/products/${nextProduct.slug}`} passHref>
-                <Button variant="outline">
-                    Next <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
-            </Link>
-        </div>
-
       </div>
     </MainLayout>
   );
