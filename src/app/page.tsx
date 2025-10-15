@@ -28,19 +28,21 @@ export default function ServicesPage() {
         </header>
 
         <main className="p-4">
-          <section className="relative mb-6 rounded-2xl overflow-hidden shadow-lg">
-            <div className="relative h-64 w-full">
-               <Image src="https://picsum.photos/seed/fashion-sale/600/400" layout="fill" objectFit="cover" alt="Fashion Sale" data-ai-hint="fashion models" />
-               <div className="absolute inset-0 bg-black/20"></div>
-            </div>
-            <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white p-4">
-                <div className="bg-white/80 backdrop-blur-sm p-6 rounded-lg text-card-foreground">
-                    <p className="font-semibold text-primary">Trending Item</p>
-                    <h2 className="text-3xl font-bold my-2 leading-tight">WOMEN'S LATEST<br/>FASHION SALE</h2>
-                    <Button className="mt-4 bg-primary text-primary-foreground rounded-lg">SHOP NOW</Button>
-                </div>
-            </div>
-          </section>
+          <Link href="#">
+            <section className="relative mb-6 rounded-2xl overflow-hidden shadow-lg">
+              <div className="relative h-64 w-full">
+                 <Image src="https://picsum.photos/seed/fashion-sale/600/400" layout="fill" objectFit="cover" alt="Fashion Sale" data-ai-hint="fashion models" />
+                 <div className="absolute inset-0 bg-black/20"></div>
+              </div>
+              <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white p-4">
+                  <div className="bg-white/80 backdrop-blur-sm p-6 rounded-lg text-card-foreground">
+                      <p className="font-semibold text-primary">Trending Item</p>
+                      <h2 className="text-3xl font-bold my-2 leading-tight">WOMEN'S LATEST<br/>FASHION SALE</h2>
+                      <Button className="mt-4 bg-primary text-primary-foreground rounded-lg">SHOP NOW</Button>
+                  </div>
+              </div>
+            </section>
+          </Link>
 
           <section>
             <div className="space-y-3">
@@ -65,21 +67,21 @@ export default function ServicesPage() {
         <footer className="fixed bottom-0 left-0 right-0 bg-card border-t border-border max-w-md mx-auto">
           <div className="flex justify-around items-center h-16">
             <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground">
-              <Menu className="h-6 w-6"/>
+              <Menu className="h-7 w-7"/>
             </Button>
             <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground relative">
-              <ShoppingBag className="h-6 w-6"/>
+              <ShoppingBag className="h-7 w-7"/>
               <span className="absolute top-0 right-0 -mt-1 -mr-1 block h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs font-bold">0</span>
             </Button>
             <Button variant="ghost" className="flex flex-col h-auto p-1 text-primary">
-              <Home className="h-6 w-6"/>
+              <Home className="h-7 w-7"/>
             </Button>
             <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground relative">
-              <Heart className="h-6 w-6"/>
+              <Heart className="h-7 w-7"/>
                <span className="absolute top-0 right-0 -mt-1 -mr-1 block h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs font-bold">0</span>
             </Button>
             <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground">
-              <LayoutGrid className="h-6 w-6"/>
+              <LayoutGrid className="h-7 w-7"/>
             </Button>
           </div>
         </footer>
