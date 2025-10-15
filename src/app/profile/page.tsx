@@ -133,7 +133,7 @@ export default function ProfilePage() {
 
                 <div className="w-full space-y-3 mt-6">
                     {isAdmin && (
-                        <div className="mb-4">
+                        <div className="mb-2">
                             <ProfileMenuItem icon={UserCog} text="Admin Panel" href="/admin" />
                         </div>
                     )}
