@@ -35,25 +35,28 @@ export default function EcommerceHomePage() {
 
   const scrollViewportRef = useRef<HTMLDivElement>(null);
   const isHoveringRef = useRef(false);
+  const animationFrameIdRef = useRef<number>();
+  let frameCount = 0; // To slow down the animation
 
   useEffect(() => {
     const scrollEl = scrollViewportRef.current;
     if (!scrollEl) return;
 
-    let animationFrameId: number;
-
     const scroll = () => {
-      if (!isHoveringRef.current) {
-        if (scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth) {
-          scrollEl.scrollLeft = 0;
-        } else {
-          scrollEl.scrollLeft += 1;
-        }
+      frameCount++;
+      if (frameCount % 2 === 0) { // Only scroll every 2nd frame
+          if (!isHoveringRef.current) {
+            if (scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth) {
+              scrollEl.scrollLeft = 0;
+            } else {
+              scrollEl.scrollLeft += 1; // Slow scroll amount
+            }
+          }
       }
-      animationFrameId = requestAnimationFrame(scroll);
+      animationFrameIdRef.current = requestAnimationFrame(scroll);
     };
 
-    animationFrameId = requestAnimationFrame(scroll);
+    animationFrameIdRef.current = requestAnimationFrame(scroll);
 
     const handleMouseEnter = () => { isHoveringRef.current = true; };
     const handleMouseLeave = () => { isHoveringRef.current = false; };
@@ -65,7 +68,9 @@ export default function EcommerceHomePage() {
 
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameIdRef.current) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+      }
       if (scrollEl) {
         scrollEl.removeEventListener('mouseenter', handleMouseEnter);
         scrollEl.removeEventListener('mouseleave', handleMouseLeave);
@@ -121,7 +126,6 @@ export default function EcommerceHomePage() {
     setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
   };
 
-
   return (
     <MainLayout>
       <AuthRedirect to="/login" condition="is-not-auth">
@@ -143,6 +147,7 @@ export default function EcommerceHomePage() {
                           <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"/>
                       )}
                   </div>
+                   <h2 className="text-lg font-semibold text-center mt-4 mb-2 whitespace-nowrap text-muted-foreground">Trending Invitation Card</h2>
               </header>
 
               <main className="pb-4">
@@ -181,8 +186,6 @@ export default function EcommerceHomePage() {
                         <ScrollBar orientation="horizontal" />
                       </ScrollArea>
                   </section>
-                  
-                  <h2 className="text-xl font-bold text-center mb-6 whitespace-nowrap">{searchQuery ? `Results for "${searchQuery}"` : (selectedCategory ? selectedCategory : "Trending Inovation Card")}</h2>
                   
                   <section className="px-4">
                       {displayedProducts.length > 0 ? (
