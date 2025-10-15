@@ -6,6 +6,7 @@ import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWith
 import { useRouter } from 'next/navigation';
 import { app } from '@/lib/firebase';
 import { createSessionCookie, clearSessionCookie } from '@/lib/actions';
+import { useToast } from '@/hooks/use-toast';
 
 interface AuthContextType {
   user: User | null;
@@ -24,15 +25,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const auth = getAuth(app);
+  const { toast } = useToast();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      
+      const isJustVerified = user && user.emailVerified && !auth.currentUser?.emailVerified;
+      
       setUser(user);
       setLoading(false);
+      
       if(user) {
         if (user.emailVerified) {
-            const idToken = await user.getIdToken();
+            const idToken = await user.getIdToken(true); // Force refresh
             await createSessionCookie(idToken);
+            if (isJustVerified) {
+                 toast({
+                    title: "Verification Successful!",
+                    description: "Your email has been verified. Welcome!",
+                });
+            }
         }
       } else {
         await clearSessionCookie();
@@ -40,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, [auth]);
+  }, [auth, toast]);
 
   const signUp = (email: string, pass: string) => {
     return createUserWithEmailAndPassword(auth, email, pass);

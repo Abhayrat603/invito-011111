@@ -8,56 +8,73 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, MailCheck } from "lucide-react";
+import { getAuth, reload } from "firebase/auth";
 
 const RESEND_TIMEOUT = 60; // seconds
 
 export default function VerifyEmailPage() {
-  const { user, signOut, sendVerificationEmail, loading } = useAuth();
+  const { user, sendVerificationEmail, loading } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
   const [countdown, setCountdown] = useState(RESEND_TIMEOUT);
   const [isResending, setIsResending] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    if (!loading && user && user.emailVerified) {
-      router.push("/");
-    }
-  }, [user, loading, router]);
-  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCountdown((currentCountdown) => {
-        if (currentCountdown <= 1) {
+    const auth = getAuth();
+    
+    // Periodically check the user's email verification status
+    const interval = setInterval(async () => {
+      if (auth.currentUser) {
+        await reload(auth.currentUser);
+        if (auth.currentUser.emailVerified) {
           clearInterval(interval);
-          return 0;
+          toast({
+            title: "Verification Successful!",
+            description: "Your email has been verified. Welcome!",
+          });
+          router.push("/");
         }
-        return currentCountdown - 1;
-      });
-    }, 1000);
+      }
+    }, 3000); // Check every 3 seconds
+
+    if (!loading) {
+        setIsChecking(false);
+        if (user?.emailVerified) {
+            clearInterval(interval);
+            router.push("/");
+        }
+    }
 
     return () => clearInterval(interval);
-  }, []);
-
-  const handleResendEmail = async () => {
-    if (countdown > 0) return;
-    setIsResending(true);
-    try {
-      await sendVerificationEmail();
-      toast({
-        title: "Email Sent",
-        description: "A new verification email has been sent to your address.",
-      });
-      setCountdown(RESEND_TIMEOUT);
-      // Restart countdown
-      const interval = setInterval(() => {
+  }, [user, loading, router, toast]);
+  
+  useEffect(() => {
+    let countdownInterval: NodeJS.Timeout;
+    if (countdown > 0) {
+      countdownInterval = setInterval(() => {
         setCountdown((currentCountdown) => {
           if (currentCountdown <= 1) {
-            clearInterval(interval);
+            clearInterval(countdownInterval);
             return 0;
           }
           return currentCountdown - 1;
         });
       }, 1000);
+    }
+    return () => clearInterval(countdownInterval);
+  }, [countdown]);
+
+  const handleResendEmail = async () => {
+    if (countdown > 0 || isResending) return;
+    setIsResending(true);
+    try {
+      await sendVerificationEmail();
+      toast({
+        title: "Email Sent",
+        description: "A new verification email has been sent.",
+      });
+      setCountdown(RESEND_TIMEOUT);
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -69,7 +86,7 @@ export default function VerifyEmailPage() {
     }
   };
 
-  if (loading) {
+  if (loading || isChecking) {
     return (
         <div className="flex items-center justify-center min-h-screen">
             <Loader2 className="h-8 w-8 animate-spin" />
@@ -86,7 +103,7 @@ export default function VerifyEmailPage() {
             </div>
           <CardTitle className="text-2xl font-bold">Verify Your Email</CardTitle>
           <CardDescription>
-            We've sent a verification link to <span className="font-semibold text-primary">{user?.email}</span>. Please check your inbox and follow the link to activate your account.
+            We've sent a verification link to <span className="font-semibold text-primary">{user?.email}</span>. Please check your inbox (and spam folder) and follow the link to activate your account.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
