@@ -17,7 +17,7 @@ export default function EcommerceHomePage() {
       <MainLayout>
         <div className="bg-background text-foreground">
             <header className="p-4">
-                <h1 className="text-4xl font-bold text-center mb-4">Anon</h1>
+                <h1 className="text-4xl font-bold text-center mb-4">Night Fury</h1>
                 <div className="relative">
                     <Input placeholder="Enter your product name..." className="bg-card border-border rounded-lg h-12 pl-4 pr-10 focus-visible:ring-primary/50" />
                     <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"/>
@@ -61,11 +61,9 @@ export default function EcommerceHomePage() {
 
                 <section>
                     <h2 className="text-2xl font-bold text-center mb-6">Our Products</h2>
-                    <div className="flex overflow-x-auto space-x-4 pb-4">
+                    <div className="space-y-4">
                         {products.slice(0, 4).map((product, index) => (
-                           <div key={product.id} className="min-w-[180px] flex-shrink-0">
-                             <ProductCard product={product} onSale={index === 2} />
-                           </div>
+                           <ProductCard key={product.id} product={product} onSale={index === 2} />
                         ))}
                     </div>
                 </section>
