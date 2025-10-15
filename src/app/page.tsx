@@ -132,8 +132,8 @@ export default function EcommerceHomePage() {
 
 
   return (
-    <AuthRedirect to="/login" condition="is-not-auth">
-      <MainLayout>
+    <MainLayout>
+      <AuthRedirect to="/login" condition="is-not-auth">
         <div className="bg-background text-foreground">
               <header className="p-4">
                   <h1 className="text-4xl font-bold text-center mb-4 font-headline text-primary">Invite Designer</h1>
@@ -222,7 +222,7 @@ export default function EcommerceHomePage() {
                   </section>
               </main>
           </div>
-        </MainLayout>
-    </AuthRedirect>
+      </AuthRedirect>
+    </MainLayout>
   );
 }
