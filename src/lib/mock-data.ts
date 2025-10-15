@@ -1,4 +1,4 @@
-import type { Product, Category } from './types';
+import type { Product, Category, EditRequest } from './types';
 
 export const categories: Category[] = [
   { id: 'cat1', name: 'Wedding Invitations', imageId: 'category-wedding' },
@@ -93,7 +93,7 @@ export const products: Product[] = [
     slug: 'shop-visiting-card',
     name: 'Shop Visiting Card',
     description: 'A professional and eye-catching visiting card for your shop. Designed in a modern, attractive style.',
-    price: 10.00,
+    price: 10,
     images: ['product-visiting-card-1', 'product-visiting-card-2'],
     category: 'Corporate Events',
     createdAt: new Date(),
@@ -108,4 +108,43 @@ export const products: Product[] = [
     category: 'Wedding Invitations',
     createdAt: new Date(),
   }
+];
+
+export const editRequests: EditRequest[] = [
+  {
+    id: 'req1',
+    productId: 'prod1',
+    productName: 'Classic Wedding',
+    requestDetails: 'Please change the main font to "Great Vibes" and the wedding date to October 26, 2024.',
+    status: 'Approved',
+    requestedAt: new Date('2023-10-01T10:00:00Z'),
+    updatedAt: new Date('2023-10-01T18:30:00Z'),
+  },
+  {
+    id: 'req2',
+    productId: 'prod2',
+    productName: 'Modern Birthday Bash',
+    requestDetails: 'Can you change the age from "30th" to "40th" and use a blue color scheme instead of pink?',
+    status: 'Pending',
+    requestedAt: new Date('2023-10-05T14:15:00Z'),
+    updatedAt: new Date('2023-10-05T14:15:00Z'),
+  },
+  {
+    id: 'req3',
+    productId: 'prod3',
+    productName: 'Corporate Gala Invite',
+    requestDetails: 'Add our company logo to the top right corner. I have emailed it to you.',
+    status: 'Pending',
+    requestedAt: new Date('2023-10-06T09:00:00Z'),
+    updatedAt: new Date('2023-10-06T09:00:00Z'),
+  },
+  {
+    id: 'req4',
+    productId: 'prod4',
+    productName: 'Summer Pool Party',
+    requestDetails: 'This request is not feasible. Please add a unicorn that flies across the card.',
+    status: 'Rejected',
+    requestedAt: new Date('2023-09-28T11:00:00Z'),
+    updatedAt: new Date('2023-09-29T16:45:00Z'),
+  },
 ];

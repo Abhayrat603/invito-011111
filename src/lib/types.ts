@@ -29,6 +29,7 @@ export interface CartItem {
 
 export interface WishlistItem {
   productId: string;
+
   addedAt: Date;
 }
 
@@ -50,4 +51,14 @@ export interface Order {
     total: number;
     status: 'placed' | 'shipped' | 'delivered' | 'cancelled';
     createdAt: Date;
+}
+
+export interface EditRequest {
+  id: string;
+  productName: string;
+  productId: string;
+  requestDetails: string;
+  status: 'Pending' | 'Approved' | 'Rejected';
+  requestedAt: Date;
+  updatedAt: Date;
 }
