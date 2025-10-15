@@ -131,7 +131,7 @@ export default function ProfilePage() {
                 {user?.displayName && <h2 className="text-2xl font-bold">{user.displayName}</h2>}
 
 
-                <div className="w-full space-y-3 mt-6">
+                <div className="w-full space-y-2 mt-6">
                     {isAdmin && (
                         <div className="mb-2">
                             <ProfileMenuItem icon={UserCog} text="Admin Panel" href="/admin" />
@@ -151,10 +151,12 @@ export default function ProfilePage() {
                         <ProfileMenuItem icon={HelpCircle} text="Help Center" href="/help-center" />
                     </div>
                     
-                    <div className="pt-1">
+                    <div className="pt-1 mb-2">
                         <ProfileMenuItem icon={Shield} text="Privacy Policy" href="/privacy-policy"/>
                     </div>
-                    <ProfileMenuItem icon={FileText} text="Terms & Conditions" href="/terms-and-conditions"/>
+                     <div className="mb-2">
+                        <ProfileMenuItem icon={FileText} text="Terms & Conditions" href="/terms-and-conditions"/>
+                    </div>
                     <ProfileMenuItem icon={Info} text="About Us" href="/about-us"/>
                     <ProfileMenuItem icon={Mail} text="Contact Us" href="/contact-us" />
 
