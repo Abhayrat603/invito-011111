@@ -2,27 +2,27 @@
 "use client";
 
 import Link from "next/link";
-import { X, Plus, ChevronLeft, Facebook, Instagram, Mail } from "lucide-react";
+import { X, Plus, ChevronRight, Facebook, Instagram, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SheetClose } from "@/components/ui/sheet";
 
 const menuItems = [
-    { name: "Wedding Invitation", href: "#", expandable: false },
-    { name: "Birthday Invitation", href: "#", expandable: false },
-    { name: "Engagement Invitation", href: "#", expandable: false },
-    { name: "Anniversary Invitation", href: "#", expandable: false },
-    { name: "Housewarming Invitation", href: "#", expandable: false },
-    { name: "Baby Shower Invitation", href: "#", expandable: false },
-    { name: "Graduation Invitation", href: "#", expandable: false },
-    { name: "Corporate Invitation", href: "#", expandable: false },
-    { name: "Party Invitation", href: "#", expandable: false },
-    { name: "E-Invite / Digital Invitation", href: "#", expandable: false },
-    { name: "Save-the-Date Card", href: "#", expandable: false },
-    { name: "Formal Invitation", href: "#", expandable: false },
-    { name: "Casual Invitation", href: "#", expandable: false },
-    { name: "Handmade Invitation", href: "#", expandable: false },
-    { name: "Poster Presentation", href: "#", expandable: false },
-    { name: "Wedding Invitation Video", href: "#", expandable: false },
+    { name: "Wedding Invitation", href: "#" },
+    { name: "Birthday Invitation", href: "#" },
+    { name: "Engagement Invitation", href: "#" },
+    { name: "Anniversary Invitation", href: "#" },
+    { name: "Housewarming Invitation", href: "#" },
+    { name: "Baby Shower Invitation", href: "#" },
+    { name: "Graduation Invitation", href: "#" },
+    { name: "Corporate Invitation", href: "#" },
+    { name: "Party Invitation", href: "#" },
+    { name: "E-Invite / Digital Invitation", href: "#" },
+    { name: "Save-the-Date Card", href: "#" },
+    { name: "Formal Invitation", href: "#" },
+    { name: "Casual Invitation", href: "#" },
+    { name: "Handmade Invitation", href: "#" },
+    { name: "Poster Presentation", href: "#" },
+    { name: "Wedding Invitation Video", href: "#" },
 ];
 
 const settingsItems = [
@@ -63,7 +63,7 @@ export function MenuPageContent() {
                             <Link href={item.href} passHref>
                                 <div className="flex justify-between items-center py-4 text-lg">
                                     <span>{item.name}</span>
-                                    {item.expandable && <Plus className="h-5 w-5 text-muted-foreground" />}
+                                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
                                 </div>
                             </Link>
                         </li>
@@ -75,7 +75,7 @@ export function MenuPageContent() {
                         <Link href={item.href} key={item.name}>
                             <div className="flex justify-between items-center py-3 text-lg">
                                 <span>{item.name}</span>
-                                <ChevronLeft className="h-5 w-5 text-muted-foreground" />
+                                <ChevronRight className="h-5 w-5 text-muted-foreground" />
                             </div>
                         </Link>
                      ))}
