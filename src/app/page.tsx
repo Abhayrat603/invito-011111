@@ -65,24 +65,34 @@ export default function ServicesPage() {
         </main>
 
         <footer className="fixed bottom-0 left-0 right-0 bg-card border-t border-border max-w-md mx-auto">
-          <div className="flex justify-around items-center h-16">
-            <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground">
-              <Menu className="h-7 w-7"/>
-            </Button>
-            <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground relative">
-              <ShoppingBag className="h-7 w-7"/>
-              <span className="absolute top-0 right-0 -mt-1 -mr-1 block h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs font-bold">0</span>
-            </Button>
-            <Button variant="ghost" className="flex flex-col h-auto p-1 text-primary">
-              <Home className="h-7 w-7"/>
-            </Button>
-            <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground relative">
-              <Heart className="h-7 w-7"/>
-               <span className="absolute top-0 right-0 -mt-1 -mr-1 block h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs font-bold">0</span>
-            </Button>
-            <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground">
-              <LayoutGrid className="h-7 w-7"/>
-            </Button>
+          <div className="flex justify-around items-center h-20">
+            <Link href="/menu" passHref>
+              <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground">
+                <Menu className="h-8 w-8"/>
+              </Button>
+            </Link>
+            <Link href="/cart" passHref>
+              <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground relative">
+                <ShoppingBag className="h-8 w-8"/>
+                <span className="absolute top-0 right-0 -mt-1 -mr-1 block h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs font-bold">0</span>
+              </Button>
+            </Link>
+            <Link href="/" passHref>
+              <Button variant="ghost" className="flex flex-col h-auto p-1 text-primary">
+                <Home className="h-8 w-8"/>
+              </Button>
+            </Link>
+            <Link href="/wishlist" passHref>
+              <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground relative">
+                <Heart className="h-8 w-8"/>
+                 <span className="absolute top-0 right-0 -mt-1 -mr-1 block h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs font-bold">0</span>
+              </Button>
+            </Link>
+            <Link href="/profile" passHref>
+              <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground">
+                <LayoutGrid className="h-8 w-8"/>
+              </Button>
+            </Link>
           </div>
         </footer>
       </div>
