@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 
 const NavItem = ({ href, icon: Icon, label, pathname, hasNotification }: { href: string, icon: React.ElementType, label: string, pathname: string, hasNotification?: boolean }) => (
     <Link href={href}>
-        <div className={cn("flex flex-col items-center justify-center gap-1 relative", pathname === href ? "text-primary" : "text-amber-800")}>
+        <div className={cn("flex flex-col items-center justify-center gap-1 relative", pathname === href ? "text-primary" : "text-amber-900")}>
             <Icon className="w-5 h-5" />
             <span className="text-[10px] font-medium">{label}</span>
             {hasNotification && (
@@ -57,7 +57,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         <footer className="fixed bottom-0 left-0 right-0 bg-card border-t max-w-md mx-auto">
             <div className="flex justify-around items-center h-16">
               <SheetTrigger asChild>
-                <div className="flex flex-col items-center justify-center gap-1 text-amber-800">
+                <div className="flex flex-col items-center justify-center gap-1 text-amber-900">
                     <MenuIcon className="w-5 h-5" />
                     <span className="text-[10px] font-medium">Menu</span>
                 </div>
