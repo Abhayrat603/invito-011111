@@ -79,6 +79,7 @@ export default function ProfilePage() {
                         height={128}
                         className="rounded-full border-4 border-card object-cover"
                         data-ai-hint="man portrait"
+                        key={user?.photoURL} 
                     />
                     <input
                         type="file"

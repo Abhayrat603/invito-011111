@@ -29,16 +29,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       
-      const isJustVerified = user && user.emailVerified && !auth.currentUser?.emailVerified;
+      const isJustVerified = currentUser && currentUser.emailVerified && user && !user.emailVerified;
       
-      setUser(user);
+      setUser(currentUser);
       setLoading(false);
       
-      if(user) {
-        if (user.emailVerified) {
-            const idToken = await user.getIdToken(true); // Force refresh
+      if(currentUser) {
+        if (currentUser.emailVerified) {
+            const idToken = await currentUser.getIdToken(true); // Force refresh
             await createSessionCookie(idToken);
             if (isJustVerified) {
                  toast({
@@ -53,13 +53,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, [auth, toast]);
+  }, [auth, toast, user]);
 
   const signUp = async (email: string, pass: string, name: string) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-    await updateProfile(userCredential.user, { displayName: name });
-    // Manually update the user state to reflect the new display name
-    setUser({ ...userCredential.user, displayName: name });
+    if (userCredential.user) {
+      await updateProfile(userCredential.user, { displayName: name });
+      // Manually trigger a re-render by creating a new user object
+      setUser(prevUser => ({ ...prevUser, ...userCredential.user, displayName: name }));
+    }
     return userCredential;
   };
 
@@ -90,13 +92,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     
     // In a real app, you would upload the file to a service like Firebase Storage
-    // and get a URL. For this example, we'll use a placeholder.
+    // and get a URL. For this example, we'll use a placeholder that changes.
     const newPhotoURL = `https://picsum.photos/seed/${auth.currentUser.uid}/${Date.now()}/200/200`;
 
     await updateProfile(auth.currentUser, { photoURL: newPhotoURL });
     
     // Manually update the user state to reflect the new photoURL immediately
-    setUser(auth.currentUser);
+    // Create a new object to force re-render
+    setUser(prevUser => {
+      if (!prevUser) return null;
+      return { ...prevUser, photoURL: newPhotoURL };
+    });
   };
 
 
