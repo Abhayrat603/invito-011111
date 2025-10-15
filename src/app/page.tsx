@@ -239,6 +239,7 @@ export default function EcommerceHomePage() {
                   </section>
                   
                   <section className="px-4">
+                      <h2 className="text-2xl font-headline text-primary text-center mb-6">New Invitation</h2>
                       {displayedProducts.length > 0 ? (
                           <>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
