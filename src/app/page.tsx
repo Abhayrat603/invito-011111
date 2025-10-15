@@ -34,21 +34,54 @@ export default function EcommerceHomePage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const scrollViewportRef = useRef<HTMLDivElement>(null);
+  const isInteractingRef = useRef(false);
 
   useEffect(() => {
-    const scrollInterval = setInterval(() => {
-        if (scrollViewportRef.current) {
-            const { scrollLeft, scrollWidth, clientWidth } = scrollViewportRef.current;
-            const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 1;
-            if (isAtEnd) {
-                scrollViewportRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-            } else {
-                scrollViewportRef.current.scrollBy({ left: clientWidth, behavior: 'smooth' });
-            }
-        }
-    }, 3000);
+    const scrollEl = scrollViewportRef.current;
+    if (!scrollEl) return;
 
-    return () => clearInterval(scrollInterval);
+    let scrollInterval: NodeJS.Timeout;
+
+    const startScrolling = () => {
+      scrollInterval = setInterval(() => {
+        if (!scrollEl || isInteractingRef.current) return;
+
+        const { scrollLeft, scrollWidth, clientWidth } = scrollEl;
+        if (scrollLeft + clientWidth >= scrollWidth - 1) {
+          scrollEl.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          scrollEl.scrollLeft += 1;
+        }
+      }, 50); 
+    };
+
+    const stopScrolling = () => {
+      clearInterval(scrollInterval);
+      isInteractingRef.current = true;
+    };
+    
+    const resumeScrolling = () => {
+      isInteractingRef.current = false;
+      startScrolling();
+    };
+
+    startScrolling();
+
+    scrollEl.addEventListener('mouseenter', stopScrolling);
+    scrollEl.addEventListener('mouseleave', resumeScrolling);
+    scrollEl.addEventListener('touchstart', stopScrolling, { passive: true });
+    scrollEl.addEventListener('touchend', resumeScrolling);
+
+
+    return () => {
+      clearInterval(scrollInterval);
+      if (scrollEl) {
+        scrollEl.removeEventListener('mouseenter', stopScrolling);
+        scrollEl.removeEventListener('mouseleave', resumeScrolling);
+        scrollEl.removeEventListener('touchstart', stopScrolling);
+        scrollEl.removeEventListener('touchend', resumeScrolling);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -102,94 +135,94 @@ export default function EcommerceHomePage() {
     <AuthRedirect to="/login" condition="is-not-auth">
       <MainLayout>
         <div className="bg-background text-foreground">
-            <header className="p-4">
-                <h1 className="text-4xl font-bold text-center mb-4 font-headline text-primary">Invite Designer</h1>
-                <div className="relative">
-                    <Input 
-                        placeholder="Search for invitations..." 
-                        className="bg-card border-border rounded-lg h-12 pl-4 pr-10 focus-visible:ring-primary/50" 
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    {searchQuery ? (
-                        <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full" onClick={() => setSearchQuery('')}>
-                            <X className="h-5 w-5 text-muted-foreground"/>
-                        </Button>
-                    ) : (
-                        <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"/>
-                    )}
-                </div>
-            </header>
+              <header className="p-4">
+                  <h1 className="text-4xl font-bold text-center mb-4 font-headline text-primary">Invite Designer</h1>
+                  <div className="relative">
+                      <Input 
+                          placeholder="Search for invitations..." 
+                          className="bg-card border-border rounded-lg h-12 pl-4 pr-10 focus-visible:ring-primary/50" 
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                      {searchQuery ? (
+                          <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full" onClick={() => setSearchQuery('')}>
+                              <X className="h-5 w-5 text-muted-foreground"/>
+                          </Button>
+                      ) : (
+                          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"/>
+                      )}
+                  </div>
+              </header>
 
-            <main className="pb-4">
-                <section className="mb-6">
-                    <ScrollArea className="w-full whitespace-nowrap" viewportRef={scrollViewportRef}>
-                      <div className="flex w-max space-x-2 p-4">
-                        {categories.map((category) => {
-                          const image = findImage(category.imageId);
-                          const isSelected = selectedCategory === category.name;
-                          return (
-                            <figure 
-                                key={category.name} 
-                                className={cn(
-                                    "shrink-0 rounded-full bg-secondary/80 flex items-center p-1.5 pr-5 gap-2 cursor-pointer transition-all duration-300",
-                                    isSelected ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : "hover:bg-secondary"
-                                )}
-                                onClick={() => handleCategorySelect(category.name)}
-                            >
-                              <div className="relative h-10 w-10 shrink-0">
-                                <Image
-                                  src={image?.imageUrl || `https://picsum.photos/seed/${category.id}/100`}
-                                  alt={category.name}
-                                  layout="fill"
-                                  objectFit="cover"
-                                  className="rounded-full"
-                                  data-ai-hint={image?.imageHint}
-                                />
-                              </div>
-                              <figcaption className="text-sm font-medium text-foreground whitespace-nowrap">
-                                {category.name}
-                              </figcaption>
-                            </figure>
-                          );
-                        })}
-                      </div>
-                      <ScrollBar orientation="horizontal" />
-                    </ScrollArea>
-                </section>
-
-                <section className="px-4">
-                    <h2 className="text-2xl font-bold text-center mb-6">{searchQuery ? `Results for "${searchQuery}"` : (selectedCategory ? selectedCategory : "Our Designs")}</h2>
-                    
-                    {displayedProducts.length > 0 ? (
-                        <>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {displayedProducts.map((product, index) => (
-                                <ProductCard key={product.id} product={product} onSale={index % 2 === 0} />
-                                ))}
-                            </div>
-
-                            {totalPages > 1 && (
-                                <div className="flex justify-between items-center p-4 mt-4">
-                                    <Button variant="outline" onClick={handlePrev} disabled={currentPage === 0}>
-                                        <ChevronLeft className="mr-2 h-4 w-4" /> Previous
-                                    </Button>
-                                    <Button variant="outline" onClick={handleNext} disabled={currentPage === totalPages - 1}>
-                                        Next <ChevronRight className="ml-2 h-4 w-4" />
-                                    </Button>
+              <main className="pb-4">
+                  <section className="mb-6">
+                      <ScrollArea className="w-full whitespace-nowrap" viewportRef={scrollViewportRef}>
+                        <div className="flex w-max space-x-2 p-4">
+                          {categories.map((category) => {
+                            const image = findImage(category.imageId);
+                            const isSelected = selectedCategory === category.name;
+                            return (
+                              <figure 
+                                  key={category.name} 
+                                  className={cn(
+                                      "shrink-0 rounded-full bg-secondary/80 flex items-center p-1.5 pr-5 gap-2 cursor-pointer transition-all duration-300",
+                                      isSelected ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : "hover:bg-secondary"
+                                  )}
+                                  onClick={() => handleCategorySelect(category.name)}
+                              >
+                                <div className="relative h-10 w-10 shrink-0">
+                                  <Image
+                                    src={image?.imageUrl || `https://picsum.photos/seed/${category.id}/100`}
+                                    alt={category.name}
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className="rounded-full"
+                                    data-ai-hint={image?.imageHint}
+                                  />
                                 </div>
-                            )}
-                        </>
-                    ) : (
-                        <div className="text-center py-10">
-                            <p className="text-lg text-muted-foreground">{selectedCategory ? `No results found in ${selectedCategory}` : 'No results found.'}</p>
-                            <Button variant="link" onClick={() => { setSearchQuery(''); setSelectedCategory(null); }}>Clear filters</Button>
+                                <figcaption className="text-sm font-medium text-foreground whitespace-nowrap">
+                                  {category.name}
+                                </figcaption>
+                              </figure>
+                            );
+                          })}
                         </div>
-                    )}
-                </section>
-            </main>
-        </div>
-      </MainLayout>
+                        <ScrollBar orientation="horizontal" />
+                      </ScrollArea>
+                  </section>
+
+                  <section className="px-4">
+                      <h2 className="text-2xl font-bold text-center mb-6">{searchQuery ? `Results for "${searchQuery}"` : (selectedCategory ? selectedCategory : "Our Designs")}</h2>
+                      
+                      {displayedProducts.length > 0 ? (
+                          <>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  {displayedProducts.map((product, index) => (
+                                  <ProductCard key={product.id} product={product} onSale={index % 2 === 0} />
+                                  ))}
+                              </div>
+
+                              {totalPages > 1 && (
+                                  <div className="flex justify-between items-center p-4 mt-4">
+                                      <Button variant="outline" onClick={handlePrev} disabled={currentPage === 0}>
+                                          <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+                                      </Button>
+                                      <Button variant="outline" onClick={handleNext} disabled={currentPage === totalPages - 1}>
+                                          Next <ChevronRight className="ml-2 h-4 w-4" />
+                                      </Button>
+                                  </div>
+                              )}
+                          </>
+                      ) : (
+                          <div className="text-center py-10">
+                              <p className="text-lg text-muted-foreground">{selectedCategory ? `No results found in ${selectedCategory}` : 'No results found.'}</p>
+                              <Button variant="link" onClick={() => { setSearchQuery(''); setSelectedCategory(null); }}>Clear filters</Button>
+                          </div>
+                      )}
+                  </section>
+              </main>
+          </div>
+        </MainLayout>
     </AuthRedirect>
   );
 }
