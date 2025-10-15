@@ -118,8 +118,8 @@ export default function EditProfilePage() {
                 <div>
                   <h2 className="text-lg font-semibold mb-4">Account Settings</h2>
                   <div className="space-y-4">
-                      <SettingsMenuItem icon={Mail} text="Change Email" href="/profile/settings/email" className="mb-2" />
-                      <SettingsMenuItem icon={Lock} text="Change Password" href="/profile/settings/password" className="mb-2" />
+                      <SettingsMenuItem icon={Mail} text="Change Email" href="/profile/settings/email" />
+                      <SettingsMenuItem icon={Lock} text="Change Password" href="/profile/settings/password" />
                       <SettingsMenuItem icon={Phone} text="Change Phone Number" href="/profile/settings/phone" />
                   </div>
                 </div>
