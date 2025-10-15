@@ -24,33 +24,33 @@ export default function CartPage() {
           <div className="flex justify-around items-center h-20">
             <Link href="/menu" passHref>
               <Button variant="ghost" className="flex flex-col h-auto p-2 text-muted-foreground">
-                <Menu className="h-8 w-8"/>
+                <Menu className="h-10 w-10"/>
                 <span className="text-xs mt-1">Menu</span>
               </Button>
             </Link>
             <Link href="/cart" passHref>
               <Button variant="ghost" className="flex flex-col h-auto p-2 text-primary relative">
-                <ShoppingBag className="h-8 w-8"/>
+                <ShoppingBag className="h-10 w-10"/>
                 <span className="text-xs mt-1">Cart</span>
                 <span className="absolute top-0 right-0 -mt-1 mr-1 block h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs font-bold">0</span>
               </Button>
             </Link>
             <Link href="/" passHref>
               <Button variant="ghost" className="flex flex-col h-auto p-2 text-muted-foreground">
-                <Home className="h-8 w-8"/>
+                <Home className="h-10 w-10"/>
                 <span className="text-xs mt-1">Home</span>
               </Button>
             </Link>
             <Link href="/wishlist" passHref>
               <Button variant="ghost" className="flex flex-col h-auto p-2 text-muted-foreground relative">
-                <Heart className="h-8 w-8"/>
+                <Heart className="h-10 w-10"/>
                 <span className="text-xs mt-1">Wishlist</span>
                  <span className="absolute top-0 right-0 -mt-1 mr-1 block h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs font-bold">0</span>
               </Button>
             </Link>
             <Link href="/profile" passHref>
               <Button variant="ghost" className="flex flex-col h-auto p-2 text-muted-foreground">
-                <LayoutGrid className="h-8 w-8"/>
+                <LayoutGrid className="h-10 w-10"/>
                 <span className="text-xs mt-1">Profile</span>
               </Button>
             </Link>
