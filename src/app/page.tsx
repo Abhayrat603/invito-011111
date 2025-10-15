@@ -3,80 +3,86 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AuthRedirect } from "@/components/auth-redirect";
-import { ArrowLeft, Menu, Search, Star } from "lucide-react";
+import { Search, Home, ShoppingBag, Heart, LayoutGrid, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const categories = [
-  { name: "Haircuts", icon: "https://picsum.photos/seed/haircut-icon/100/100", hint: "scissors comb" },
-  { name: "Coloring", icon: "https://picsum.photos/seed/coloring-icon/100/100", hint: "hair dye" },
-  { name: "Body Spa", icon: "https://picsum.photos/seed/spa-icon/100/100", hint: "lotions oils" },
-  { name: "Make Up", icon: "https://picsum.photos/seed/makeup-icon/100/100", hint: "makeup brushes" },
-  { name: "Nails", icon: "https://picsum.photos/seed/nails-icon/100/100", hint: "nail polish" },
-  { name: "Skincare", icon: "https://picsum.photos/seed/skincare-icon/100/100", hint: "face cream" },
-];
-
-const specialists = [
-  { name: "Anne Smith", image: "https://picsum.photos/seed/anne/200/200", rating: 5, hint: "woman smiling" },
-  { name: "Alice Hills", image: "https://picsum.photos/seed/alice/200/200", rating: 5, hint: "professional woman" },
-  { name: "Julie Haws", image: "https://picsum.photos/seed/julie/200/200", rating: 5, hint: "woman portrait" },
+  { name: "Haircuts", icon: "https://picsum.photos/seed/haircut-icon/100/100", hint: "scissors comb", count: 53 },
+  { name: "Coloring", icon: "https://picsum.photos/seed/coloring-icon/100/100", hint: "hair dye", count: 24 },
+  { name: "Body Spa", icon: "https://picsum.photos/seed/spa-icon/100/100", hint: "lotions oils", count: 18 },
+  { name: "Make Up", icon: "https://picsum.photos/seed/makeup-icon/100/100", hint: "makeup brushes", count: 45 },
+  { name: "Nails", icon: "https://picsum.photos/seed/nails-icon/100/100", hint: "nail polish", count: 32 },
 ];
 
 export default function ServicesPage() {
   return (
     <AuthRedirect to="/login" condition="is-not-auth">
-      <div className="w-full max-w-md mx-auto">
-        <header className="flex items-center justify-between mb-6">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft />
-          </Button>
-          <div className="relative flex-grow mx-4">
-             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"/>
-            <Input placeholder="Search" className="rounded-full bg-secondary border-none pl-12 h-12" />
+      <div className="w-full max-w-md mx-auto bg-background text-foreground">
+        <header className="p-4">
+          <h1 className="text-4xl font-bold text-center mb-4">Anon</h1>
+          <div className="relative">
+            <Input placeholder="Enter your product name..." className="bg-card border border-border rounded-lg h-12 pl-4 pr-10" />
+            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"/>
           </div>
-          <Button variant="ghost" size="icon">
-            <Menu />
-          </Button>
         </header>
 
-        <h1 className="text-3xl font-bold font-headline text-center mb-8">Services</h1>
+        <main className="p-4">
+          <section className="relative mb-6 rounded-2xl overflow-hidden shadow-lg">
+            <div className="relative h-64 w-full">
+               <Image src="https://picsum.photos/seed/fashion-sale/600/400" layout="fill" objectFit="cover" alt="Fashion Sale" data-ai-hint="fashion models" />
+               <div className="absolute inset-0 bg-black/20"></div>
+            </div>
+            <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white p-4">
+                <div className="bg-white/80 backdrop-blur-sm p-6 rounded-lg text-card-foreground">
+                    <p className="font-semibold text-primary">Trending Item</p>
+                    <h2 className="text-3xl font-bold my-2 leading-tight">WOMEN'S LATEST<br/>FASHION SALE</h2>
+                    <Button className="mt-4 bg-primary text-primary-foreground rounded-lg">SHOP NOW</Button>
+                </div>
+            </div>
+          </section>
 
-        <section className="mb-12">
-          <h2 className="text-sm font-semibold uppercase text-muted-foreground mb-4">Categories</h2>
-          <div className="grid grid-cols-3 gap-4">
-            {categories.map((category) => (
-              <Link href="#" key={category.name}>
-                <div className="flex flex-col items-center text-center">
-                  <div className="relative w-full aspect-square rounded-2xl bg-card shadow-md overflow-hidden mb-2">
-                    <Image src={category.icon} alt={category.name} layout="fill" objectFit="cover" data-ai-hint={category.hint} />
+          <section>
+            <div className="space-y-3">
+              {categories.map((category) => (
+                <Link href="#" key={category.name}>
+                  <div className="flex items-center gap-4 p-3 rounded-lg bg-card border border-border shadow-sm">
+                    <div className="relative w-16 h-16 rounded-md bg-secondary flex items-center justify-center overflow-hidden">
+                       <Image src={category.icon} alt={category.name} width={40} height={40} data-ai-hint={category.hint} />
+                    </div>
+                    <div className="flex-grow">
+                      <h3 className="font-bold text-foreground">{category.name}</h3>
+                      <span className="text-sm text-muted-foreground">Show All</span>
+                    </div>
+                    <span className="text-sm text-muted-foreground">({category.count})</span>
                   </div>
-                  <span className="text-xs font-medium">{category.name}</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
+                </Link>
+              ))}
+            </div>
+          </section>
+        </main>
 
-        <section>
-          <h2 className="text-sm font-semibold uppercase text-muted-foreground mb-4">Specialist</h2>
-          <div className="space-y-4">
-            {specialists.map((specialist) => (
-              <div key={specialist.name} className="flex items-center gap-4 p-4 rounded-2xl bg-card shadow-md">
-                <div className="relative w-16 h-16 rounded-full overflow-hidden">
-                  <Image src={specialist.image} alt={specialist.name} layout="fill" objectFit="cover" data-ai-hint={specialist.hint} />
-                </div>
-                <div>
-                  <h3 className="font-bold">{specialist.name}</h3>
-                  <div className="flex items-center">
-                    {[...Array(specialist.rating)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
+        <footer className="fixed bottom-0 left-0 right-0 bg-card border-t border-border max-w-md mx-auto">
+          <div className="flex justify-around items-center h-16">
+            <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground">
+              <Menu className="h-6 w-6"/>
+            </Button>
+            <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground relative">
+              <ShoppingBag className="h-6 w-6"/>
+              <span className="absolute top-0 right-0 -mt-1 -mr-1 block h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs font-bold">0</span>
+            </Button>
+            <Button variant="ghost" className="flex flex-col h-auto p-1 text-primary">
+              <Home className="h-6 w-6"/>
+            </Button>
+            <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground relative">
+              <Heart className="h-6 w-6"/>
+               <span className="absolute top-0 right-0 -mt-1 -mr-1 block h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs font-bold">0</span>
+            </Button>
+            <Button variant="ghost" className="flex flex-col h-auto p-1 text-muted-foreground">
+              <LayoutGrid className="h-6 w-6"/>
+            </Button>
           </div>
-        </section>
+        </footer>
       </div>
     </AuthRedirect>
   );
