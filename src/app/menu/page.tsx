@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Facebook, Instagram, Mail, Heart, Gift, School, Building, PartyPopper, CalendarDays, Edit, Clapperboard, Star, Info, FileText } from "lucide-react";
+import { ChevronRight, Facebook, Instagram, Mail, Heart, Gift, School, Building, PartyPopper, CalendarDays, Edit, Clapperboard, Star, Info, FileText, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SheetClose } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
@@ -58,6 +58,11 @@ export function MenuPageContent() {
         <div className="w-full h-full bg-background text-foreground flex flex-col">
             <header className="p-4 flex justify-between items-center border-b">
               <h1 className="text-2xl font-bold text-primary">Menu</h1>
+              <SheetClose asChild>
+                <Button variant="ghost" size="icon">
+                    <X className="h-6 w-6" />
+                </Button>
+              </SheetClose>
             </header>
 
             <main className="flex-grow p-4 overflow-y-auto">
