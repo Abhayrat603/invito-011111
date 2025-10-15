@@ -57,7 +57,7 @@ export default function ProfilePage() {
                     </Button>
                 </div>
 
-                <div className="w-full space-y-4">
+                <div className="w-full">
                     <div className="mb-2">
                         <ProfileMenuItem icon={User} text="My Account" href="#" />
                     </div>
@@ -67,7 +67,9 @@ export default function ProfilePage() {
                     <div className="mb-2">
                         <ProfileMenuItem icon={Settings} text="Settings" href="#" />
                     </div>
-                    <ProfileMenuItem icon={HelpCircle} text="Help Center" href="#" />
+                    <div className="mb-2">
+                        <ProfileMenuItem icon={HelpCircle} text="Help Center" href="#" />
+                    </div>
                     <ProfileMenuItem icon={LogOut} text="Log Out" onClick={signOut} isLogout />
                 </div>
             </div>
