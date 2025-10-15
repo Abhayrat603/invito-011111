@@ -45,15 +45,12 @@ Here is some information about our store:
 - Our brand is for the bold and brave.
 
 Keep your answers helpful and relevant to a fashion store context.`;
-
-    const model = ai.getModel({
-      model: 'googleai/gemini-2.5-flash',
-      system: systemPrompt,
-    });
     
-    const response = await model.generate({
-      history: history,
-      prompt: message,
+    const response = await ai.generate({
+        model: 'googleai/gemini-2.5-flash',
+        system: systemPrompt,
+        history: history,
+        prompt: message,
     });
 
     return response.text;
