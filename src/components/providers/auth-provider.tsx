@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendEmailVerification, sendPasswordResetEmail, updateProfile, type User, updateEmail, updatePassword } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendEmailVerification, sendPasswordResetEmail, updateProfile, type User, updateEmail, updatePassword, reload } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { app, storage } from '@/lib/firebase';
 import { createSessionCookie, clearSessionCookie } from '@/lib/actions';
@@ -98,8 +98,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error("No user is signed in.");
     }
     await updateProfile(currentUser, profileData);
-    // Create a new user object to force a state update in React
-    setUser({ ...currentUser }); 
+    // After updating, reload the user to get the latest data from Firebase.
+    await reload(currentUser);
+    // This is important to get a fresh user object with the updated info.
+    const refreshedUser = getAuth(app).currentUser;
+    // Set the new user object to trigger a re-render in React components.
+    setUser(refreshedUser ? { ...refreshedUser } : null);
   };
   
   const updateUserEmail = async (email: string) => {
