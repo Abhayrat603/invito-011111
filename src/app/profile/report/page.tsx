@@ -45,7 +45,7 @@ export default function ReportPage() {
     const handleDownload = () => {
         const input = reportRef.current;
         if (input) {
-            html2canvas(input, { scale: 2 }).then((canvas) => {
+            html2canvas(input, { scale: 4 }).then((canvas) => {
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jsPDF('p', 'mm', 'a4');
                 const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -53,14 +53,19 @@ export default function ReportPage() {
                 const canvasWidth = canvas.width;
                 const canvasHeight = canvas.height;
                 const ratio = canvasWidth / canvasHeight;
-                const width = pdfWidth;
-                const height = width / ratio;
+                let width = pdfWidth;
+                let height = width / ratio;
 
-                // If the height is greater than the page height, we might need to split it
-                // For simplicity, this example will scale it to fit one page.
-                let finalHeight = height > pdfHeight ? pdfHeight - 20 : height;
+                if (height > pdfHeight) {
+                    height = pdfHeight;
+                    width = height * ratio;
+                }
+                
+                const x = (pdfWidth - width) / 2;
+                const y = (pdfHeight - height) / 2;
 
-                pdf.addImage(imgData, 'PNG', 0, 10, width, finalHeight);
+
+                pdf.addImage(imgData, 'PNG', x, y, width, height);
                 pdf.save("user-report.pdf");
 
                 toast({
