@@ -133,7 +133,9 @@ export default function ProfilePage() {
 
                 <div className="w-full space-y-3 mt-6">
                     {isAdmin && (
-                        <ProfileMenuItem icon={UserCog} text="Admin Panel" href="/admin" />
+                        <div className="mb-4">
+                            <ProfileMenuItem icon={UserCog} text="Admin Panel" href="/admin" />
+                        </div>
                     )}
                     <ProfileMenuItem icon={Pencil} text="Edit Profile" href="/profile/edit" />
                     <ProfileMenuItem icon={Sparkles} text="Help with AI" href="/ai-help" />
