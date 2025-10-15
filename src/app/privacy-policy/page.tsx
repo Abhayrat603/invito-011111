@@ -3,16 +3,20 @@
 
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Shield, CheckCircle, FileText, User, Mail } from "lucide-react";
+import { ArrowLeft, Shield, CheckCircle, FileText, User, Mail, Database, Cookie, Globe } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const InfoCard = ({ icon: Icon, title, children }: { icon: React.ElementType, title: string, children: React.ReactNode }) => (
     <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50">
-        <div className="flex items-center mb-3">
-            <Icon className="h-8 w-8 text-primary mr-4" />
-            <h3 className="text-2xl font-headline text-primary">{title}</h3>
+        <div className="flex items-start mb-3">
+            <div className="bg-primary/10 p-3 rounded-full mr-4 mt-1">
+                <Icon className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+                <h3 className="text-2xl font-headline text-primary">{title}</h3>
+            </div>
         </div>
-        <div className="text-foreground/80 space-y-3 leading-relaxed">
+        <div className="text-foreground/80 space-y-3 leading-relaxed pl-2">
             {children}
         </div>
     </div>
@@ -40,27 +44,46 @@ export default function PrivacyPolicyPage() {
                     </div>
 
                     <InfoCard icon={FileText} title="Introduction">
-                        <p>Welcome to Night Fury. We are committed to protecting your privacy and ensuring you have a positive experience on our website and in using our services. This Privacy Policy outlines our practices regarding the collection, use, and disclosure of your information through the use of our website and services.</p>
+                        <p>Welcome to Night Fury. We are committed to protecting your privacy and ensuring you have a positive experience on our website and in using our services. This Privacy Policy outlines our practices regarding the collection, use, and disclosure of your information through the use of our website and services (the "Service"). It applies to all visitors, users, and others who access the Service.</p>
                     </InfoCard>
 
                     <InfoCard icon={User} title="Information We Collect">
-                        <p>We collect information to provide better services to all our users. We collect information in the following ways:</p>
+                        <p>We collect information to provide better services to all our users. The types of information we collect depend on how you use our Service.</p>
                         <ul className="list-disc list-inside space-y-2 pl-2">
-                            <li><strong>Information you give us:</strong> This includes your name, email address, phone number, and password when you create an account.</li>
-                            <li><strong>Information we get from your use of our services:</strong> We may collect information about the services that you use and how you use them, like when you visit a certain page or what products you view.</li>
-                            <li><strong>Device information:</strong> We may collect device-specific information (such as your hardware model, operating system version, and mobile network information).</li>
+                            <li><strong>Personal Information you provide:</strong> This includes your name, email address, phone number, and password when you create an account. It also includes any other information you choose to provide, such as your profile picture or shipping address.</li>
+                            <li><strong>Information from your use of our services:</strong> We collect information about the services you use and how you use them. This includes products you view or purchase, pages you visit, and your interactions with our features.</li>
+                            <li><strong>Device and Log Information:</strong> We may collect device-specific information (such as your hardware model, operating system version, unique device identifiers, and mobile network information including phone number). We may also automatically collect and store certain information in server logs, including details of how you used our service, IP address, and device event information such as crashes and system activity.</li>
                         </ul>
                     </InfoCard>
                     
                     <InfoCard icon={CheckCircle} title="How We Use Information">
-                        <p>We use the information we collect to provide, maintain, protect, and improve our services, to develop new ones, and to protect Night Fury and our users. We also use this information to offer you tailored content.</p>
-                        <p>We may use the name you provide for your Night Fury Profile across all of the services we offer that require a Night Fury Account. In addition, we may replace past names associated with your Night Fury Account so that you are represented consistently across all our services.</p>
+                         <p>We use the information we collect for various purposes, including:</p>
+                        <ul className="list-disc list-inside space-y-2 pl-2">
+                            <li><strong>Provide, maintain, and improve our Service:</strong> To operate our site, process transactions, and provide you with the features and functionality of the Service.</li>
+                            <li><strong>Personalize your experience:</strong> To offer you tailored content, such as showing you products and offers we think you might like.</li>
+                            <li><strong>Communicate with you:</strong> To send you service-related notices, including any updates to our terms or policies, and to respond to your inquiries. We may also send you promotional communications, which you can opt out of.</li>
+                            <li><strong>Protect Night Fury and our users:</strong> To detect and prevent fraud, abuse, and other harmful activity.</li>
+                            <li><strong>Develop new services:</strong> To understand our user base and develop new products and features.</li>
+                        </ul>
+                    </InfoCard>
+
+                    <InfoCard icon={Database} title="Data Storage and Security">
+                        <p>Your information is stored on secure servers. We implement a variety of security measures to maintain the safety of your personal information when you place an order or enter, submit, or access your personal information. These measures include data encryption, firewalls, and secure socket layer (SSL) technology. However, no method of transmission over the Internet or method of electronic storage is 100% secure. Therefore, we cannot guarantee its absolute security.</p>
+                    </InfoCard>
+
+                    <InfoCard icon={Cookie} title="Cookies and Similar Technologies">
+                        <p>We use cookies and similar tracking technologies to track the activity on our Service and hold certain information. Cookies are files with a small amount of data which may include an anonymous unique identifier. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our Service.</p>
+                    </InfoCard>
+
+                    <InfoCard icon={Globe} title="Your Privacy Rights">
+                        <p>Depending on your location, you may have certain rights regarding your personal information, such as the right to access, correct, or delete your data. You can typically manage your profile information through your account settings. If you need further assistance, please contact us using the details below.</p>
                     </InfoCard>
 
                      <InfoCard icon={Mail} title="Contact Us">
                         <p>If you have any questions about this Privacy Policy, please contact us:</p>
                         <ul className="list-none space-y-1">
-                            <li>By email: privacy@nightfury.com</li>
+                            <li>By email: abhayrat603@gmail.com</li>
+                            <li>By phone: +91 8463062603</li>
                             <li>By visiting this page on our website: nightfury.com/contact</li>
                         </ul>
                     </InfoCard>
