@@ -3,7 +3,7 @@
 
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, FileText, AlertTriangle, Copyright, CheckSquare, Scale, Ban, Box } from "lucide-react";
+import { ArrowLeft, FileText, AlertTriangle, Copyright, CheckSquare, Scale, Ban, Box, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const TermCard = ({ icon: Icon, title, children }: { icon: React.ElementType, title: string, children: React.ReactNode }) => (
@@ -70,7 +70,7 @@ export default function TermsAndConditionsPage() {
                     </TermCard>
 
                     <TermCard icon={Ban} title="Termination">
-                        <p>We may terminate or suspend your account and bar access to the Service immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever and without limitation, including but not limited to a breach of the Terms. All provisions of the Terms which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity, and limitations of liability.</p>
+                        <p>We may terminate or suspend your account and bar access to the Service immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever and without limitation, including but not to a breach of the Terms. All provisions of the Terms which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity, and limitations of liability.</p>
                     </TermCard>
                     
                     <TermCard icon={Scale} title="Governing Law">
