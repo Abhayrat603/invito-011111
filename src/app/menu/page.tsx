@@ -87,3 +87,4 @@ export default function MenuPage() {
     // We keep it for completeness.
     return <MenuPageContent />;
 }
+
