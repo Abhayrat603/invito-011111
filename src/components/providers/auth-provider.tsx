@@ -1,6 +1,7 @@
 
 "use client";
 
+import * as React from 'react';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendEmailVerification, sendPasswordResetEmail, updateProfile, type User, updateEmail, updatePassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
@@ -96,10 +97,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error("No user is signed in.");
     }
     await updateProfile(currentUser, profileData);
-    // Force a reload of the user to get the updated profile
     await currentUser.reload();
-    // Create a new user object to trigger re-render in components
-    setUser(auth.currentUser ? { ...auth.currentUser } : null);
+    setUser({ ...currentUser });
   };
   
   const updateUserEmail = async (email: string) => {
@@ -128,8 +127,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 
   const updateUserProfilePicture = async (file: File) => {
-    // In a real app, you would upload the file to a service like Firebase Storage
-    // and get a URL back. For this placeholder, we'll use a local object URL.
     const newPhotoURL = URL.createObjectURL(file);
     await updateUserProfile({ photoURL: newPhotoURL });
   };
