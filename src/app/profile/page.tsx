@@ -6,7 +6,7 @@ import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/providers/auth-provider";
 import Image from "next/image";
-import { HelpCircle, LogOut, ChevronRight, Camera, Pencil, Shield, FileText, Info, Mail, UserCog, Sparkles, History, Edit } from "lucide-react";
+import { HelpCircle, LogOut, ChevronRight, Camera, Pencil, Shield, FileText, Info, Mail, UserCog, Sparkles, History, Edit, Download } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import React, { useRef, useState, useCallback } from "react";
@@ -143,6 +143,9 @@ export default function ProfilePage() {
                     </div>
                     <div className="mb-2">
                         <ProfileMenuItem icon={History} text="History" href="/history" />
+                    </div>
+                     <div className="mb-2">
+                        <ProfileMenuItem icon={Download} text="Download Report" href="/profile/report" />
                     </div>
                     <div className="mb-2">
                         <ProfileMenuItem icon={Edit} text="Request For Edit" href="/request-edit" />
