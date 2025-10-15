@@ -144,8 +144,12 @@ export default function ProfilePage() {
                     <div className="mb-2">
                         <ProfileMenuItem icon={History} text="History" href="/history" />
                     </div>
-                    <ProfileMenuItem icon={Edit} text="Request For Edit" href="/request-edit" />
-                    <ProfileMenuItem icon={HelpCircle} text="Help Center" href="/help-center" />
+                    <div className="mb-2">
+                        <ProfileMenuItem icon={Edit} text="Request For Edit" href="/request-edit" />
+                    </div>
+                    <div className="mb-2">
+                        <ProfileMenuItem icon={HelpCircle} text="Help Center" href="/help-center" />
+                    </div>
                     
                     <div className="pt-1">
                         <ProfileMenuItem icon={Shield} text="Privacy Policy" href="/privacy-policy"/>
