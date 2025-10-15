@@ -140,12 +140,13 @@ export default function ProfilePage() {
                     <ProfileMenuItem icon={Pencil} text="Edit Profile" href="/profile/edit" />
                     <ProfileMenuItem icon={Sparkles} text="Help with AI" href="/ai-help" />
                     <ProfileMenuItem icon={HelpCircle} text="Help Center" href="/help-center" />
-                    <ProfileMenuItem icon={Mail} text="Contact Us" href="/contact-us" />
+                    
                     <div className="pt-2">
                         <ProfileMenuItem icon={Shield} text="Privacy Policy" href="/privacy-policy"/>
                     </div>
                     <ProfileMenuItem icon={FileText} text="Terms & Conditions" href="/terms-and-conditions"/>
                     <ProfileMenuItem icon={Info} text="About Us" href="/about-us"/>
+                    <ProfileMenuItem icon={Mail} text="Contact Us" href="/contact-us" />
 
                     <div className="pt-4">
                         <ProfileMenuItem icon={LogOut} text="Log Out" onClick={signOut} isLogout />
