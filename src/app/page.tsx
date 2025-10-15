@@ -1,135 +1,105 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ShoppingBag, Zap } from "lucide-react";
+import { ArrowRight, ChevronUp, ChevronDown, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ProductCard from "@/components/product-card";
-import { products, categories } from "@/lib/mock-data";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { useState } from "react";
 
 export default function Home() {
-  const featuredProducts = products.slice(0, 4);
-  const heroImage = PlaceHolderImages.find(p => p.id === "hero");
+    const [quantity, setQuantity] = useState(2);
 
   return (
-    <div className="flex flex-col gap-12 md:gap-16 lg:gap-24 pb-12">
-      {/* Hero Section */}
-      <section className="relative h-[60vh] md:h-[70vh] w-full">
-        {heroImage && (
-             <Image
-                src={heroImage.imageUrl}
-                alt={heroImage.description}
-                fill
-                className="object-cover"
-                data-ai-hint={heroImage.imageHint}
-                priority
-             />
-        )}
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
-          <h1 className="text-4xl md:text-6xl font-headline font-bold mb-4 drop-shadow-md">
-            Style in Motion
-          </h1>
-          <p className="text-lg md:text-xl max-w-2xl mb-8 drop-shadow">
-            Discover our new collection of dynamic apparel. Unmatched quality and style, designed for your active life.
-          </p>
-          <Button asChild size="lg" className="font-bold">
-            <Link href="/shop">
-              Shop Now <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
-        </div>
-      </section>
-
-      {/* Featured Categories */}
-      <section className="container mx-auto px-4">
-        <h2 className="text-3xl font-headline font-bold text-center mb-8">
-          Shop by Category
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {categories.slice(0, 4).map((category) => {
-            const categoryImage = PlaceHolderImages.find(p => p.id === category.imageId);
-            return (
-              <Link href={`/shop?category=${category.name.toLowerCase()}`} key={category.id}>
-                <Card className="overflow-hidden group hover:shadow-xl transition-shadow duration-300">
-                  <CardContent className="p-0">
-                    <div className="relative aspect-square">
-                      {categoryImage && (
-                        <Image
-                          src={categoryImage.imageUrl}
-                          alt={category.name}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                          data-ai-hint={categoryImage.imageHint}
-                        />
-                      )}
-                       <div className="absolute inset-0 bg-black/20" />
-                       <h3 className="absolute bottom-4 left-4 text-white font-bold text-lg font-headline drop-shadow-md">
-                         {category.name}
-                       </h3>
+    <div className="flex flex-col lg:flex-row items-center justify-between gap-12 h-full">
+        {/* Left Column */}
+        <div className="lg:w-1/2 text-left">
+            <h1 className="text-5xl md:text-7xl font-headline font-bold text-primary italic mb-4">
+                e-commerce<br/>Website
+            </h1>
+            <p className="tracking-[0.2em] text-foreground/80 mb-10">SUPPORT LOCAL EVERYTHING</p>
+            
+            <div className="flex items-center gap-6">
+                <div className="bg-secondary p-4 rounded-xl">
+                    <p className="text-sm text-foreground/70 mb-2">Choose your</p>
+                    <div className="flex items-center gap-4">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-background" onClick={() => setQuantity(q => Math.max(1, q-1))}>
+                            <ChevronDown className="h-4 w-4 text-accent" />
+                        </Button>
+                        <span className="text-lg font-bold w-4 text-center">{quantity}</span>
+                         <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-background" onClick={() => setQuantity(q => q+1)}>
+                            <ChevronUp className="h-4 w-4 text-accent" />
+                        </Button>
                     </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Featured Products */}
-      <section className="container mx-auto px-4">
-        <h2 className="text-3xl font-headline font-bold text-center mb-8">
-          Featured Products
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-        <div className="text-center mt-12">
-          <Button asChild variant="outline">
-            <Link href="/shop">View All Products</Link>
-          </Button>
-        </div>
-      </section>
-
-      {/* Why Shop With Us Section */}
-      <section className="bg-secondary">
-          <div className="container mx-auto px-4 py-16">
-            <h2 className="text-3xl font-headline font-bold text-center mb-12">
-              Why E-motion Commerce?
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8 text-center">
-              <div className="flex flex-col items-center">
-                <div className="bg-primary text-primary-foreground rounded-full p-4 mb-4">
-                  <ShoppingBag className="h-8 w-8" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">Quality Products</h3>
-                <p className="text-muted-foreground">
-                  We source the best materials to create durable and stylish products.
-                </p>
-              </div>
-              <div className="flex flex-col items-center">
-                 <div className="bg-primary text-primary-foreground rounded-full p-4 mb-4">
-                  <Zap className="h-8 w-8" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Fast Shipping</h3>
-                <p className="text-muted-foreground">
-                  Get your orders delivered to your doorstep in no time.
-                </p>
-              </div>
-              <div className="flex flex-col items-center">
-                 <div className="bg-primary text-primary-foreground rounded-full p-4 mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                </div>
-                <h3 className="text-xl font-bold mb-2">Secure Checkout</h3>
-                <p className="text-muted-foreground">
-                  Your data is safe with our secure and encrypted checkout process.
-                </p>
-              </div>
+                <Button size="lg" className="h-16 bg-accent text-accent-foreground rounded-full px-8 text-base font-bold shadow-lg hover:bg-accent/90">
+                    <ShoppingCart className="mr-3 h-6 w-6"/>
+                    Buy Now
+                </Button>
             </div>
-          </div>
-      </section>
+        </div>
+
+        {/* Right Column */}
+        <div className="lg:w-1/2 relative flex items-center justify-center">
+            <div className="absolute w-[30rem] h-[30rem] bg-secondary rounded-full -z-0" />
+
+            <div className="relative z-10 w-[24rem] h-[24rem]">
+                 <Image
+                    src="https://picsum.photos/seed/chair-main/800/800"
+                    alt="Stylish black chair"
+                    width={800}
+                    height={800}
+                    className="object-contain drop-shadow-2xl"
+                    data-ai-hint="black chair"
+                />
+            </div>
+
+            {/* Floating Cards */}
+            <div className="absolute z-20 top-8 -right-8 bg-card shadow-lg rounded-full px-6 py-3">
+                <p className="font-semibold">Minimalistic</p>
+            </div>
+             <div className="absolute z-20 bottom-16 -left-12 bg-card shadow-lg rounded-full px-6 py-3">
+                <p className="font-semibold text-accent">¡Super cozy!</p>
+            </div>
+
+            {/* Image thumbnails */}
+            <div className="absolute z-20 top-20 right-0 space-y-3">
+                <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-card shadow-md">
+                     <Image
+                        src="https://picsum.photos/seed/thumb1/100/100"
+                        alt="Kitchen"
+                        width={100}
+                        height={100}
+                        className="object-cover"
+                        data-ai-hint="modern kitchen"
+                    />
+                </div>
+                <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-card shadow-md">
+                     <Image
+                        src="https://picsum.photos/seed/thumb2/100/100"
+                        alt="Play area"
+                        width={100}
+                        height={100}
+                        className="object-cover"
+                        data-ai-hint="kids playroom"
+                    />
+                </div>
+                 <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-card shadow-md">
+                     <Image
+                        src="https://picsum.photos/seed/thumb3/100/100"
+                        alt="Bedroom"
+                        width={100}
+                        height={100}
+                        className="object-cover"
+                        data-ai-hint="cozy bedroom"
+                    />
+                </div>
+            </div>
+        </div>
+         <div className="absolute bottom-12 right-12 hidden lg:block">
+             <Link href="/shop" className="flex items-center gap-2 text-sm font-medium text-foreground/70 hover:text-foreground">
+                Continue shopping <ArrowRight className="h-4 w-4"/>
+            </Link>
+        </div>
     </div>
   );
 }

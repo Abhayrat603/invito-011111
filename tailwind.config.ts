@@ -18,7 +18,7 @@ export default {
     extend: {
       fontFamily: {
         body: ['"Geist Sans"', 'sans-serif'],
-        headline: ['"Geist Sans"', 'sans-serif'],
+        headline: ['"Playfair Display"', 'serif'],
         code: ['monospace'],
       },
       colors: {

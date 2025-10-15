@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import {
   Avatar,
@@ -27,25 +27,6 @@ export default function UserNav() {
     return <Skeleton className="h-10 w-10 rounded-full" />;
   }
 
-  if (!user) {
-    return (
-      <div className="flex items-center gap-2">
-         <Button asChild variant="ghost">
-          <Link href="/login">
-            <LogIn className="mr-2 h-4 w-4"/>
-            Sign In
-          </Link>
-        </Button>
-        <Button asChild>
-          <Link href="/signup">
-             <UserPlus className="mr-2 h-4 w-4"/>
-            Sign Up
-          </Link>
-        </Button>
-      </div>
-    );
-  }
-
   const getInitials = (email: string) => {
     return email[0].toUpperCase();
   };
@@ -53,17 +34,16 @@ export default function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src="/avatars/01.png" alt="User avatar" />
-            <AvatarFallback>
-              {user.email ? getInitials(user.email) : "U"}
-            </AvatarFallback>
+        <Button variant="ghost" className="relative h-10 w-10 rounded-full bg-background">
+          <Avatar className="h-10 w-10 text-accent">
+            { user ? <AvatarFallback>{user.email ? getInitials(user.email) : "U"}</AvatarFallback> : <User />}
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
+        { user ? (
+          <>
+          <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
               {user.displayName || "User"}
@@ -93,6 +73,24 @@ export default function UserNav() {
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>
+        </>
+        ) : (
+          <DropdownMenuGroup>
+            <DropdownMenuItem asChild>
+              <Link href="/login">
+                <LogIn className="mr-2 h-4 w-4" />
+                <span>Sign In</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/signup">
+                <UserPlus className="mr-2 h-4 w-4" />
+                <span>Sign Up</span>
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        )}
+        
       </DropdownMenuContent>
     </DropdownMenu>
   );
