@@ -38,7 +38,7 @@ const formSchema = z.object({
 });
 
 export default function SignupPage() {
-  const { signUp } = useAuth();
+  const { signUp, sendVerificationEmail } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = React.useState(false);
@@ -57,11 +57,12 @@ export default function SignupPage() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await signUp(values.email, values.password);
+      await sendVerificationEmail();
       toast({
         title: "Account Created",
-        description: "You've been successfully signed up.",
+        description: "A verification email has been sent. Please check your inbox.",
       });
-      router.push("/");
+      router.push("/verify-email");
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -139,7 +140,7 @@ export default function SignupPage() {
                             <div className="relative">
                                <Input type={showPassword ? "text" : "password"} placeholder="Password" {...field} className="bg-secondary rounded-full border-none h-12 px-6 pr-12" />
                                <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground/50 hover:bg-secondary" onClick={() => setShowPassword(p => !p)}>
-                                {showPassword ? <EyeOff/> : <Eye />}
+                                {showPassword ? <EyeOff className="h-5 w-5 opacity-50"/> : <Eye className="h-5 w-5 opacity-50"/>}
                                </Button>
                             </div>
                           </FormControl>
@@ -156,7 +157,7 @@ export default function SignupPage() {
                              <div className="relative">
                                <Input type={showPassword ? "text" : "password"} placeholder="Confirm Password" {...field} className="bg-secondary rounded-full border-none h-12 px-6 pr-12" />
                                <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground/50 hover:bg-secondary" onClick={() => setShowPassword(p => !p)}>
-                                {showPassword ? <EyeOff/> : <Eye />}
+                                {showPassword ? <EyeOff className="h-5 w-5 opacity-50"/> : <Eye className="h-5 w-5 opacity-50"/>}
                                </Button>
                             </div>
                           </FormControl>

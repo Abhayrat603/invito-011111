@@ -10,8 +10,18 @@ import { Button } from "@/components/ui/button";
 import { MainLayout } from "@/components/main-layout";
 import { products } from "@/lib/mock-data";
 import { ProductCard } from "@/components/product-card";
+import { useAuth } from "@/components/providers/auth-provider";
+import { useRouter } from "next/navigation";
 
 export default function EcommerceHomePage() {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  if (user && !user.emailVerified) {
+    router.replace('/verify-email');
+    return null;
+  }
+
   return (
     <AuthRedirect to="/login" condition="is-not-auth">
       <MainLayout>

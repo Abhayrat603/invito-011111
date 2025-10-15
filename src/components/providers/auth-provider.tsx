@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, type User } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendEmailVerification, type User } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { app } from '@/lib/firebase';
 import { createSessionCookie, clearSessionCookie } from '@/lib/actions';
@@ -12,6 +12,7 @@ interface AuthContextType {
   signUp: (email: string, pass: string) => Promise<any>;
   signIn: (email: string, pass: string) => Promise<any>;
   signOut: () => Promise<void>;
+  sendVerificationEmail: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,8 +28,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(user);
       setLoading(false);
       if(user) {
-        const idToken = await user.getIdToken();
-        await createSessionCookie(idToken);
+        if (user.emailVerified) {
+            const idToken = await user.getIdToken();
+            await createSessionCookie(idToken);
+        }
       } else {
         await clearSessionCookie();
       }
@@ -47,10 +50,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     await firebaseSignOut(auth);
-    router.push('/');
+    router.push('/login');
   };
 
-  const value = { user, loading, signUp, signIn, signOut };
+  const sendVerificationEmail = async () => {
+    if (auth.currentUser) {
+      await sendEmailVerification(auth.currentUser);
+    } else {
+      throw new Error("No user is currently signed in.");
+    }
+  };
+
+
+  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
