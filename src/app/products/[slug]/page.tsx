@@ -106,10 +106,10 @@ export default function ProductDetailPage() {
           
           <div className="space-y-4">
             {onSale && <Badge variant="outline" className="text-sm font-semibold border-yellow-500 text-yellow-600">Paid</Badge>}
-            <h1 className="text-2xl font-bold leading-tight">{product.name}</h1>
+            <h1 className="text-xl font-bold leading-tight">{product.name}</h1>
             
             <div className="flex items-center justify-between">
-              <span className="text-3xl font-bold text-foreground">₹{product.price.toFixed(2)}</span>
+              <span className="text-2xl font-bold text-foreground">₹{product.price.toFixed(2)}</span>
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" onClick={() => setQuantity(q => Math.max(1, q - 1))}>
                   <Minus className="h-4 w-4" />
@@ -121,14 +121,14 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            <div className="flex flex-wrap items-stretch gap-2">
-              <Button size="lg" className="flex-1 bg-amber-800 hover:bg-amber-900 h-12 min-w-[120px]" onClick={handleAddToCart}>
-                <Download className="mr-2 h-5 w-5" /> Download
-              </Button>
-              <Button size="lg" variant="outline" className="flex-1 h-12 min-w-[120px]" onClick={handleAddToCart}>Buy now</Button>
-              <Button variant="outline" size="icon" className="h-12 w-12 shrink-0" onClick={handleToggleWishlist}>
-                <Heart className={`h-6 w-6 ${isLiked ? 'text-red-500 fill-current' : ''}`} />
-              </Button>
+            <div className="flex items-stretch gap-2">
+                <Button size="lg" className="flex-1 bg-amber-800 hover:bg-amber-900 h-11 min-w-[100px] text-xs px-2" onClick={handleAddToCart}>
+                    <Download className="mr-1.5 h-4 w-4" /> Download
+                </Button>
+                <Button size="lg" variant="outline" className="flex-1 h-11 min-w-[100px] text-xs px-2" onClick={handleAddToCart}>Buy now</Button>
+                <Button variant="outline" size="icon" className="h-11 w-11 shrink-0" onClick={handleToggleWishlist}>
+                    <Heart className={`h-5 w-5 ${isLiked ? 'text-red-500 fill-current' : ''}`} />
+                </Button>
             </div>
           </div>
 
@@ -173,5 +173,3 @@ export default function ProductDetailPage() {
     </MainLayout>
   );
 }
-
-    
