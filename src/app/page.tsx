@@ -34,52 +34,46 @@ export default function EcommerceHomePage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const scrollViewportRef = useRef<HTMLDivElement>(null);
-  const isInteractingRef = useRef(false);
+  const isHoveringRef = useRef(false);
+  const animationFrameRef = useRef<number>();
 
   useEffect(() => {
     const scrollEl = scrollViewportRef.current;
     if (!scrollEl) return;
 
-    let scrollInterval: NodeJS.Timeout;
-
-    const startScrolling = () => {
-      scrollInterval = setInterval(() => {
-        if (!scrollEl || isInteractingRef.current) return;
-
-        const { scrollLeft, scrollWidth, clientWidth } = scrollEl;
-        if (scrollLeft + clientWidth >= scrollWidth - 1) {
-          scrollEl.scrollTo({ left: 0, behavior: 'smooth' });
+    const scroll = () => {
+      if (!isHoveringRef.current) {
+        if (scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth) {
+          // Reset to the beginning instantly for a seamless loop
+          scrollEl.scrollLeft = 0;
         } else {
+          // Scroll by 1 pixel
           scrollEl.scrollLeft += 1;
         }
-      }, 50); 
+      }
+      animationFrameRef.current = requestAnimationFrame(scroll);
     };
 
-    const stopScrolling = () => {
-      clearInterval(scrollInterval);
-      isInteractingRef.current = true;
-    };
-    
-    const resumeScrolling = () => {
-      isInteractingRef.current = false;
-      startScrolling();
-    };
+    animationFrameRef.current = requestAnimationFrame(scroll);
 
-    startScrolling();
+    const handleMouseEnter = () => { isHoveringRef.current = true; };
+    const handleMouseLeave = () => { isHoveringRef.current = false; };
 
-    scrollEl.addEventListener('mouseenter', stopScrolling);
-    scrollEl.addEventListener('mouseleave', resumeScrolling);
-    scrollEl.addEventListener('touchstart', stopScrolling, { passive: true });
-    scrollEl.addEventListener('touchend', resumeScrolling);
+    scrollEl.addEventListener('mouseenter', handleMouseEnter);
+    scrollEl.addEventListener('mouseleave', handleMouseLeave);
+    scrollEl.addEventListener('touchstart', handleMouseEnter, { passive: true });
+    scrollEl.addEventListener('touchend', handleMouseLeave);
 
 
     return () => {
-      clearInterval(scrollInterval);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
       if (scrollEl) {
-        scrollEl.removeEventListener('mouseenter', stopScrolling);
-        scrollEl.removeEventListener('mouseleave', resumeScrolling);
-        scrollEl.removeEventListener('touchstart', stopScrolling);
-        scrollEl.removeEventListener('touchend', resumeScrolling);
+        scrollEl.removeEventListener('mouseenter', handleMouseEnter);
+        scrollEl.removeEventListener('mouseleave', handleMouseLeave);
+        scrollEl.removeEventListener('touchstart', handleMouseEnter);
+        scrollEl.removeEventListener('touchend', handleMouseLeave);
       }
     };
   }, []);
