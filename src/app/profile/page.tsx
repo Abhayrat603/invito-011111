@@ -6,7 +6,7 @@ import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/providers/auth-provider";
 import Image from "next/image";
-import { HelpCircle, LogOut, ChevronRight, Camera, Pencil, Shield, FileText, Info, Mail, UserCog } from "lucide-react";
+import { HelpCircle, LogOut, ChevronRight, Camera, Pencil, Shield, FileText, Info, Mail, UserCog, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import React, { useRef, useState, useCallback } from "react";
@@ -128,6 +128,7 @@ export default function ProfilePage() {
                         </div>
                     )}
                     <ProfileMenuItem icon={Pencil} text="Edit Profile" href="/profile/edit" />
+                    <ProfileMenuItem icon={Sparkles} text="Help with AI" href="/ai-help" />
                     <ProfileMenuItem icon={HelpCircle} text="Help Center" href="/help-center" />
                     <ProfileMenuItem icon={Mail} text="Contact Us" href="/contact-us" />
                     <div className="pt-2">

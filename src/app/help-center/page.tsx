@@ -4,156 +4,109 @@
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Send, User, Bot, Sparkles } from "lucide-react";
+import { ArrowLeft, LifeBuoy, BookOpen, Shield, Truck, RotateCw, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
-import { helpChat } from "@/ai/flows/help-chat-flow";
-import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuth } from "@/components/providers/auth-provider";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
-type Message = {
-    role: 'user' | 'model';
-    content: string;
-};
+const faqs = [
+    {
+        question: "What is your return policy?",
+        answer: "We offer a 30-day return policy for a full refund on all items that are unworn, unwashed, and in their original packaging with tags attached. Sale items are final and cannot be returned."
+    },
+    {
+        question: "How long does shipping take?",
+        answer: "Standard shipping typically takes 3-5 business days. Expedited shipping options are available at checkout for an additional fee. You will receive a tracking number once your order has shipped."
+    },
+    {
+        question: "How do I track my order?",
+        answer: "Once your order is shipped, you will receive an email with a tracking number and a link to the carrier's website. You can also find your tracking information in your account dashboard under 'My Orders'."
+    },
+    {
+        question: "Do you ship internationally?",
+        answer: "Yes, we ship to most countries worldwide. International shipping rates and times vary depending on the destination. Please note that customs fees and import duties are the responsibility of the customer."
+    },
+    {
+        question: "Can I change or cancel my order?",
+        answer: "We process orders quickly, but we will do our best to accommodate any changes. Please contact our customer support team as soon as possible. If the order has already been shipped, you will need to follow the standard return process."
+    },
+     {
+        question: "What payment methods do you accept?",
+        answer: "We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and other secure payment gateways. All transactions are encrypted for your security."
+    },
+];
+
+const HelpCategory = ({ icon: Icon, title, description, href }: { icon: React.ElementType, title: string, description: string, href: string }) => (
+    <Link href={href}>
+        <div className="bg-card p-4 rounded-lg shadow-sm hover:bg-accent transition-colors">
+            <div className="flex items-center">
+                <Icon className="h-8 w-8 text-primary mr-4"/>
+                <div>
+                    <h3 className="font-semibold text-foreground">{title}</h3>
+                    <p className="text-sm text-muted-foreground">{description}</p>
+                </div>
+            </div>
+        </div>
+    </Link>
+);
 
 export default function HelpCenterPage() {
     const router = useRouter();
-    const { user } = useAuth();
-    const [messages, setMessages] = useState<Message[]>([]);
-    const [input, setInput] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const scrollViewportRef = useRef<HTMLDivElement>(null);
-
-    const scrollToBottom = () => {
-        if (scrollViewportRef.current) {
-            scrollViewportRef.current.scrollTop = scrollViewportRef.current.scrollHeight;
-        }
-    }
-
-    useEffect(() => {
-        // A slight delay to allow the new message to render before scrolling
-        setTimeout(scrollToBottom, 100);
-    }, [messages]);
-    
-    useEffect(() => {
-        // Initial bot message
-        setMessages([{ role: 'model', content: "Hello! I'm your AI assistant for Night Fury. How can I help you today?" }]);
-    }, []);
-
-    const handleSendMessage = async () => {
-        if (input.trim() === "" || isLoading) return;
-
-        const userMessage: Message = { role: 'user', content: input };
-        setMessages(prev => [...prev, userMessage]);
-        const currentInput = input;
-        setInput("");
-        setIsLoading(true);
-        
-        // Format history for the AI flow
-        const historyForAI = messages.map(msg => ({
-            role: msg.role as 'user' | 'model',
-            content: [{ text: msg.content }]
-        }));
-
-        try {
-            const botResponse = await helpChat({
-                history: historyForAI,
-                message: currentInput,
-            });
-
-            const botMessage: Message = { role: 'model', content: botResponse };
-            setMessages(prev => [...prev, botMessage]);
-        } catch (error) {
-            console.error("AI Error:", error);
-            const errorMessage: Message = { role: 'model', content: "Sorry, I'm having trouble connecting. Please try again later." };
-            setMessages(prev => [...prev, errorMessage]);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
 
     return (
         <MainLayout>
-            <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10 shrink-0">
-                <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                    <ArrowLeft />
-                </Button>
-                <div className="flex-grow flex items-center justify-center">
-                   <Sparkles className="h-6 w-6 text-primary mr-2"/>
-                   <h1 className="text-xl font-bold">AI Help Assistant</h1>
-                </div>
-                <div className="w-10"></div>
-            </header>
-            <div className="flex-grow flex flex-col overflow-hidden bg-secondary/30">
-                <ScrollArea className="flex-grow p-4" viewportRef={scrollViewportRef}>
-                     <div className="space-y-2 pb-16">
-                        {messages.map((message, index) => (
-                            <div key={index} className={cn("flex items-end gap-3 w-full", message.role === 'user' ? 'justify-end' : 'justify-start')}>
-                                {message.role === 'model' && (
-                                    <Avatar className="h-9 w-9 border-2 border-primary/50">
-                                        <AvatarFallback className="bg-primary/20"><Bot className="text-primary"/></AvatarFallback>
-                                    </Avatar>
-                                )}
-                                <div className={cn("rounded-2xl px-4 py-3 max-w-[80%] shadow-md", 
-                                    message.role === 'user' 
-                                        ? 'bg-primary text-primary-foreground rounded-br-none' 
-                                        : 'bg-card text-card-foreground rounded-bl-none'
-                                )}>
-                                    <p className="text-sm leading-relaxed">{message.content}</p>
-                                </div>
-                                {message.role === 'user' && (
-                                    <Avatar className="h-9 w-9 border-2 border-border">
-                                        <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'User'}/>
-                                        <AvatarFallback><User/></AvatarFallback>
-
-                                    </Avatar>
-                                )}
-                            </div>
-                        ))}
-                        {isLoading && (
-                            <div className="flex items-end gap-3 justify-start">
-                                <Avatar className="h-9 w-9 border-2 border-primary/50">
-                                    <AvatarFallback className="bg-primary/20"><Bot className="text-primary"/></AvatarFallback>
-                                </Avatar>
-                                <div className="rounded-2xl px-4 py-3 bg-card text-card-foreground rounded-bl-none shadow-md">
-                                    <div className="flex items-center space-x-2">
-                                       <span className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                                       <span className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                                       <span className="h-2 w-2 bg-primary rounded-full animate-bounce"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+            <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col">
+                <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
+                    <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                        <ArrowLeft />
+                    </Button>
+                    <div className="flex-grow flex items-center justify-center">
+                       <LifeBuoy className="h-6 w-6 text-primary mr-2"/>
+                       <h1 className="text-xl font-bold">Help Center</h1>
                     </div>
-                </ScrollArea>
-                <div className="p-4 border-t bg-background shrink-0 absolute bottom-16 left-0 right-0 w-full max-w-md mx-auto">
+                    <div className="w-10"></div>
+                </header>
+                <main className="flex-grow p-4 md:p-6 space-y-8">
                     <div className="relative">
-                        <Input 
-                            placeholder="Ask me anything..." 
-                            className="pr-12 h-12 rounded-full bg-card pl-5" 
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                            disabled={isLoading}
-                        />
-                        <Button 
-                            variant="default" 
-                            size="icon" 
-                            className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full"
-                            onClick={handleSendMessage}
-                            disabled={isLoading || input.trim() === ""}
-                        >
-                            <Send className="h-5 w-5"/>
-                        </Button>
+                        <Input placeholder="Search for help..." className="pr-10 h-11" />
+                        <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     </div>
-                     <div className="text-center mt-3">
-                        <p className="text-xs text-muted-foreground">Can't find your answer? <Link href="/contact-us" className="text-primary underline">Contact Support</Link></p>
-                     </div>
-                </div>
+
+                    <div className="space-y-4">
+                        <h2 className="text-lg font-semibold">Help Categories</h2>
+                         <div className="grid grid-cols-1 gap-3">
+                            <HelpCategory icon={Truck} title="Shipping & Delivery" description="Track your order, learn about times" href="#" />
+                            <HelpCategory icon={RotateCw} title="Returns & Exchanges" description="Our policy and how to start a return" href="#" />
+                            <HelpCategory icon={Shield} title="Account & Security" description="Manage your profile and password" href="/profile/edit" />
+                            <HelpCategory icon={BookOpen} title="About Our Products" description="Sizing, materials, and care" href="/about-us" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 className="text-lg font-semibold mb-2">Frequently Asked Questions</h2>
+                         <Accordion type="single" collapsible className="w-full">
+                            {faqs.map((faq, index) => (
+                                <AccordionItem value={`item-${index}`} key={index}>
+                                    <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
+                                    <AccordionContent>
+                                        {faq.answer}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                    </div>
+
+                    <div className="text-center text-muted-foreground pt-4">
+                        <p>Can't find what you're looking for?</p>
+                        <p>Our AI assistant might be able to help, or you can <Link href="/contact-us" className="text-primary underline">contact our support team</Link>.</p>
+                    </div>
+
+                </main>
             </div>
         </MainLayout>
     );
