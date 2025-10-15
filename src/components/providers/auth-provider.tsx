@@ -2,7 +2,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendEmailVerification, sendPasswordResetEmail, updateProfile, type User } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendEmailVerification, sendPasswordResetEmail, updateProfile, type User, updateEmail, updatePassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { app } from '@/lib/firebase';
 import { createSessionCookie, clearSessionCookie } from '@/lib/actions';
@@ -18,6 +18,8 @@ interface AuthContextType {
   sendPasswordReset: (email: string) => Promise<void>;
   updateUserProfile: (profileData: { displayName?: string; photoURL?: string }) => Promise<void>;
   updateUserProfilePicture: (file: File) => Promise<void>;
+  updateUserEmail: (email: string) => Promise<void>;
+  updateUserPassword: (password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -61,10 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
     if (userCredential.user) {
       await updateProfile(userCredential.user, { displayName: name });
-      // The onAuthStateChanged listener will handle setting the user state.
-      // We trigger a refresh of the user object to get the latest profile data.
-      await userCredential.user.reload();
-      setUser(auth.currentUser);
+      setUser({ ...userCredential.user, displayName: name });
     }
     return userCredential;
   };
@@ -94,15 +93,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const updateUserProfile = async (profileData: { displayName?: string; photoURL?: string }) => {
-    if (!auth.currentUser) {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
       throw new Error("No user is signed in.");
     }
-    await updateProfile(auth.currentUser, profileData);
+    await updateProfile(currentUser, profileData);
     
-    // Create a new user object to force a re-render in React components
-    if (auth.currentUser) {
-       setUser(Object.assign(Object.create(auth.currentUser), auth.currentUser));
-    }
+    setUser(null); 
+    setUser(auth.currentUser);
+  };
+  
+  const updateUserEmail = async (email: string) => {
+    if (!auth.currentUser) throw new Error("No user is signed in.");
+    await updateEmail(auth.currentUser, email);
+    await sendVerificationEmail(); 
+    await updateUserProfile({}); 
+  };
+
+  const updateUserPassword = async (password: string) => {
+    if (!auth.currentUser) throw new Error("No user is signed in.");
+    await updatePassword(auth.currentUser, password);
+    await updateUserProfile({}); 
   };
 
   const updateUserProfilePicture = async (file: File) => {
@@ -113,7 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await updateUserProfile({ photoURL: newPhotoURL });
   };
 
-  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset, updateUserProfile, updateUserProfilePicture };
+  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset, updateUserProfile, updateUserProfilePicture, updateUserEmail, updateUserPassword };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

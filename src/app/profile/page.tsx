@@ -101,7 +101,7 @@ export default function ProfilePage() {
                         <ProfileMenuItem icon={Bell} text="Notifications" href="#" />
                     </div>
                     <div className="mb-2">
-                        <ProfileMenuItem icon={Settings} text="Settings" href="#" />
+                        <ProfileMenuItem icon={Settings} text="Settings" href="/profile/settings" />
                     </div>
                     <div className="mb-4">
                         <ProfileMenuItem icon={HelpCircle} text="Help Center" href="#" />
