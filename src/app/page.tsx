@@ -52,37 +52,23 @@ export default function ServicesPage() {
                   const image = getPlaceholderImage(product.images[0]);
                   return (
                     <div key={product.id} className="bg-card rounded-lg overflow-hidden shadow-sm border border-border">
-                       <div className="relative group">
-                          <div className="absolute top-0 left-0 bg-black text-white text-xs font-bold uppercase px-3 py-1 -rotate-45 -translate-x-6 translate-y-2 z-10">Sale</div>
+                       <div className="relative group overflow-hidden">
+                          <div className="absolute top-0 left-0 bg-black text-white text-xs font-bold uppercase px-8 py-1.5 -rotate-45 -translate-x-8 translate-y-3 z-10 shadow-md">Sale</div>
                           <div className="relative w-full aspect-square">
                             {image && <Image src={image.imageUrl} alt={product.name} layout="fill" objectFit="cover" data-ai-hint={image.imageHint} />}
                           </div>
-                          <div className="absolute top-2 right-2 flex flex-col gap-2">
-                              <Button variant="outline" size="icon" className="h-8 w-8 bg-white/80 backdrop-blur-sm border-border">
-                                  <Heart className="h-4 w-4"/>
-                              </Button>
-                              <Button variant="outline" size="icon" className="h-8 w-8 bg-white/80 backdrop-blur-sm border-border">
-                                  <Eye className="h-4 w-4"/>
-                              </Button>
-                              <Button variant="outline" size="icon" className="h-8 w-8 bg-white/80 backdrop-blur-sm border-border">
-                                  <Repeat className="h-4 w-4"/>
-                              </Button>
-                              <Button variant="outline" size="icon" className="h-8 w-8 bg-white/80 backdrop-blur-sm border-border">
-                                  <ShoppingBag className="h-4 w-4"/>
-                              </Button>
-                          </div>
                        </div>
-                       <div className="p-4 text-center">
-                          <p className="text-sm text-primary font-bold uppercase">{product.category}</p>
-                          <h3 className="font-semibold text-foreground mt-1 truncate">{product.name}</h3>
-                          <div className="flex justify-center items-center mt-2">
+                       <div className="p-4 text-left">
+                          <p className="text-sm text-primary font-bold uppercase tracking-wider">{product.category}</p>
+                          <h3 className="font-semibold text-foreground mt-1 truncate text-lg">{product.name}</h3>
+                          <div className="flex items-center mt-2">
                             {[...Array(5)].map((_, i) => (
-                                <Star key={i} className={cn("h-4 w-4", i < 3 ? "text-yellow-400 fill-yellow-400" : "text-gray-300")} />
+                                <Star key={i} className={cn("h-5 w-5", i < 3 ? "text-yellow-400 fill-yellow-400" : "text-gray-300")} />
                             ))}
                           </div>
-                          <div className="flex justify-center items-baseline gap-2 mt-2">
-                            <p className="text-lg font-bold text-foreground">${product.price.toFixed(2)}</p>
-                            <p className="text-sm text-muted-foreground line-through">${(product.price * 1.1).toFixed(2)}</p>
+                          <div className="flex items-baseline gap-2 mt-2">
+                            <p className="text-xl font-bold text-foreground">${product.price.toFixed(2)}</p>
+                            <p className="text-base text-muted-foreground line-through">${(product.price * 1.1).toFixed(2)}</p>
                           </div>
                        </div>
                     </div>
@@ -96,3 +82,4 @@ export default function ServicesPage() {
     </AuthRedirect>
   );
 }
+
