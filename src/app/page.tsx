@@ -8,8 +8,9 @@ import { Search, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MainLayout } from "@/components/main-layout";
-import { products, categories } from "@/lib/mock-data";
+import { products, categories, dealProduct } from "@/lib/mock-data";
 import { ProductCard } from "@/components/product-card";
+import { DealOfTheDayCard } from "@/components/deal-of-the-day-card";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
@@ -151,6 +152,9 @@ export default function EcommerceHomePage() {
               </header>
 
               <main className="pb-4">
+                  <section className="px-4 mb-6">
+                    <DealOfTheDayCard product={dealProduct} />
+                  </section>
                   <section className="mb-4">
                       <ScrollArea className="w-full whitespace-nowrap" viewportRef={scrollViewportRef}>
                         <div className="flex w-max space-x-2 p-4">

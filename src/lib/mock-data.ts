@@ -1,4 +1,4 @@
-import type { Product, Category, EditRequest, Order } from './types';
+import type { Product, Category, EditRequest, Order, DealProduct } from './types';
 
 export const categories: Category[] = [
   { id: 'cat1', name: 'Wedding', imageId: 'category-wedding' },
@@ -188,3 +188,22 @@ export const orders: Order[] = [
         createdAt: new Date('2023-10-07T10:00:00Z'),
     },
 ];
+
+const offerEndDate = new Date();
+offerEndDate.setHours(offerEndDate.getHours() + 24);
+
+export const dealProduct: DealProduct = {
+  id: 'dealprod1',
+  slug: 'shampoo-conditioner-facewash',
+  name: 'Shampoo, Conditioner & Facewash',
+  description: 'A complete grooming kit for men. The ultimate swagger pack for everyday freshness.',
+  price: 200,
+  discountPrice: 150,
+  images: ['product-deal-1'],
+  category: 'Personal Care',
+  createdAt: new Date(),
+  offerEndsAt: offerEndDate,
+  stock: 60,
+  sold: 20,
+  rating: 3.5,
+};

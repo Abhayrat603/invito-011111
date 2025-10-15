@@ -22,6 +22,14 @@ export interface Product {
   createdAt: Date;
 }
 
+export interface DealProduct extends Product {
+  discountPrice: number;
+  offerEndsAt: Date;
+  stock: number;
+  sold: number;
+  rating: number;
+}
+
 export interface CartItem {
   productId: string;
   quantity: number;

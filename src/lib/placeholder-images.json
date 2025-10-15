@@ -191,6 +191,12 @@
       "description": "A calendar with a heart on a date",
       "imageUrl": "https://picsum.photos/seed/cat-save-date/100/100",
       "imageHint": "calendar date"
+    },
+    {
+      "id": "product-deal-1",
+      "description": "Old Spice grooming kit",
+      "imageUrl": "https://picsum.photos/seed/oldspice/500/500",
+      "imageHint": "grooming kit"
     }
   ]
 }
