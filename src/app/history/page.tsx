@@ -58,6 +58,9 @@ const orderStatusConfig = {
 
 export default function HistoryPage() {
     const router = useRouter();
+    
+    const deliveredOrders = orders.filter(order => order.status === 'Delivered');
+    const approvedRequests = editRequests.filter(request => request.status === 'Approved');
 
     return (
         <MainLayout>
@@ -76,13 +79,13 @@ export default function HistoryPage() {
                 <main className="flex-grow p-4 md:p-6 space-y-8">
                     <section>
                          <h2 className="text-lg font-semibold flex items-center mb-4"><ShoppingCart className="h-5 w-5 mr-2 text-primary"/> Order History</h2>
-                         {orders.length === 0 ? (
+                         {deliveredOrders.length === 0 ? (
                             <div className="text-center text-muted-foreground mt-10">
-                                <p>You haven't placed any orders yet.</p>
+                                <p>You have no delivered orders.</p>
                             </div>
                         ) : (
                             <div className="space-y-4">
-                            {orders.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).map(order => {
+                            {deliveredOrders.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).map(order => {
                                 const { color, text } = orderStatusConfig[order.status];
                                 return (
                                     <Card key={order.id} className="overflow-hidden">
@@ -124,13 +127,13 @@ export default function HistoryPage() {
                     
                     <section>
                         <h2 className="text-lg font-semibold flex items-center mb-4"><FileText className="h-5 w-5 mr-2 text-primary"/> Edit Request History</h2>
-                        {editRequests.length === 0 ? (
+                        {approvedRequests.length === 0 ? (
                             <div className="text-center text-muted-foreground mt-10">
-                                <p>You haven't made any edit requests yet.</p>
+                                <p>You have no approved edit requests.</p>
                             </div>
                         ) : (
                             <div className="space-y-4">
-                            {editRequests.sort((a, b) => b.requestedAt.getTime() - a.requestedAt.getTime()).map(request => {
+                            {approvedRequests.sort((a, b) => b.requestedAt.getTime() - a.requestedAt.getTime()).map(request => {
                                 const { icon: Icon, color, text } = editStatusConfig[request.status];
                                 return (
                                     <Card key={request.id} className="overflow-hidden">

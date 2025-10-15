@@ -1,190 +1,94 @@
 
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useToast } from "@/hooks/use-toast";
 import { MainLayout } from "@/components/main-layout";
-import { ArrowLeft, User, Mail, Phone, Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Clock, CheckCircle, XCircle, FileText } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { editRequests } from "@/lib/mock-data";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { format } from "date-fns";
 import { EditIcon } from "@/components/icons/edit-icon";
 
-const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email." }),
-  phone: z.string().min(10, { message: "Please enter a valid phone number." }),
-  description: z.string().min(10, { message: "Please describe your edit request in at least 10 characters." }),
-  turnaround: z.enum(["urgent", "1-day", "2-days"], {
-    required_error: "You need to select a turnaround time.",
-  }),
-});
+const editStatusConfig = {
+  Pending: {
+    icon: Clock,
+    color: "bg-yellow-500",
+    text: "text-yellow-800 dark:text-yellow-200",
+  },
+  Approved: {
+    icon: CheckCircle,
+    color: "bg-green-500",
+    text: "text-green-800 dark:text-green-200",
+  },
+  Rejected: {
+    icon: XCircle,
+    color: "bg-red-500",
+    text: "text-red-800 dark:text-red-200",
+  },
+};
 
-export default function RequestEditPage() {
+export default function RequestEditHistoryPage() {
     const router = useRouter();
-    const { toast } = useToast();
-
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: "",
-            email: "",
-            phone: "",
-            description: "",
-        },
-    });
-
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log("Edit Request Submitted:", values);
-        toast({
-            title: "Request Sent!",
-            description: "We have received your edit request and will get back to you shortly.",
-        });
-        form.reset();
-        router.push('/');
-    };
 
     return (
         <MainLayout>
-             <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col">
+            <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
                 <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
                     <Button variant="ghost" size="icon" onClick={() => router.back()}>
                         <ArrowLeft />
                     </Button>
                     <div className="flex-grow flex items-center justify-center">
                        <EditIcon className="h-6 w-6 text-primary mr-2"/>
-                       <h1 className="text-xl font-bold">Request an Edit</h1>
+                       <h1 className="text-xl font-bold">My Edit Requests</h1>
                     </div>
                     <div className="w-10"></div>
                 </header>
-                <main className="flex-grow p-4 md:p-6">
-                    <p className="text-muted-foreground mb-6 text-center">Need changes to a design? Fill out the form below and we'll get on it!</p>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Your Name</FormLabel>
-                                        <FormControl>
-                                            <div className="relative">
-                                                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                                                <Input placeholder="Enter your full name" {...field} className="pl-10" />
+                <main className="flex-grow p-4 md:p-6 space-y-8">
+                    <section>
+                        {editRequests.length === 0 ? (
+                            <div className="text-center text-muted-foreground mt-10">
+                                <p>You haven't made any edit requests yet.</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                            {editRequests.sort((a, b) => b.requestedAt.getTime() - a.requestedAt.getTime()).map(request => {
+                                const { icon: Icon, color, text } = editStatusConfig[request.status];
+                                return (
+                                    <Card key={request.id} className="overflow-hidden">
+                                        <CardHeader className="flex flex-row items-center justify-between p-4 bg-card">
+                                            <div className="flex-grow overflow-hidden">
+                                                <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
+                                                <CardDescription className="text-xs">
+                                                    Requested: {format(request.requestedAt, "MMM d, yyyy 'at' h:mm a")}
+                                                </CardDescription>
                                             </div>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Email Address</FormLabel>
-                                        <FormControl>
-                                            <div className="relative">
-                                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                                                <Input placeholder="Enter your email" {...field} className="pl-10" />
-                                            </div>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="phone"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Phone Number</FormLabel>
-                                        <FormControl>
-                                            <div className="relative">
-                                                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                                                <Input placeholder="Enter your phone number" {...field} className="pl-10" />
-                                            </div>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>What needs to be edited?</FormLabel>
-                                        <FormControl>
-                                            <Textarea placeholder="Please describe the changes you need in detail..." {...field} rows={5}/>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                             <FormField
-                                control={form.control}
-                                name="turnaround"
-                                render={({ field }) => (
-                                <FormItem className="space-y-3">
-                                    <FormLabel>How soon do you need it?</FormLabel>
-                                    <FormControl>
-                                    <RadioGroup
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                        className="flex flex-col space-y-1"
-                                    >
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem value="urgent" />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">
-                                                Turant (Urgent)
-                                            </FormLabel>
-                                        </FormItem>
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem value="1-day" />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">
-                                                1 Day
-                                            </FormLabel>
-                                        </FormItem>
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem value="2-days" />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">
-                                                2 Days
-                                            </FormLabel>
-                                        </FormItem>
-                                    </RadioGroup>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                                )}
-                            />
-                            <Button type="submit" className="w-full h-12" disabled={form.formState.isSubmitting}>
-                                <Send className="mr-2 h-4 w-4" />
-                                {form.formState.isSubmitting ? "Sending..." : "Send Request"}
-                            </Button>
-                        </form>
-                    </Form>
+                                            <Badge className={cn("text-xs font-bold", color, text)}>
+                                                <Icon className="h-3 w-3 mr-1.5" />
+                                                {request.status}
+                                            </Badge>
+                                        </CardHeader>
+                                        <Separator />
+                                        <CardContent className="p-4">
+                                            <p className="text-sm text-foreground/80">{request.requestDetails}</p>
+                                        </CardContent>
+                                    </Card>
+                                )
+                            })}
+                            </div>
+                        )}
+                    </section>
                 </main>
             </div>
         </MainLayout>
     );
 }
-    
