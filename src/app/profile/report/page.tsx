@@ -1,9 +1,10 @@
 
 "use client";
 
+import { useRef } from "react";
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Printer, User, ShoppingCart, FileText, Clock, CheckCircle, XCircle } from "lucide-react";
+import { ArrowLeft, Download, User, ShoppingCart, FileText, Clock, CheckCircle, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/providers/auth-provider";
 import { orders, editRequests } from "@/lib/mock-data";
@@ -18,6 +19,8 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const orderStatusConfig = {
     Placed: { color: "bg-blue-500", text: "text-blue-800" },
@@ -35,9 +38,30 @@ const editStatusConfig = {
 export default function ReportPage() {
     const router = useRouter();
     const { user } = useAuth();
+    const reportRef = useRef<HTMLDivElement>(null);
 
-    const handlePrint = () => {
-        window.print();
+    const handleDownload = () => {
+        const input = reportRef.current;
+        if (input) {
+            html2canvas(input, { scale: 2 }).then((canvas) => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                const ratio = canvasWidth / canvasHeight;
+                const width = pdfWidth;
+                const height = width / ratio;
+
+                // If the height is greater than the page height, we might need to split it
+                // For simplicity, this example will scale it to fit one page.
+                let finalHeight = height > pdfHeight ? pdfHeight - 20 : height;
+
+                pdf.addImage(imgData, 'PNG', 0, 10, width, finalHeight);
+                pdf.save("user-report.pdf");
+            });
+        }
     };
 
     // Filter for delivered orders only
@@ -56,12 +80,12 @@ export default function ReportPage() {
                        <FileText className="h-6 w-6 text-primary mr-2"/>
                        <h1 className="text-xl font-bold">User Report</h1>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={handlePrint}>
-                        <Printer />
+                    <Button variant="ghost" size="icon" onClick={handleDownload}>
+                        <Download />
                     </Button>
                 </header>
 
-                <main className="flex-grow p-4 md:p-6 space-y-8">
+                <main ref={reportRef} className="flex-grow p-4 md:p-6 space-y-8">
                     {/* User Details Section */}
                     <section>
                          <h2 className="text-lg font-semibold flex items-center mb-4"><User className="h-5 w-5 mr-2 text-primary"/> User Details</h2>
