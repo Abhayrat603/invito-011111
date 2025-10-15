@@ -1,6 +1,7 @@
 
 "use client";
 
+import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -22,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { AuthRedirect } from "@/components/auth-redirect";
-import { Loader2, User, Lock } from "lucide-react";
+import { Loader2, User, Lock, Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 
 const formSchema = z.object({
@@ -34,6 +35,7 @@ export default function LoginPage() {
   const { signIn } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
+  const [showPassword, setShowPassword] = React.useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -107,7 +109,10 @@ export default function LoginPage() {
                             <FormControl>
                                <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 opacity-50" />
-                                <Input type="password" placeholder="Password" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 pl-12 pr-4 focus-visible:ring-primary/50" />
+                                <Input type={showPassword ? "text" : "password"} placeholder="Password" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 pl-12 pr-12 focus-visible:ring-primary/50" />
+                                <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground/50 hover:bg-transparent" onClick={() => setShowPassword(p => !p)}>
+                                  {showPassword ? <EyeOff className="h-5 w-5 opacity-50"/> : <Eye className="h-5 w-5 opacity-50"/>}
+                                </Button>
                               </div>
                             </FormControl>
                             <FormMessage className="text-destructive/80 text-xs"/>
