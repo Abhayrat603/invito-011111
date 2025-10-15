@@ -21,6 +21,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { useToast } from "@/hooks/use-toast";
 
 const orderStatusConfig = {
     Placed: { color: "bg-blue-500", text: "text-blue-800" },
@@ -39,6 +40,7 @@ export default function ReportPage() {
     const router = useRouter();
     const { user } = useAuth();
     const reportRef = useRef<HTMLDivElement>(null);
+    const { toast } = useToast();
 
     const handleDownload = () => {
         const input = reportRef.current;
@@ -60,6 +62,11 @@ export default function ReportPage() {
 
                 pdf.addImage(imgData, 'PNG', 0, 10, width, finalHeight);
                 pdf.save("user-report.pdf");
+
+                toast({
+                    title: "Download Successful",
+                    description: "Your report has been saved as a PDF.",
+                });
             });
         }
     };
