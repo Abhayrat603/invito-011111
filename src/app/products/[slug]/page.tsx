@@ -50,6 +50,21 @@ export default function ProductDetailPage() {
     });
   }
 
+  const handleDownload = () => {
+    toast({
+      title: "Downloading...",
+      description: "Your file download will begin shortly. (This is a simulation)",
+    });
+    // In a real app, you would trigger a file download here.
+    // For example, by creating a link and clicking it programmatically.
+    const link = document.createElement("a");
+    link.href = findImage(product.images[0])?.imageUrl || '';
+    link.download = `${product.slug}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   const handleToggleWishlist = () => {
     toggleWishlist(product.id);
     toast({
@@ -124,7 +139,7 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="flex flex-wrap items-stretch gap-2">
-                <Button size="sm" className="flex-1 bg-amber-800 hover:bg-amber-900 h-11 min-w-[100px] text-xs px-2" onClick={handleAddToCart}>
+                <Button size="sm" className="flex-1 bg-amber-800 hover:bg-amber-900 h-11 min-w-[100px] text-xs px-2" onClick={handleDownload}>
                     <Download className="mr-1.5 h-4 w-4" /> Download
                 </Button>
                 <Button size="sm" variant="outline" className="flex-1 h-11 min-w-[100px] text-xs px-2" onClick={handleAddToCart}>Buy now</Button>
