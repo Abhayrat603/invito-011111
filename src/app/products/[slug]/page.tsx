@@ -45,14 +45,14 @@ export default function ProductDetailPage() {
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft />
           </Button>
-          <div className="flex-grow flex items-center text-sm text-muted-foreground">
-            <span className="mx-2">Home</span>
-            <ChevronRight className="h-4 w-4" />
-            <span className="mx-2">{product.category}</span>
-            <ChevronRight className="h-4 w-4" />
+          <div className="flex-grow flex items-center text-sm text-muted-foreground overflow-hidden">
+            <span className="mx-2 shrink-0">Home</span>
+            <ChevronRight className="h-4 w-4 shrink-0" />
+            <span className="mx-2 shrink-0">{product.category}</span>
+            <ChevronRight className="h-4 w-4 shrink-0" />
             <span className="mx-2 font-medium text-foreground truncate">{product.name}</span>
           </div>
-          <div className="w-10"></div>
+          <div className="w-10 shrink-0"></div>
         </header>
 
         <main className="flex-grow p-4 md:p-6 space-y-6">

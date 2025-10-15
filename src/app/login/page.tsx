@@ -64,8 +64,8 @@ export default function LoginPage() {
 
   return (
     <AuthRedirect to="/" condition="is-auth">
-      <div className="flex flex-col items-center justify-center min-h-screen p-4">
-        <div className="w-full max-w-sm">
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 overflow-hidden">
+        <div className="w-full max-w-sm relative">
             <div className="relative h-48 w-full rounded-t-3xl overflow-hidden">
               <Image 
                 src="https://picsum.photos/seed/makeup/600/400"
@@ -76,7 +76,7 @@ export default function LoginPage() {
               />
             </div>
             <Card className="rounded-b-3xl shadow-2xl border-none pt-8">
-              <CardContent className="relative p-8 text-center bg-card">
+              <CardContent className="relative p-8 text-center bg-card overflow-hidden">
                  <div className="absolute top-0 left-0 w-32 h-32 bg-primary/10 rounded-full -translate-x-1/3 -translate-y-1/2"></div>
                  <div className="absolute bottom-0 right-0 w-48 h-48 bg-primary/10 rounded-full translate-x-1/4 translate-y-1/4"></div>
 

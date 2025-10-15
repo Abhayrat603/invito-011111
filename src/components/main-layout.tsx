@@ -4,7 +4,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, ShoppingBag, Heart, User, Menu as MenuIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -40,12 +39,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     { href: "/wishlist", icon: Heart, label: "Wishlist", hasNotification: true },
     { href: "/profile", icon: User, label: "Profile" },
   ];
-  
-  const isHelpCenter = pathname === '/help-center';
 
   return (
-    <div className="w-full max-w-md mx-auto bg-background text-foreground h-screen flex flex-col">
-      <main className={cn("flex-grow", { 'pb-16': !isHelpCenter, 'flex flex-col': isHelpCenter })}>
+    <div className="w-full max-w-md mx-auto bg-background text-foreground min-h-screen flex flex-col">
+      <main className="flex-grow pb-16 overflow-y-auto">
         {children}
       </main>
 

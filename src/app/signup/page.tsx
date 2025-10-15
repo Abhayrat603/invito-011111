@@ -76,7 +76,7 @@ export default function SignupPage() {
 
   return (
     <AuthRedirect to="/" condition="is-auth">
-      <div className="flex items-center justify-center min-h-full py-12">
+      <div className="flex items-center justify-center min-h-full py-12 px-4">
         <div className="w-full max-w-sm">
             <Card className="rounded-3xl shadow-2xl overflow-hidden border-none">
               <div className="relative h-48 w-full">
