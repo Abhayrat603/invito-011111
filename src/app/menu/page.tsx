@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { X, Plus, ChevronRight, Facebook, Instagram, Mail } from "lucide-react";
+import { ChevronRight, Facebook, Instagram, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SheetClose } from "@/components/ui/sheet";
 
@@ -23,11 +23,6 @@ const menuItems = [
     { name: "Handmade Invitation", href: "#" },
     { name: "Poster Presentation", href: "#" },
     { name: "Wedding Invitation Video", href: "#" },
-];
-
-const settingsItems = [
-    { name: "Language", href: "#" },
-    { name: "Currency", href: "#" },
 ];
 
 const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -60,26 +55,17 @@ export function MenuPageContent() {
                 <ul className="flex-grow space-y-2">
                     {menuItems.map((item) => (
                         <li key={item.name} className="border-b">
-                            <Link href={item.href} passHref>
-                                <div className="flex justify-between items-center py-4 text-lg">
-                                    <span>{item.name}</span>
-                                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                                </div>
-                            </Link>
+                            <SheetClose asChild>
+                                <Link href={item.href} passHref>
+                                    <div className="flex justify-between items-center py-4 text-lg">
+                                        <span>{item.name}</span>
+                                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                                    </div>
+                                </Link>
+                            </SheetClose>
                         </li>
                     ))}
                 </ul>
-
-                <div className="space-y-2 py-4">
-                     {settingsItems.map((item) => (
-                        <Link href={item.href} key={item.name}>
-                            <div className="flex justify-between items-center py-3 text-lg">
-                                <span>{item.name}</span>
-                                <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                            </div>
-                        </Link>
-                     ))}
-                </div>
                 
                 <div className="flex justify-center items-center space-x-4 py-4">
                     <Button variant="ghost" size="icon" className="bg-secondary rounded-full">
