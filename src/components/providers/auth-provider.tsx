@@ -98,9 +98,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error("No user is signed in.");
     }
     await updateProfile(currentUser, profileData);
-    
-    setUser(null); 
-    setUser(auth.currentUser);
+    // Create a new user object to trigger re-render
+    setUser(Object.assign(Object.create(currentUser), currentUser));
   };
   
   const updateUserEmail = async (email: string) => {

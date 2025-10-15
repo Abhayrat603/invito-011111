@@ -8,12 +8,6 @@ import { useAuth } from "@/components/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Form,
   FormControl,
   FormField,
@@ -24,12 +18,26 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { AuthRedirect } from "@/components/auth-redirect";
-import { Loader2, User, ArrowLeft } from "lucide-react";
+import { Loader2, User, ArrowLeft, Mail, Lock, ChevronRight } from "lucide-react";
 import { MainLayout } from "@/components/main-layout";
+import Link from "next/link";
+import React from "react";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
 });
+
+const SettingsMenuItem = ({ icon: Icon, text, href }: { icon: React.ElementType, text: string, href: string }) => {
+  return (
+    <Link href={href} className="w-full">
+      <div className="flex items-center bg-card p-4 rounded-lg shadow-sm hover:bg-accent transition-colors">
+        <Icon className="h-6 w-6 mr-4 text-primary" />
+        <span className="font-medium flex-grow text-foreground">{text}</span>
+        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+      </div>
+    </Link>
+  );
+};
 
 export default function EditProfilePage() {
   const { user, updateUserProfile } = useAuth();
@@ -42,6 +50,12 @@ export default function EditProfilePage() {
       name: user?.displayName || "",
     },
   });
+  
+  React.useEffect(() => {
+    if (user) {
+      form.reset({ name: user.displayName || "" });
+    }
+  }, [user, form]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -50,7 +64,6 @@ export default function EditProfilePage() {
         title: "Profile Updated",
         description: "Your name has been successfully updated.",
       });
-      router.push("/profile");
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -72,11 +85,9 @@ export default function EditProfilePage() {
             <div className="w-10"></div>
           </header>
           <main className="flex-grow p-4">
-              <Card className="border-none shadow-none">
-                <CardHeader>
-                  <CardTitle>Update Your Information</CardTitle>
-                </CardHeader>
-                <CardContent>
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-lg font-semibold mb-4">Update Your Name</h2>
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                       <FormField
@@ -98,12 +109,19 @@ export default function EditProfilePage() {
                       <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
                         {form.formState.isSubmitting ? (
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : "Save Changes"}
+                        ) : "Save Name"}
                       </Button>
                     </form>
                   </Form>
-                </CardContent>
-              </Card>
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold mb-4">Account Settings</h2>
+                  <div className="space-y-4">
+                      <SettingsMenuItem icon={Mail} text="Change Email" href="/profile/settings/email" />
+                      <SettingsMenuItem icon={Lock} text="Change Password" href="/profile/settings/password" />
+                  </div>
+                </div>
+              </div>
           </main>
         </div>
       </MainLayout>
