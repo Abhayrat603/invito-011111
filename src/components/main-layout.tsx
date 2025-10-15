@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 const NavItem = ({ href, icon: Icon, label, pathname, hasNotification }: { href: string, icon: React.ElementType, label: string, pathname: string, hasNotification?: boolean }) => (
     <Link href={href}>
         <div className={cn("flex flex-col items-center justify-center gap-1 relative", pathname === href ? "text-primary" : "text-muted-foreground")}>
-            <Icon className="w-6 h-6" />
+            <Icon className="w-8 h-8" />
             <span className="text-[10px] font-medium">{label}</span>
             {hasNotification && (
                 <div className="absolute top-0 right-1.5 w-4 h-4 bg-red-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
@@ -47,7 +47,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       </main>
 
        <Sheet>
-        <SheetContent side="left" className="p-0 w-[70vw]">
+        <SheetContent side="left" className="p-0 w-[85vw]">
           <SheetTitle className="sr-only">Menu</SheetTitle>
           <MenuPageContent />
         </SheetContent>
@@ -56,7 +56,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             <div className="flex justify-around items-center h-16">
               <SheetTrigger asChild>
                 <div className="flex flex-col items-center justify-center gap-1 text-muted-foreground">
-                    <MenuIcon className="w-6 h-6" />
+                    <MenuIcon className="w-8 h-8" />
                     <span className="text-[10px] font-medium">Menu</span>
                 </div>
               </SheetTrigger>
