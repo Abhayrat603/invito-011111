@@ -48,12 +48,13 @@ export default function ReportPage() {
 
         try {
             const canvas = await html2canvas(input, {
-                scale: 2, // Increase scale for better resolution
+                scale: 2, // Use a good scale for quality
                 useCORS: true,
                 logging: false,
             });
 
-            const imgData = canvas.toDataURL('image/png', 0.9); // Use PNG with some compression
+            // Use 'image/jpeg' and a quality setting (e.g., 0.9) for better compression
+            const imgData = canvas.toDataURL('image/jpeg', 0.9);
 
             const pdf = new jsPDF({
                 orientation: 'portrait',
@@ -63,27 +64,26 @@ export default function ReportPage() {
 
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
-            const ratio = imgWidth / imgHeight;
-            const newImgWidth = pdfWidth;
-            const newImgHeight = newImgWidth / ratio;
-
-            let height = newImgHeight;
-            let position = 0;
             
-            pdf.addImage(imgData, 'PNG', 0, position, newImgWidth, newImgHeight);
-            height -= pdfHeight;
+            const imgProps = pdf.getImageProperties(imgData);
+            const imgWidth = imgProps.width;
+            const imgHeight = imgProps.height;
 
-            let page = 1;
-            while (height > 0) {
-                position = -pdfHeight * page;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, newImgWidth, newImgHeight);
-                height -= pdfHeight;
-                page++;
+            const ratio = imgWidth / imgHeight;
+            let finalHeight;
+            let finalWidth;
+
+            // Fit to page logic
+            if (imgWidth / pdfWidth > imgHeight / pdfHeight) {
+                finalWidth = pdfWidth;
+                finalHeight = finalWidth / ratio;
+            } else {
+                finalHeight = pdfHeight;
+                finalWidth = finalHeight * ratio;
             }
-
+            
+            pdf.addImage(imgData, 'JPEG', 0, 0, finalWidth, finalHeight);
+            
             pdf.save(`report-${user?.displayName || 'user'}.pdf`);
 
             toast({
@@ -110,7 +110,7 @@ export default function ReportPage() {
     return (
         <MainLayout>
             <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
-                <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
+                <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10 print:hidden">
                     <Button variant="ghost" size="icon" onClick={() => router.back()}>
                         <ArrowLeft />
                     </Button>
@@ -123,7 +123,7 @@ export default function ReportPage() {
                     </Button>
                 </header>
                 
-                <div ref={printRef}> 
+                <div id="print-area" ref={printRef}> 
                     <main className="p-4 md:p-6 space-y-8 bg-background">
                         {/* User Details Section */}
                         <section>
