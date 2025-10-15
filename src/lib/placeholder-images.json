@@ -1,3 +1,124 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "Athlete running on a modern, abstract background",
+      "imageUrl": "https://picsum.photos/seed/hero-run/1800/1200",
+      "imageHint": "runner athlete"
+    },
+    {
+      "id": "product-tee-1",
+      "description": "Front view of a performance t-shirt on a mannequin",
+      "imageUrl": "https://picsum.photos/seed/tee1/800/800",
+      "imageHint": "gray t-shirt"
+    },
+    {
+      "id": "product-tee-2",
+      "description": "Back view of a performance t-shirt showing fabric detail",
+      "imageUrl": "https://picsum.photos/seed/tee2/800/800",
+      "imageHint": "shirt fabric"
+    },
+    {
+      "id": "product-shorts-1",
+      "description": "Black running shorts laid flat",
+      "imageUrl": "https://picsum.photos/seed/shorts1/800/800",
+      "imageHint": "running shorts"
+    },
+    {
+      "id": "product-shorts-2",
+      "description": "Side view of running shorts showing pocket detail",
+      "imageUrl": "https://picsum.photos/seed/shorts2/800/800",
+      "imageHint": "black shorts"
+    },
+    {
+      "id": "product-sneakers-1",
+      "description": "Side profile of modern athletic sneakers",
+      "imageUrl": "https://picsum.photos/seed/sneaker1/800/800",
+      "imageHint": "white sneakers"
+    },
+    {
+      "id": "product-sneakers-2",
+      "description": "Top-down view of a pair of athletic sneakers",
+      "imageUrl": "https://picsum.photos/seed/sneaker2/800/800",
+      "imageHint": "pair sneakers"
+    },
+    {
+      "id": "product-hoodie-1",
+      "description": "Dark grey hoodie on a hanger",
+      "imageUrl": "https://picsum.photos/seed/hoodie1/800/800",
+      "imageHint": "gray hoodie"
+    },
+    {
+      "id": "product-hoodie-2",
+      "description": "Close-up of the hoodie's zipper and fabric texture",
+      "imageUrl": "https://picsum.photos/seed/hoodie2/800/800",
+      "imageHint": "hoodie fabric"
+    },
+    {
+      "id": "product-backpack-1",
+      "description": "Sleek, modern black backpack",
+      "imageUrl": "https://picsum.photos/seed/pack1/800/800",
+      "imageHint": "black backpack"
+    },
+    {
+      "id": "product-backpack-2",
+      "description": "Backpack opened to show internal compartments",
+      "imageUrl": "https://picsum.photos/seed/pack2/800/800",
+      "imageHint": "open backpack"
+    },
+    {
+      "id": "product-bottle-1",
+      "description": "Matte black stainless steel water bottle",
+      "imageUrl": "https://picsum.photos/seed/bottle1/800/800",
+      "imageHint": "water bottle"
+    },
+    {
+      "id": "product-cap-1",
+      "description": "Side view of a black baseball cap",
+      "imageUrl": "https://picsum.photos/seed/cap1/800/800",
+      "imageHint": "black cap"
+    },
+    {
+      "id": "product-cap-2",
+      "description": "Top view of a black baseball cap",
+      "imageUrl": "https://picsum.photos/seed/cap2/800/800",
+      "imageHint": "baseball cap"
+    },
+    {
+      "id": "product-boots-1",
+      "description": "Pair of durable hiking boots",
+      "imageUrl": "https://picsum.photos/seed/boots1/800/800",
+      "imageHint": "hiking boots"
+    },
+    {
+      "id": "product-boots-2",
+      "description": "Close-up of the sole of a hiking boot",
+      "imageUrl": "https://picsum.photos/seed/boots2/800/800",
+      "imageHint": "boot sole"
+    },
+    {
+      "id": "category-apparel",
+      "description": "A collection of stylish activewear",
+      "imageUrl": "https://picsum.photos/seed/catapparel/600/600",
+      "imageHint": "activewear clothing"
+    },
+    {
+      "id": "category-footwear",
+      "description": "An assortment of athletic shoes",
+      "imageUrl": "https://picsum.photos/seed/catfootwear/600/600",
+      "imageHint": "athletic shoes"
+    },
+    {
+      "id": "category-accessories",
+      "description": "Various sports accessories like caps and backpacks",
+      "imageUrl": "https://picsum.photos/seed/catacc/600/600",
+      "imageHint": "sports accessories"
+    },
+    {
+      "id": "category-gear",
+      "description": "Performance gear including water bottles and equipment",
+      "imageUrl": "https://picsum.photos/seed/catgear/600/600",
+      "imageHint": "fitness gear"
+    }
+  ]
 }

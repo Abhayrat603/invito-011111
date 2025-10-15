@@ -1,0 +1,48 @@
+export interface UserProfile {
+  uid: string;
+  email: string | null;
+  name: string | null;
+  createdAt: Date;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  imageId: string;
+}
+
+export interface Product {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  price: number;
+  images: string[];
+  category: string;
+  createdAt: Date;
+}
+
+export interface CartItem {
+  productId: string;
+  quantity: number;
+}
+
+export interface Cart {
+  items: CartItem[];
+  updatedAt: Date;
+}
+
+export interface OrderItem {
+    productId: string;
+    quantity: number;
+    price: number;
+}
+
+export interface Order {
+    id: string;
+    uid: string;
+    items: OrderItem[];
+    total: number;
+    status: 'placed' | 'shipped' | 'delivered' | 'cancelled';
+    createdAt: Date;
+}
