@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { X, Plus, ChevronLeft, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { X, Plus, ChevronLeft, Facebook, Instagram, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SheetClose } from "@/components/ui/sheet";
 
@@ -21,17 +21,29 @@ const settingsItems = [
     { name: "Currency", href: "#" },
 ];
 
+const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+    </svg>
+);
+
 
 export function MenuPageContent() {
     return (
         <div className="w-full h-full bg-background text-foreground flex flex-col">
             <header className="p-4 flex justify-between items-center border-b">
               <h1 className="text-2xl font-bold text-primary">Menu</h1>
-              <SheetClose asChild>
-                 <Button variant="ghost" size="icon">
-                    <X className="h-6 w-6"/>
-                 </Button>
-              </SheetClose>
             </header>
 
             <main className="flex-grow p-4 overflow-y-auto">
@@ -62,16 +74,16 @@ export function MenuPageContent() {
                 
                 <div className="flex justify-center items-center space-x-4 py-4">
                     <Button variant="ghost" size="icon" className="bg-secondary rounded-full">
-                        <Facebook className="h-5 w-5 text-muted-foreground" />
+                        <Mail className="h-5 w-5 text-muted-foreground" />
                     </Button>
                     <Button variant="ghost" size="icon" className="bg-secondary rounded-full">
-                        <Twitter className="h-5 w-5 text-muted-foreground" />
+                        <WhatsAppIcon className="h-5 w-5 text-muted-foreground" />
                     </Button>
                     <Button variant="ghost" size="icon" className="bg-secondary rounded-full">
                         <Instagram className="h-5 w-5 text-muted-foreground" />
                     </Button>
                     <Button variant="ghost" size="icon" className="bg-secondary rounded-full">
-                        <Linkedin className="h-5 w-5 text-muted-foreground" />
+                        <Facebook className="h-5 w-5 text-muted-foreground" />
                     </Button>
                 </div>
               </nav>
@@ -87,4 +99,3 @@ export default function MenuPage() {
     // We keep it for completeness.
     return <MenuPageContent />;
 }
-
