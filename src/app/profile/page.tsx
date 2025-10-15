@@ -157,7 +157,9 @@ export default function ProfilePage() {
                      <div className="mb-2">
                         <ProfileMenuItem icon={FileText} text="Terms & Conditions" href="/terms-and-conditions"/>
                     </div>
-                    <ProfileMenuItem icon={Info} text="About Us" href="/about-us"/>
+                    <div className="mb-2">
+                        <ProfileMenuItem icon={Info} text="About Us" href="/about-us"/>
+                    </div>
                     <ProfileMenuItem icon={Mail} text="Contact Us" href="/contact-us" />
 
                     <div className="pt-3">
