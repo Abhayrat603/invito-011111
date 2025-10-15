@@ -160,7 +160,9 @@ export default function ProfilePage() {
                     <div className="mb-2">
                         <ProfileMenuItem icon={Info} text="About Us" href="/about-us"/>
                     </div>
-                    <ProfileMenuItem icon={Mail} text="Contact Us" href="/contact-us" />
+                    <div className="mb-2">
+                        <ProfileMenuItem icon={Mail} text="Contact Us" href="/contact-us" />
+                    </div>
 
                     <div className="pt-3">
                         <ProfileMenuItem icon={LogOut} text="Log Out" onClick={signOut} isLogout />
