@@ -44,11 +44,9 @@ export default function EcommerceHomePage() {
     const scroll = () => {
       if (!isHoveringRef.current) {
         if (scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth) {
-          // Reset to the beginning instantly for a seamless loop
           scrollEl.scrollLeft = 0;
         } else {
-          // Scroll by 1 pixel
-          scrollEl.scrollLeft += 1;
+          scrollEl.scrollLeft += 2;
         }
       }
       animationFrameRef.current = requestAnimationFrame(scroll);
@@ -186,7 +184,7 @@ export default function EcommerceHomePage() {
                   </section>
 
                   <section className="px-4">
-                      <h2 className="text-2xl font-bold text-center mb-6">{searchQuery ? `Results for "${searchQuery}"` : (selectedCategory ? selectedCategory : "Our Designs")}</h2>
+                      <h2 className="text-2xl font-bold text-center mb-6">{searchQuery ? `Results for "${searchQuery}"` : (selectedCategory ? selectedCategory : "Trending Inovation Card")}</h2>
                       
                       {displayedProducts.length > 0 ? (
                           <>
