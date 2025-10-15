@@ -18,17 +18,25 @@ export default function VerifyEmailPage() {
   const { toast } = useToast();
   const [countdown, setCountdown] = useState(RESEND_TIMEOUT);
   const [isResending, setIsResending] = useState(false);
-  const [isChecking, setIsChecking] = useState(true);
-
+  
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        router.replace('/login');
+      } else if (user.emailVerified) {
+        router.replace('/');
+      }
+    }
+  }, [user, loading, router]);
+  
   useEffect(() => {
     const auth = getAuth();
-    
-    // Periodically check the user's email verification status
+    if (!user || user.emailVerified) return;
+
     const interval = setInterval(async () => {
       if (auth.currentUser) {
         await reload(auth.currentUser);
         if (auth.currentUser.emailVerified) {
-          clearInterval(interval);
           toast({
             title: "Verification Successful!",
             description: "Your email has been verified. Welcome!",
@@ -38,19 +46,11 @@ export default function VerifyEmailPage() {
       }
     }, 3000); // Check every 3 seconds
 
-    if (!loading) {
-        setIsChecking(false);
-        if (user?.emailVerified) {
-            clearInterval(interval);
-            router.push("/");
-        }
-    }
-
     return () => clearInterval(interval);
-  }, [user, loading, router, toast]);
+  }, [user, router, toast]);
   
   useEffect(() => {
-    let countdownInterval: NodeJS.Timeout;
+    let countdownInterval: NodeJS.Timeout | undefined;
     if (countdown > 0) {
       countdownInterval = setInterval(() => {
         setCountdown((currentCountdown) => {
@@ -86,7 +86,7 @@ export default function VerifyEmailPage() {
     }
   };
 
-  if (loading || isChecking) {
+  if (loading || !user || user.emailVerified) {
     return (
         <div className="flex items-center justify-center min-h-screen">
             <Loader2 className="h-8 w-8 animate-spin" />
