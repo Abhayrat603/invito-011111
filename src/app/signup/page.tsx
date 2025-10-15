@@ -81,11 +81,11 @@ export default function SignupPage() {
             <Card className="rounded-3xl shadow-2xl overflow-hidden border-none">
               <div className="relative h-48 w-full">
                 <Image 
-                  src="https://picsum.photos/seed/makeup-alt/600/400"
-                  alt="Makeup items"
+                  src="https://picsum.photos/seed/signup-invite/600/400"
+                  alt="Elegant invitation background"
                   layout="fill"
                   objectFit="cover"
-                  data-ai-hint="cosmetics palette"
+                  data-ai-hint="calligraphy pen invitation"
                 />
               </div>
               <CardContent className="p-8 text-center bg-card">

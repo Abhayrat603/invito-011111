@@ -68,11 +68,11 @@ export default function LoginPage() {
         <div className="w-full max-w-sm relative">
             <div className="relative h-48 w-full rounded-t-3xl overflow-hidden">
               <Image 
-                src="https://picsum.photos/seed/makeup/600/400"
-                alt="Makeup items"
+                src="https://picsum.photos/seed/login-invite/600/400"
+                alt="Invitation Card Background"
                 layout="fill"
                 objectFit="cover"
-                data-ai-hint="makeup cosmetics"
+                data-ai-hint="elegant invitation design"
               />
             </div>
             <Card className="rounded-b-3xl shadow-2xl border-none pt-8">
@@ -82,7 +82,7 @@ export default function LoginPage() {
 
                  <div className="relative z-10">
                    <h1 className="text-5xl font-bold font-headline text-primary mb-2">HELLO!</h1>
-                   <p className="text-primary/80 mb-8">Find the best beauty services near you.</p>
+                   <p className="text-primary/80 mb-8">Design your perfect invitation with us.</p>
 
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 text-left">
@@ -94,7 +94,7 @@ export default function LoginPage() {
                             <FormControl>
                               <div className="relative">
                                 <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/50 opacity-50" />
-                                <Input placeholder="Username" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 pl-12 pr-4 focus-visible:ring-primary/50" />
+                                <Input placeholder="Email" {...field} className="bg-transparent rounded-lg border-primary/50 text-primary placeholder:text-primary/50 h-12 pl-12 pr-4 focus-visible:ring-primary/50" />
                               </div>
                             </FormControl>
                             <FormMessage className="text-destructive/80 text-xs"/>

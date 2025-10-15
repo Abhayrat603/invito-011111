@@ -5,8 +5,8 @@ import { AuthProvider } from "@/components/providers/auth-provider";
 import { AppStateProvider } from "@/components/providers/app-state-provider";
 
 export const metadata: Metadata = {
-  title: "Anon",
-  description: "Find and book the best beauty services near you.",
+  title: "Invite Designer",
+  description: "Create and customize beautiful invitation cards for every occasion.",
 };
 
 export default function RootLayout({

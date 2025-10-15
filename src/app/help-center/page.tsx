@@ -4,7 +4,7 @@
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, LifeBuoy, BookOpen, Shield, Truck, RotateCw, Search, CreditCard, Globe, Gift } from "lucide-react";
+import { ArrowLeft, LifeBuoy, BookOpen, Shield, Truck, RotateCw, Search, CreditCard, Globe, Gift, FileText as FileTextIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -16,40 +16,40 @@ import {
 
 const faqs = [
     {
-        question: "What is your return policy?",
-        answer: "We offer a 30-day return policy for a full refund on all items that are unworn, unwashed, and in their original packaging with tags attached. To start a return, please visit our Returns & Exchanges section in your account. Sale items are final and cannot be returned."
+        question: "What formats are the invitations available in?",
+        answer: "Our invitations are available as high-resolution JPG and print-ready PDF files. You can choose the format that best suits your needs, whether for digital sharing or physical printing."
     },
     {
-        question: "How long does shipping take?",
-        answer: "Standard shipping typically takes 3-5 business days within the country. Expedited shipping options are available at checkout for an additional fee. You will receive a tracking number via email once your order has shipped, allowing you to follow its journey to your doorstep."
+        question: "How do I request an edit to a design?",
+        answer: "On each product page, there is a 'Request For Edit' button. Clicking this will take you to a form where you can describe the changes you need, and our design team will get back to you shortly."
     },
     {
-        question: "How do I track my order?",
-        answer: "Once your order is shipped, you will receive an email with a tracking number and a link to the carrier's website. You can also find your tracking information by logging into your account dashboard under the 'My Orders' section. This allows for real-time updates on your package's location."
+        question: "How long does it take to get a custom edit?",
+        answer: "Turnaround time depends on the option you select in the edit request form. We offer 'Urgent', '1 Day', and '2 Days' options to meet your deadline."
     },
     {
-        question: "Do you ship internationally?",
-        answer: "Yes, we ship to most countries worldwide. International shipping rates and delivery times vary depending on the destination. Please be aware that customs fees, import duties, and local taxes are the responsibility of the customer and are not included in the item price or shipping cost."
+        question: "Can I get a design printed?",
+        answer: "While we specialize in digital templates, our PDF files are designed to be print-ready. You can take them to any local or online print shop for professional printing."
     },
     {
-        question: "Can I change or cancel my order?",
-        answer: "We process orders very quickly to ensure you get your items as soon as possible. If you need to change or cancel your order, please contact our customer support team immediately. If the order has already been processed and shipped, you will need to follow the standard return process once you receive it."
+        question: "Can I change my order after purchase?",
+        answer: "Since our products are digital downloads, all sales are final. However, if you have an issue with your file or need an edit, please use the 'Request For Edit' feature or contact our support team, and we'll be happy to help."
     },
     {
         question: "What payment methods do you accept?",
-        answer: "We accept a wide range of payment methods for your convenience. This includes all major credit cards (Visa, MasterCard, American Express), PayPal, and other secure payment gateways like Apple Pay and Google Pay. All transactions are encrypted with SSL technology for your security."
+        answer: "We accept a wide range of payment methods for your convenience. This includes all major credit cards (Visa, MasterCard, American Express), PayPal, and other secure payment gateways like Apple Pay and Google Pay. All transactions are encrypted for your security."
     },
     {
-        question: "Are your products sustainable?",
-        answer: "We are deeply committed to sustainability. We prioritize using eco-friendly materials, partner with ethical manufacturers, and utilize recyclable packaging. We are on a continuous journey to improve our environmental footprint. You can learn more on our 'About Us' page."
+        question: "Are there any hidden fees?",
+        answer: "The price you see is the price you pay for the template. Custom edit requests may have an additional charge depending on the complexity, which will be communicated to you before any work begins."
     },
     {
-        question: "How do I find the right size?",
-        answer: "Each product page features a detailed sizing guide with measurements to help you find the perfect fit. We also provide model specifications (height, size worn) as a reference. If you are between sizes, we generally recommend sizing up for a more comfortable fit."
+        question: "How do I download my files after purchase?",
+        answer: "Once your purchase is complete, you will see a download link on the confirmation page. You will also receive an email with a link to download your files. You can also access your purchased designs from your account profile."
     },
     {
         question: "Do you offer gift cards?",
-        answer: "Yes, we offer digital gift cards in various denominations. They are the perfect gift for any fashion lover! Gift cards are delivered by email and contain instructions to redeem them at checkout. They have no additional processing fees and do not expire."
+        answer: "Yes, we offer digital gift cards in various denominations. They are the perfect gift for anyone planning an event! Gift cards are delivered by email and contain instructions to redeem them at checkout."
     },
 ];
 
@@ -92,13 +92,12 @@ export default function HelpCenterPage() {
                     <div className="space-y-4">
                         <h2 className="text-lg font-semibold">Help Categories</h2>
                          <div className="grid grid-cols-1 gap-3">
-                            <HelpCategory icon={Truck} title="Shipping & Delivery" description="Track your order, learn about times" href="#" />
-                            <HelpCategory icon={RotateCw} title="Returns & Exchanges" description="Our policy and how to start a return" href="#" />
+                            <HelpCategory icon={RotateCw} title="Editing & Customization" description="How to request edits and changes" href="/request-edit" />
+                            <HelpCategory icon={FileTextIcon} title="File Formats & Downloads" description="JPG, PDF, and how to download" href="#" />
                             <HelpCategory icon={CreditCard} title="Payment & Pricing" description="Accepted methods and currency" href="#" />
                             <HelpCategory icon={Gift} title="Gift Cards & Promotions" description="Using gift cards and promo codes" href="#" />
-                             <HelpCategory icon={Globe} title="International Orders" description="Duties, taxes, and shipping" href="#" />
+                            <HelpCategory icon={BookOpen} title="About Our Designs" description="Learn about our creative process" href="/about-us" />
                             <HelpCategory icon={Shield} title="Account & Security" description="Manage your profile and password" href="/profile/edit" />
-                            <HelpCategory icon={BookOpen} title="About Our Products" description="Sizing, materials, and care" href="/about-us" />
                         </div>
                     </div>
 

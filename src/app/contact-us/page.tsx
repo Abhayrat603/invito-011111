@@ -48,7 +48,7 @@ export default function ContactUsPage() {
                 </header>
                 <main className="flex-grow p-4 md:p-6 space-y-8">
                     <div className="text-center">
-                        <p className="text-lg text-foreground/80">We'd love to hear from you! Whether you have a question, feedback, or just want to say hello, feel free to reach out.</p>
+                        <p className="text-lg text-foreground/80">We'd love to hear from you! Whether you have a question, feedback, or need help with a design, feel free to reach out.</p>
                     </div>
 
                     <InfoCard icon={Send} title="Send Us a Message">
@@ -64,18 +64,18 @@ export default function ContactUsPage() {
                     </InfoCard>
 
                     <InfoCard icon={Phone} title="Call Us">
-                        <p>Our customer support team is available to assist you. Give us a call for any immediate inquiries.</p>
+                        <p>Our design support team is available to assist you. Give us a call for any immediate inquiries.</p>
                         <a href="tel:+918463062603" className="font-semibold text-primary hover:underline">+91 8463062603</a>
                     </InfoCard>
 
                     <InfoCard icon={Mail} title="Email Us">
-                        <p>For general inquiries, support, or feedback, you can email us directly. We aim to respond within 24 hours.</p>
+                        <p>For general inquiries, support, or design questions, you can email us directly. We aim to respond within 24 hours.</p>
                         <a href="mailto:abhayrat603@gmail.com" className="font-semibold text-primary hover:underline">abhayrat603@gmail.com</a>
                     </InfoCard>
 
-                    <InfoCard icon={MapPin} title="Visit Our Office">
-                        <p>Come visit us at our headquarters. We recommend scheduling an appointment first.</p>
-                        <p className="font-medium">123 Fashion Ave, Style City, 452001, India</p>
+                    <InfoCard icon={MapPin} title="Visit Our Studio">
+                        <p>Come visit us at our design studio. We recommend scheduling an appointment first.</p>
+                        <p className="font-medium">123 Design Lane, Creativity City, 452001, India</p>
                     </InfoCard>
 
                     <InfoCard icon={Clock} title="Business Hours">
@@ -88,14 +88,14 @@ export default function ContactUsPage() {
 
                     <InfoCard icon={Users} title="Department Contacts">
                          <ul className="list-disc list-inside space-y-2">
-                            <li><strong>Customer Service:</strong> <a href="mailto:support@nightfury.com" className="text-primary hover:underline">support@nightfury.com</a></li>
-                            <li><strong>Press & Media:</strong> <a href="mailto:media@nightfury.com" className="text-primary hover:underline">media@nightfury.com</a></li>
-                            <li><strong>Careers:</strong> <a href="mailto:careers@nightfury.com" className="text-primary hover:underline">careers@nightfury.com</a></li>
+                            <li><strong>Customer Support:</strong> <a href="mailto:support@invitedesigner.com" className="text-primary hover:underline">support@invitedesigner.com</a></li>
+                            <li><strong>Design Team:</strong> <a href="mailto:design@invitedesigner.com" className="text-primary hover:underline">design@invitedesigner.com</a></li>
+                            <li><strong>Careers:</strong> <a href="mailto:careers@invitedesigner.com" className="text-primary hover:underline">careers@invitedesigner.com</a></li>
                         </ul>
                     </InfoCard>
 
                     <div className="text-center text-muted-foreground pt-4">
-                        <p>We look forward to connecting with you!</p>
+                        <p>We look forward to creating with you!</p>
                     </div>
 
                 </main>

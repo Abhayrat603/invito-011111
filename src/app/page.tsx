@@ -50,9 +50,9 @@ export default function EcommerceHomePage() {
       <MainLayout>
         <div className="bg-background text-foreground">
             <header className="p-4">
-                <h1 className="text-4xl font-bold text-center mb-4">Night Fury</h1>
+                <h1 className="text-4xl font-bold text-center mb-4">Invite Designer</h1>
                 <div className="relative">
-                    <Input placeholder="Enter your product name..." className="bg-card border-border rounded-lg h-12 pl-4 pr-10 focus-visible:ring-primary/50" />
+                    <Input placeholder="Search for invitations..." className="bg-card border-border rounded-lg h-12 pl-4 pr-10 focus-visible:ring-primary/50" />
                     <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"/>
                 </div>
             </header>
@@ -60,13 +60,13 @@ export default function EcommerceHomePage() {
             <main className="px-4 mt-4">
                 <section className="relative mb-6 rounded-lg overflow-hidden">
                     <div className="relative h-[400px] w-full">
-                       <Image src="https://picsum.photos/seed/fashion-sale/800/600" layout="fill" objectFit="cover" alt="Fashion Sale" data-ai-hint="fashion models sunglasses" className="rounded-lg" />
+                       <Image src="https://picsum.photos/seed/invitation-hero/800/600" layout="fill" objectFit="cover" alt="Beautifully designed invitation cards" data-ai-hint="invitation cards spread" className="rounded-lg" />
                        <div className="absolute inset-0 bg-black/10 rounded-lg"></div>
                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                             <div className="bg-white/80 backdrop-blur-sm p-8 rounded-lg">
-                                <p className="font-semibold text-primary uppercase text-sm">Trending Item</p>
-                                <h2 className="text-3xl font-bold my-2 leading-tight text-foreground">WOMEN'S LATEST<br/>FASHION SALE</h2>
-                                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-8 py-3 mt-2">SHOP NOW</Button>
+                                <p className="font-semibold text-primary uppercase text-sm">Create Your Moment</p>
+                                <h2 className="text-3xl font-bold my-2 leading-tight text-foreground">BEAUTIFUL INVITATIONS<br/>FOR ANY OCCASION</h2>
+                                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-8 py-3 mt-2">Start Designing</Button>
                             </div>
                        </div>
                        <div className="absolute top-4 right-4 text-orange-400">
@@ -78,7 +78,7 @@ export default function EcommerceHomePage() {
                 <section className="mb-8">
                     <div className="bg-card p-3 rounded-lg shadow-sm flex items-center space-x-4">
                         <div className="bg-gray-100 p-3 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#38A169" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" ><path d="M12 2l-3 6h-5l4 4-1.5 6.5L12 18l5.5 4.5L16 12l4-4h-5l-3-6z"/><path d="M10 8h4l-2 4-2-4z"/><path d="M7 22h10l1-10H6l1 10z"/></svg>
+                           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
                         </div>
                         <div className="flex-grow">
                             <div className="flex justify-between items-baseline">
@@ -93,7 +93,7 @@ export default function EcommerceHomePage() {
                 </section>
 
                 <section>
-                    <h2 className="text-2xl font-bold text-center mb-6">Our Products</h2>
+                    <h2 className="text-2xl font-bold text-center mb-6">Our Designs</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {products.slice(0, 4).map((product, index) => (
                            <ProductCard key={product.id} product={product} onSale={index % 2 === 0} />

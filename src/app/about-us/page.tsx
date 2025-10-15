@@ -39,29 +39,29 @@ export default function AboutUsPage() {
                 <main className="flex-grow">
                     <div className="relative h-64 w-full">
                          <Image 
-                            src="https://picsum.photos/seed/about-hero/800/600"
+                            src="https://picsum.photos/seed/about-invite/800/600"
                             layout="fill"
                             objectFit="cover"
-                            alt="Team working"
-                            data-ai-hint="team collaboration"
+                            alt="Designers collaborating on invitation cards"
+                            data-ai-hint="designers collaboration invitations"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
                         <div className="absolute inset-0 flex items-end justify-center pb-8">
-                             <h2 className="text-4xl font-headline text-primary-foreground text-center">We Are Night Fury</h2>
+                             <h2 className="text-4xl font-headline text-primary-foreground text-center">We Are Invite Designer</h2>
                         </div>
                     </div>
 
                     <div className="p-6 md:p-8 space-y-12">
                         <div className="text-center">
                             <p className="text-lg text-foreground/80 leading-relaxed">
-                                At Night Fury, we believe that fashion is more than just clothing; it's a statement, an art form, and a way to express your unique identity. We're dedicated to bringing you the latest trends and timeless styles, crafted with quality and passion. Our journey started with a simple idea: to create a fashion destination that is inclusive, innovative, and inspiring.
+                                At Invite Designer, we believe every great event starts with a beautiful invitation. It's the first glimpse your guests have of the special day you're planning. We're dedicated to providing stunning, customizable digital and print invitations crafted with quality and passion.
                             </p>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-b border-border/50 py-8">
-                            <FeatureCard icon={Zap} title="Our Mission" description="To empower individuals to express their style confidently through innovative and accessible fashion." />
-                            <FeatureCard icon={Eye} title="Our Vision" description="To be a leading global fashion brand known for our creativity, quality, and commitment to sustainability." />
-                            <FeatureCard icon={Heart} title="Our Values" description="Passion, Integrity, and Customer-centricity guide everything we do. We are for the bold and the brave." />
+                            <FeatureCard icon={Zap} title="Our Mission" description="To empower everyone to create beautiful, personalized invitations for life's most important moments." />
+                            <FeatureCard icon={Eye} title="Our Vision" description="To be the leading platform for digital and print invitations, known for creativity, quality, and ease of use." />
+                            <FeatureCard icon={Heart} title="Our Values" description="Creativity, Quality, and Customer Happiness are at the core of everything we design." />
                         </div>
 
                         <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50">
@@ -70,8 +70,8 @@ export default function AboutUsPage() {
                                 <h3 className="text-2xl font-headline text-primary">Our Story</h3>
                             </div>
                             <div className="text-foreground/80 space-y-3 leading-relaxed">
-                                <p>Founded in 2023, Night Fury was born from a desire to break the mold of conventional fashion. We saw a world of fast fashion that lacked soul and a high-fashion industry that felt out of reach. We wanted to build something different: a brand that offers high-quality, trend-setting pieces at a fair price, all while building a community of fashion lovers who aren't afraid to stand out.</p>
-                                <p>From a small studio to a burgeoning online presence, our growth has been fueled by the support of our incredible customers. Every collection we release is a new chapter in our story, and we're thrilled to have you along for the ride.</p>
+                                <p>Founded in 2023, Invite Designer was born from a desire to make high-quality design accessible to everyone. We saw a need for invitations that were not only beautiful but also easy to customize and affordable. We wanted to build a brand that helps people celebrate their special moments in style, without the hassle.</p>
+                                <p>From a small design studio to a growing online platform, our growth is driven by our amazing customers and their stories. Every invitation we create is a part of a celebration, and we're honored to be included.</p>
                             </div>
                         </div>
 
@@ -81,23 +81,23 @@ export default function AboutUsPage() {
                                 <h3 className="text-2xl font-headline text-primary">Commitment to Quality</h3>
                             </div>
                             <div className="text-foreground/80 space-y-3 leading-relaxed">
-                                <p>We are obsessed with quality. From the fabrics we source to the craftsmanship of our tailors, every detail is meticulously considered. We partner with ethical manufacturers and artisans who share our commitment to excellence, ensuring that every Night Fury piece is not only beautiful but also built to last.</p>
+                                <p>We are obsessed with quality. From the digital templates we design to the paper we recommend for printing, every detail is meticulously considered. We partner with talented designers and artists who share our commitment to excellence, ensuring every Invite Designer piece is a work of art.</p>
                             </div>
                         </div>
 
                         <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50">
                             <div className="flex items-center mb-3">
                                 <Leaf className="h-8 w-8 text-primary mr-4" />
-                                <h3 className="text-2xl font-headline text-primary">Sustainability Efforts</h3>
+                                <h3 className="text-2xl font-headline text-primary">Sustainability</h3>
                             </div>
                             <div className="text-foreground/80 space-y-3 leading-relaxed">
-                                <p>Fashion should not come at the expense of our planet. We are continuously working to make our processes more sustainable, from using eco-friendly materials and reducing waste in our production cycle to offering recyclable packaging. It's a journey of constant improvement, and we are committed to making a positive impact.</p>
+                                <p>We encourage digital invitations as a beautiful, eco-friendly alternative to paper. For those who love print, we recommend using recycled paper and sustainable printing practices. It's a journey of constant improvement, and we are committed to making a positive impact.</p>
                             </div>
                         </div>
                         
                         <div className="text-center space-y-4">
                              <h3 className="text-3xl font-headline text-primary">Join Our Journey</h3>
-                             <p className="text-muted-foreground">Follow us on our social media channels to stay updated with our latest collections, behind-the-scenes content, and special offers. Become a part of the Night Fury family today!</p>
+                             <p className="text-muted-foreground">Follow us on our social media channels to stay updated with our latest designs, tips, and special offers. Become a part of the Invite Designer family today!</p>
                              <Button size="lg" className="rounded-full">Follow Us</Button>
                         </div>
 

@@ -40,7 +40,7 @@ export default function AiHelpPage() {
     
     useEffect(() => {
         // Initial bot message
-        setMessages([{ role: 'model', content: "Hello! I'm your AI assistant for Night Fury. How can I help you today?" }]);
+        setMessages([{ role: 'model', content: "Hello! I'm your AI assistant for Invite Designer. How can I help you with your invitation cards today?" }]);
     }, []);
 
     const handleSendMessage = async () => {
@@ -99,7 +99,7 @@ export default function AiHelpPage() {
                                             <AvatarFallback className="bg-primary/20"><Bot className="text-primary"/></AvatarFallback>
                                         </Avatar>
                                     )}
-                                    <div className={cn("rounded-2xl px-4 py-3 max-w-[80%] shadow-md", 
+                                    <div className={cn("rounded-2xl px-4 py-3 max-w-[80%⟩ shadow-md", 
                                         message.role === 'user' 
                                             ? 'bg-primary text-primary-foreground rounded-br-none' 
                                             : 'bg-card text-card-foreground rounded-bl-none'
@@ -134,7 +134,7 @@ export default function AiHelpPage() {
                     <div className="p-4 border-t bg-background shrink-0">
                         <div className="relative">
                             <Input 
-                                placeholder="Ask me anything..." 
+                                placeholder="Ask about invitations..." 
                                 className="pr-12 h-12 rounded-full bg-card pl-5" 
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
