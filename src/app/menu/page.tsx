@@ -7,13 +7,22 @@ import { Button } from "@/components/ui/button";
 import { SheetClose } from "@/components/ui/sheet";
 
 const menuItems = [
-    { name: "Home", href: "/", expandable: false },
-    { name: "Men's", href: "#", expandable: true },
-    { name: "Women's", href: "#", expandable: true },
-    { name: "Jewelry", href: "#", expandable: true },
-    { name: "Perfume", href: "#", expandable: true },
-    { name: "Blog", href: "#", expandable: false },
-    { name: "Hot Offers", href: "#", expandable: false },
+    { name: "Wedding Invitation", href: "#", expandable: false },
+    { name: "Birthday Invitation", href: "#", expandable: false },
+    { name: "Engagement Invitation", href: "#", expandable: false },
+    { name: "Anniversary Invitation", href: "#", expandable: false },
+    { name: "Housewarming Invitation", href: "#", expandable: false },
+    { name: "Baby Shower Invitation", href: "#", expandable: false },
+    { name: "Graduation Invitation", href: "#", expandable: false },
+    { name: "Corporate Invitation", href: "#", expandable: false },
+    { name: "Party Invitation", href: "#", expandable: false },
+    { name: "E-Invite / Digital Invitation", href: "#", expandable: false },
+    { name: "Save-the-Date Card", href: "#", expandable: false },
+    { name: "Formal Invitation", href: "#", expandable: false },
+    { name: "Casual Invitation", href: "#", expandable: false },
+    { name: "Handmade Invitation", href: "#", expandable: false },
+    { name: "Poster Presentation", href: "#", expandable: false },
+    { name: "Wedding Invitation Video", href: "#", expandable: false },
 ];
 
 const settingsItems = [
