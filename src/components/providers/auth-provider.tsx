@@ -30,10 +30,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      
       const isJustVerified = currentUser && currentUser.emailVerified && user && !user.emailVerified;
       
-      setUser(currentUser);
+      setUser(currentUser ? { ...currentUser } : null);
       setLoading(false);
       
       if(currentUser) {
@@ -53,20 +52,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, [auth, toast, user]);
+  }, [auth, toast]);
 
   const signUp = async (email: string, pass: string, name: string) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
     if (userCredential.user) {
       await updateProfile(userCredential.user, { displayName: name });
-      // Manually trigger a re-render by creating a new user object
-      setUser(prevUser => {
-        if (!prevUser) {
-           const newUser = { ...userCredential.user, displayName: name };
-           return newUser as User;
-        }
-        return { ...prevUser, ...userCredential.user, displayName: name };
-      });
+      setUser({ ...userCredential.user, displayName: name });
     }
     return userCredential;
   };
@@ -99,18 +91,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error("No user is signed in.");
     }
     
-    // In a real app, you would upload the file to a service like Firebase Storage
-    // and get a URL. For this example, we'll use a placeholder that changes.
     const newPhotoURL = `https://picsum.photos/seed/${auth.currentUser.uid}/${Date.now()}/200/200`;
 
     await updateProfile(auth.currentUser, { photoURL: newPhotoURL });
     
-    // Manually update the user state to reflect the new photoURL immediately
-    // Create a new object to force re-render
+    // Create a new user object to force a re-render in consuming components.
     setUser(prevUser => {
       if (!prevUser) return null;
-      // This creates a *new* user object, which forces React to re-render components
-      // that depend on the `user` object.
       return { ...prevUser, photoURL: newPhotoURL };
     });
   };
