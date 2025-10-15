@@ -20,6 +20,8 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const orderStatusConfig = {
     Placed: { color: "bg-blue-500", text: "text-blue-800" },
@@ -38,10 +40,67 @@ export default function ReportPage() {
     const router = useRouter();
     const { user } = useAuth();
     const { toast } = useToast();
+    const printRef = useRef<HTMLDivElement>(null);
 
-    const handlePrint = () => {
-        window.print();
+    const handleDownload = async () => {
+        const input = printRef.current;
+        if (!input) return;
+
+        try {
+            const canvas = await html2canvas(input, {
+                scale: 2, // Increase scale for better resolution
+                useCORS: true,
+                logging: false,
+            });
+
+            const imgData = canvas.toDataURL('image/png', 0.9); // Use PNG with some compression
+
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'px',
+                format: 'a4',
+            });
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+            const ratio = imgWidth / imgHeight;
+            const newImgWidth = pdfWidth;
+            const newImgHeight = newImgWidth / ratio;
+
+            let height = newImgHeight;
+            let position = 0;
+            
+            pdf.addImage(imgData, 'PNG', 0, position, newImgWidth, newImgHeight);
+            height -= pdfHeight;
+
+            let page = 1;
+            while (height > 0) {
+                position = -pdfHeight * page;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, newImgWidth, newImgHeight);
+                height -= pdfHeight;
+                page++;
+            }
+
+            pdf.save(`report-${user?.displayName || 'user'}.pdf`);
+
+            toast({
+                title: "Download Successful",
+                description: "Your report has been downloaded.",
+            });
+
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+            toast({
+                variant: "destructive",
+                title: "Download Failed",
+                description: "Could not generate the PDF report.",
+            });
+        }
     };
+
 
     // Filter for delivered orders only
     const deliveredOrders = orders.filter(order => order.status === 'Delivered');
@@ -51,7 +110,7 @@ export default function ReportPage() {
     return (
         <MainLayout>
             <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
-                <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10 print:hidden">
+                <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
                     <Button variant="ghost" size="icon" onClick={() => router.back()}>
                         <ArrowLeft />
                     </Button>
@@ -59,12 +118,12 @@ export default function ReportPage() {
                        <FileText className="h-6 w-6 text-primary mr-2"/>
                        <h1 className="text-xl font-bold">User Report</h1>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={handlePrint}>
+                    <Button variant="ghost" size="icon" onClick={handleDownload}>
                         <Download />
                     </Button>
                 </header>
                 
-                <div id="print-area"> 
+                <div ref={printRef}> 
                     <main className="p-4 md:p-6 space-y-8 bg-background">
                         {/* User Details Section */}
                         <section>
