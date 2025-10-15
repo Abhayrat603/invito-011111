@@ -6,7 +6,7 @@ import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/providers/auth-provider";
 import Image from "next/image";
-import { User, Bell, Settings, HelpCircle, LogOut, ChevronRight, Camera, Pencil, Mail, Lock } from "lucide-react";
+import { User, Bell, Settings, HelpCircle, LogOut, ChevronRight, Camera, Pencil, Shield, FileText, Info } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import React, { useRef, useState, useCallback } from "react";
@@ -116,22 +116,23 @@ export default function ProfilePage() {
                     </Button>
                 </div>
                 
-                {user?.displayName && <h2 className="text-2xl font-bold mb-6">{user.displayName}</h2>}
+                {user?.displayName && <h2 className="text-2xl font-bold mb-1">{user.displayName}</h2>}
+                {user?.email && <p className="text-muted-foreground mb-6">{user.email}</p>}
 
-                <div className="w-full">
-                    <div className="mb-2">
-                        <ProfileMenuItem icon={Pencil} text="Edit Profile" href="/profile/edit" />
+
+                <div className="w-full space-y-2">
+                    <ProfileMenuItem icon={Pencil} text="Edit Profile" href="/profile/edit" />
+                    <ProfileMenuItem icon={Bell} text="Notifications" href="#" />
+                    <ProfileMenuItem icon={HelpCircle} text="Help Center" href="#" />
+                    <div className="pt-2">
+                        <ProfileMenuItem icon={Shield} text="Privacy Policy" href="#"/>
                     </div>
-                    <div className="mb-2">
-                        <ProfileMenuItem icon={Bell} text="Notifications" href="#" />
+                    <ProfileMenuItem icon={FileText} text="Terms & Conditions" href="#"/>
+                    <ProfileMenuItem icon={Info} text="About Us" href="#"/>
+
+                    <div className="pt-4">
+                        <ProfileMenuItem icon={LogOut} text="Log Out" onClick={signOut} isLogout />
                     </div>
-                    <div className="mb-2">
-                        <ProfileMenuItem icon={Settings} text="Settings" href="/profile/edit" />
-                    </div>
-                    <div className="mb-4">
-                        <ProfileMenuItem icon={HelpCircle} text="Help Center" href="#" />
-                    </div>
-                    <ProfileMenuItem icon={LogOut} text="Log Out" onClick={signOut} isLogout />
                 </div>
             </div>
           </main>
