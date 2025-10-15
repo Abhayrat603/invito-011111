@@ -40,16 +40,16 @@ export interface Cart {
 
 export interface OrderItem {
     productId: string;
+    productName: string;
     quantity: number;
     price: number;
 }
 
 export interface Order {
     id: string;
-    uid: string;
     items: OrderItem[];
     total: number;
-    status: 'placed' | 'shipped' | 'delivered' | 'cancelled';
+    status: 'Placed' | 'Shipped' | 'Delivered' | 'Cancelled';
     createdAt: Date;
 }
 

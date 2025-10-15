@@ -1,4 +1,4 @@
-import type { Product, Category, EditRequest } from './types';
+import type { Product, Category, EditRequest, Order } from './types';
 
 export const categories: Category[] = [
   { id: 'cat1', name: 'Wedding Invitations', imageId: 'category-wedding' },
@@ -147,4 +147,37 @@ export const editRequests: EditRequest[] = [
     requestedAt: new Date('2023-09-28T11:00:00Z'),
     updatedAt: new Date('2023-09-29T16:45:00Z'),
   },
+];
+
+
+export const orders: Order[] = [
+    {
+        id: 'ord1',
+        items: [
+            { productId: 'prod9', productName: 'Shop Visiting Card', quantity: 2, price: 10 },
+            { productId: 'prod2', productName: 'Modern Birthday Bash', quantity: 1, price: 4.50 },
+        ],
+        total: 24.50,
+        status: 'Delivered',
+        createdAt: new Date('2023-09-15T11:30:00Z'),
+    },
+    {
+        id: 'ord2',
+        items: [
+            { productId: 'prod7', productName: 'Elegant Anniversary', quantity: 1, price: 6.50 },
+        ],
+        total: 6.50,
+        status: 'Shipped',
+        createdAt: new Date('2023-10-02T18:00:00Z'),
+    },
+    {
+        id: 'ord3',
+        items: [
+            { productId: 'prod1', productName: 'Classic Wedding', quantity: 50, price: 5.99 },
+            { productId: 'prod10', productName: 'Rustic Wedding Suite', quantity: 50, price: 6.25 },
+        ],
+        total: 612.00,
+        status: 'Placed',
+        createdAt: new Date('2023-10-07T10:00:00Z'),
+    },
 ];
