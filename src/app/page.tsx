@@ -4,7 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AuthRedirect } from "@/components/auth-redirect";
-import { Search, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, X, Quote } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MainLayout } from "@/components/main-layout";
@@ -18,10 +18,57 @@ import { Loader2 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
 
 const findImage = (id: string) => {
     return PlaceHolderImages.find(img => img.id === id);
 }
+
+const TestimonialCard = () => {
+    const testimonialImage = findImage('testimonial-alan');
+    return (
+        <Card className="bg-card shadow-lg border-border/50 rounded-2xl">
+            <CardContent className="p-8 flex flex-col items-center text-center">
+                <Avatar className="w-24 h-24 mb-4 border-4 border-background shadow-md">
+                    <AvatarImage src={testimonialImage?.imageUrl} alt="Alan Doe" data-ai-hint="woman portrait" />
+                    <AvatarFallback>AD</AvatarFallback>
+                </Avatar>
+                <h3 className="text-xl font-bold text-foreground">ALAN DOE</h3>
+                <p className="text-sm text-muted-foreground mb-4">CEO & Founder Invision</p>
+                <Quote className="w-10 h-10 text-primary/50 my-2 transform -scale-y-100" />
+                <p className="text-foreground/80 italic">
+                    "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor dolor sit amet."
+                </p>
+            </CardContent>
+        </Card>
+    );
+};
+
+const SummerCollectionCard = () => {
+    const collectionImage = findImage('summer-collection-banner');
+    return (
+        <div className="relative bg-secondary/30 rounded-2xl overflow-hidden p-6 shadow-lg border border-border/50">
+             <div 
+                className="absolute inset-0 bg-cover bg-center opacity-20"
+                style={{ backgroundImage: `url(${collectionImage?.imageUrl})`}}
+                data-ai-hint="summer dress"
+             ></div>
+             <div className="absolute top-10 left-10 w-40 h-40 bg-primary/10 rounded-full filter blur-xl opacity-50"></div>
+             <div className="absolute bottom-10 right-10 w-40 h-40 bg-accent/10 rounded-full filter blur-xl opacity-50"></div>
+
+            <div className="relative z-10 text-center flex flex-col items-center justify-center h-full">
+                <div className="bg-foreground text-background text-xs font-bold px-3 py-1 rounded-full mb-4 shadow-md">
+                    25% DISCOUNT
+                </div>
+                <h3 className="text-4xl font-headline text-foreground mb-2">Summer Collection</h3>
+                <p className="text-muted-foreground mb-4">Starting @ ₹800</p>
+                <Button variant="default" size="lg" className="rounded-full shadow-lg">SHOP NOW</Button>
+            </div>
+        </div>
+    );
+};
+
 
 export default function EcommerceHomePage() {
   const { user, loading } = useAuth();
@@ -217,6 +264,15 @@ export default function EcommerceHomePage() {
                               <Button variant="link" onClick={() => { setSearchQuery(''); setSelectedCategory(null); }}>Clear filters</Button>
                           </div>
                       )}
+                  </section>
+                  
+                  <section className="px-4 mt-8 space-y-6">
+                    <h2 className="text-2xl font-headline text-primary text-center">Testimonial</h2>
+                    <TestimonialCard />
+                  </section>
+                  
+                  <section className="px-4 mt-8">
+                    <SummerCollectionCard />
                   </section>
               </main>
           </div>

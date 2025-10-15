@@ -197,6 +197,18 @@
       "description": "Old Spice grooming kit",
       "imageUrl": "https://picsum.photos/seed/oldspice/500/500",
       "imageHint": "grooming kit"
+    },
+    {
+      "id": "testimonial-alan",
+      "description": "Portrait of Alan Doe",
+      "imageUrl": "https://picsum.photos/seed/alan-doe/200/200",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "summer-collection-banner",
+      "description": "Summer collection promotional banner background image",
+      "imageUrl": "https://picsum.photos/seed/summer-dress/600/400",
+      "imageHint": "summer dress"
     }
   ]
 }
