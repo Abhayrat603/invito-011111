@@ -9,7 +9,7 @@ import { products } from '@/lib/mock-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { MainLayout } from '@/components/main-layout';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ChevronRight, Heart, Minus, Plus, Download } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Heart, Minus, Plus, Download, ChevronLeft } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useAppState } from '@/components/providers/app-state-provider';
@@ -27,8 +27,14 @@ export default function ProductDetailPage() {
   const { addToCart, toggleWishlist, isInWishlist } = useAppState();
   const { toast } = useToast();
 
-  const product = products.find(p => p.slug === slug);
+  const productIndex = products.findIndex(p => p.slug === slug);
+  const product = products[productIndex];
+  
   const [quantity, setQuantity] = useState(1);
+  
+  const prevProduct = productIndex > 0 ? products[productIndex - 1] : products[products.length - 1];
+  const nextProduct = productIndex < products.length - 1 ? products[productIndex + 1] : products[0];
+
 
   if (!product) {
     return (
@@ -169,6 +175,20 @@ export default function ProductDetailPage() {
              </ul>
           </div>
         </main>
+
+        <div className="flex justify-between items-center p-4 border-t sticky bottom-0 bg-background z-10">
+            <Link href={`/products/${prevProduct.slug}`} passHref>
+                <Button variant="outline">
+                    <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+                </Button>
+            </Link>
+            <Link href={`/products/${nextProduct.slug}`} passHref>
+                <Button variant="outline">
+                    Next <ChevronRight className="ml-2 h-4 w-4" />
+                </Button>
+            </Link>
+        </div>
+
       </div>
     </MainLayout>
   );
