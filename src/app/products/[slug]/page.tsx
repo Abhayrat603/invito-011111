@@ -67,12 +67,12 @@ export default function ProductDetailPage() {
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft />
           </Button>
-          <div className="flex-grow flex items-center text-sm text-muted-foreground overflow-hidden">
-            <span className="mx-2 shrink-0">Home</span>
+          <div className="flex-grow flex items-center text-xs text-muted-foreground overflow-hidden">
+            <span className="mx-1 shrink-0">Home</span>
             <ChevronRight className="h-4 w-4 shrink-0" />
-            <span className="mx-2 shrink-0">{product.category}</span>
+            <span className="mx-1 shrink-0 truncate">{product.category}</span>
             <ChevronRight className="h-4 w-4 shrink-0" />
-            <span className="mx-2 font-medium text-foreground truncate">{product.name}</span>
+            <span className="mx-1 font-medium text-foreground truncate">{product.name}</span>
           </div>
           <div className="w-10 shrink-0"></div>
         </header>
@@ -105,26 +105,26 @@ export default function ProductDetailPage() {
           
           <div className="space-y-4">
             {onSale && <Badge variant="outline" className="text-sm font-semibold border-yellow-500 text-yellow-600">Paid</Badge>}
-            <h1 className="text-3xl font-bold">{product.name}</h1>
+            <h1 className="text-2xl font-bold">{product.name}</h1>
             
             <div className="flex items-center justify-between">
-              <span className="text-3xl font-bold text-foreground">₹{product.price.toFixed(2)}</span>
+              <span className="text-2xl font-bold text-foreground">₹{product.price.toFixed(2)}</span>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="icon" className="h-10 w-10 rounded-full" onClick={() => setQuantity(q => Math.max(1, q - 1))}>
+                <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" onClick={() => setQuantity(q => Math.max(1, q - 1))}>
                   <Minus className="h-4 w-4" />
                 </Button>
-                <span className="text-xl font-bold w-10 text-center">{quantity}</span>
-                <Button variant="outline" size="icon" className="h-10 w-10 rounded-full" onClick={() => setQuantity(q => q + 1)}>
+                <span className="text-lg font-bold w-8 text-center">{quantity}</span>
+                <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" onClick={() => setQuantity(q => q + 1)}>
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
             </div>
 
-            <div className="flex items-stretch gap-3">
-              <Button size="lg" className="flex-1 bg-amber-800 hover:bg-amber-900 h-12" onClick={handleAddToCart}>
+            <div className="flex flex-wrap items-stretch gap-2">
+              <Button size="lg" className="flex-1 bg-amber-800 hover:bg-amber-900 h-12 min-w-[120px]" onClick={handleAddToCart}>
                 <Download className="mr-2 h-5 w-5" /> Download
               </Button>
-              <Button size="lg" variant="outline" className="flex-1 h-12" onClick={handleAddToCart}>Buy now</Button>
+              <Button size="lg" variant="outline" className="flex-1 h-12 min-w-[120px]" onClick={handleAddToCart}>Buy now</Button>
               <Button variant="outline" size="icon" className="h-12 w-12 shrink-0" onClick={handleToggleWishlist}>
                 <Heart className={`h-6 w-6 ${isLiked ? 'text-red-500 fill-current' : ''}`} />
               </Button>
@@ -143,7 +143,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="col-span-2">
                     <p className="font-semibold text-foreground">Required Software</p>
-                    <div className="flex gap-2 flex-wrap mt-1">
+                    <div className="flex gap-2 flex-wrap mt-1 text-xs">
                       <span className="text-primary underline cursor-pointer">CorelDRAW</span>
                       <span className="text-muted-foreground">·</span>
                       <span className="text-primary underline cursor-pointer">Photoshop</span>
@@ -156,7 +156,7 @@ export default function ProductDetailPage() {
             <Button className="w-full" variant="secondary">Request For Edit</Button>
           </div>
           
-          <div className="space-y-3 text-muted-foreground">
+          <div className="space-y-3 text-muted-foreground text-sm">
              <p>Give your shop a professional and eye-catching look with this <strong>{product.name}</strong>. Designed in a modern, attractive style, it's perfect for highlighting your products, services, and offers.</p>
              <ul className="list-disc list-inside space-y-2 pl-2">
                  <li>Ready-to-print, customizable design</li>
