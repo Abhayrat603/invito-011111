@@ -4,7 +4,7 @@
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, HelpCircle, Send, User, Bot } from "lucide-react";
+import { ArrowLeft, HelpCircle, Send, User, Bot, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
@@ -27,18 +27,21 @@ export default function HelpCenterPage() {
     const [isLoading, setIsLoading] = useState(false);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        if (scrollAreaRef.current) {
-            scrollAreaRef.current.scrollTo({
-                top: scrollAreaRef.current.scrollHeight,
-                behavior: 'smooth'
-            });
+    const viewport = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+        if (viewport.current) {
+            viewport.current.scrollTop = viewport.current.scrollHeight;
         }
+    }
+
+    useEffect(() => {
+        scrollToBottom();
     }, [messages]);
     
     useEffect(() => {
         // Initial bot message
-        setMessages([{ role: 'model', content: 'Hello! How can I assist you today?' }]);
+        setMessages([{ role: 'model', content: "Hello! I'm your AI assistant for Night Fury. How can I help you today?" }]);
     }, []);
 
     const handleSendMessage = async () => {
@@ -46,6 +49,7 @@ export default function HelpCenterPage() {
 
         const userMessage: Message = { role: 'user', content: input };
         setMessages(prev => [...prev, userMessage]);
+        const currentInput = input;
         setInput("");
         setIsLoading(true);
         
@@ -58,7 +62,7 @@ export default function HelpCenterPage() {
         try {
             const botResponse = await helpChat({
                 history: historyForAI,
-                message: input,
+                message: currentInput,
             });
 
             const botMessage: Message = { role: 'model', content: botResponse };
@@ -81,26 +85,30 @@ export default function HelpCenterPage() {
                         <ArrowLeft />
                     </Button>
                     <div className="flex-grow flex items-center justify-center">
-                       <HelpCircle className="h-6 w-6 text-primary mr-2"/>
+                       <Sparkles className="h-6 w-6 text-primary mr-2"/>
                        <h1 className="text-xl font-bold">AI Help Assistant</h1>
                     </div>
                     <div className="w-10"></div>
                 </header>
-                <main className="flex-grow flex flex-col overflow-hidden">
-                    <ScrollArea className="flex-grow p-4" ref={scrollAreaRef}>
-                         <div className="space-y-4">
+                <main className="flex-grow flex flex-col overflow-hidden bg-secondary/30">
+                    <ScrollArea className="flex-grow p-4" viewportRef={viewport}>
+                         <div className="space-y-6">
                             {messages.map((message, index) => (
-                                <div key={index} className={cn("flex items-end gap-2", message.role === 'user' ? 'justify-end' : 'justify-start')}>
+                                <div key={index} className={cn("flex items-end gap-3 w-full", message.role === 'user' ? 'justify-end' : 'justify-start')}>
                                     {message.role === 'model' && (
-                                        <Avatar className="h-8 w-8">
-                                            <AvatarFallback><Bot/></AvatarFallback>
+                                        <Avatar className="h-9 w-9 border-2 border-primary/50">
+                                            <AvatarFallback className="bg-primary/20"><Bot className="text-primary"/></AvatarFallback>
                                         </Avatar>
                                     )}
-                                    <div className={cn("rounded-lg px-4 py-2 max-w-[80%]", message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted')}>
-                                        <p className="text-sm">{message.content}</p>
+                                    <div className={cn("rounded-2xl px-4 py-3 max-w-[80%] shadow-md", 
+                                        message.role === 'user' 
+                                            ? 'bg-primary text-primary-foreground rounded-br-none' 
+                                            : 'bg-card text-card-foreground rounded-bl-none'
+                                    )}>
+                                        <p className="text-sm leading-relaxed">{message.content}</p>
                                     </div>
                                     {message.role === 'user' && (
-                                        <Avatar className="h-8 w-8">
+                                        <Avatar className="h-9 w-9 border-2 border-border">
                                             <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'User'}/>
                                             <AvatarFallback><User/></AvatarFallback>
                                         </Avatar>
@@ -108,12 +116,12 @@ export default function HelpCenterPage() {
                                 </div>
                             ))}
                             {isLoading && (
-                                <div className="flex items-end gap-2 justify-start">
-                                    <Avatar className="h-8 w-8">
-                                        <AvatarFallback><Bot/></AvatarFallback>
+                                <div className="flex items-end gap-3 justify-start">
+                                    <Avatar className="h-9 w-9 border-2 border-primary/50">
+                                        <AvatarFallback className="bg-primary/20"><Bot className="text-primary"/></AvatarFallback>
                                     </Avatar>
-                                    <div className="rounded-lg px-4 py-2 bg-muted">
-                                        <div className="flex items-center space-x-1">
+                                    <div className="rounded-2xl px-4 py-3 bg-card text-card-foreground rounded-bl-none shadow-md">
+                                        <div className="flex items-center space-x-2">
                                            <span className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></span>
                                            <span className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></span>
                                            <span className="h-2 w-2 bg-primary rounded-full animate-bounce"></span>
@@ -127,23 +135,23 @@ export default function HelpCenterPage() {
                         <div className="relative">
                             <Input 
                                 placeholder="Ask me anything..." 
-                                className="pr-12" 
+                                className="pr-12 h-12 rounded-full bg-card pl-5" 
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                                 disabled={isLoading}
                             />
                             <Button 
-                                variant="ghost" 
+                                variant="default" 
                                 size="icon" 
-                                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                                className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full"
                                 onClick={handleSendMessage}
                                 disabled={isLoading || input.trim() === ""}
                             >
-                                <Send className="h-5 w-5 text-primary"/>
+                                <Send className="h-5 w-5"/>
                             </Button>
                         </div>
-                         <div className="text-center mt-4">
+                         <div className="text-center mt-3">
                             <p className="text-xs text-muted-foreground">Can't find your answer? <Link href="/contact-us" className="text-primary underline">Contact Support</Link></p>
                          </div>
                     </div>
