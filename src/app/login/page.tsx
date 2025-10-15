@@ -10,23 +10,19 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { AuthRedirect } from "@/components/auth-redirect";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -53,7 +49,7 @@ export default function LoginPage() {
         title: "Success",
         description: "You've been signed in.",
       });
-      router.push("/account");
+      router.push("/");
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -64,58 +60,61 @@ export default function LoginPage() {
   };
 
   return (
-    <AuthRedirect to="/account" condition="is-auth">
-      <div className="container flex min-h-[80vh] items-center justify-center py-12">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold font-headline">Welcome Back</CardTitle>
-            <CardDescription>Sign in to access your account</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="your@email.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+    <AuthRedirect to="/" condition="is-auth">
+      <div className="flex items-center justify-center min-h-full py-12">
+        <div className="w-full max-w-sm">
+            <Card className="rounded-3xl shadow-2xl overflow-hidden border-none">
+              <div className="relative h-48 w-full">
+                <Image 
+                  src="https://picsum.photos/seed/makeup/600/400"
+                  alt="Makeup items"
+                  layout="fill"
+                  objectFit="cover"
+                  data-ai-hint="makeup cosmetics"
                 />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input type="password" placeholder="••••••••" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                  {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
-                  Sign In
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-          <CardFooter className="flex justify-center">
-            <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
-              <Link href="/signup" className="font-medium text-primary hover:underline">
-                Sign up
-              </Link>
-            </p>
-          </CardFooter>
-        </Card>
+              </div>
+              <CardContent className="p-8 text-center bg-card">
+                 <h1 className="text-4xl font-bold font-headline text-primary mb-2">HELLO!</h1>
+                 <p className="text-muted-foreground mb-8">Find the best beauty services near you.</p>
+
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 text-left">
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input placeholder="Username" {...field} className="bg-secondary rounded-full border-none h-12 px-6" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input type="password" placeholder="Password" {...field} className="bg-secondary rounded-full border-none h-12 px-6" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button type="submit" className="w-full rounded-full h-12 text-base" disabled={form.formState.isSubmitting}>
+                      {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
+                      Log In
+                    </Button>
+                  </form>
+                </Form>
+                 <Link href="/signup" className="mt-6 inline-block text-sm text-primary hover:underline">
+                  Create an account
+                </Link>
+              </CardContent>
+            </Card>
+        </div>
       </div>
     </AuthRedirect>
   );

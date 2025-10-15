@@ -18,10 +18,10 @@ export function AuthRedirect({ to, condition, children }: AuthRedirectProps) {
   useEffect(() => {
     if (!loading) {
       if (condition === "is-auth" && user) {
-        router.push(to);
+        router.replace(to);
       }
       if (condition === "is-not-auth" && !user) {
-        router.push(to);
+        router.replace(to);
       }
     }
   }, [user, loading, router, to, condition]);
@@ -29,14 +29,9 @@ export function AuthRedirect({ to, condition, children }: AuthRedirectProps) {
   if (loading) {
     return (
       <div className="container mx-auto p-4 md:p-8">
-        <div className="space-y-4">
-          <Skeleton className="h-10 w-1/3" />
-          <Skeleton className="h-8 w-1/2" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Skeleton className="h-64" />
-            <Skeleton className="h-64" />
-            <Skeleton className="h-64" />
-          </div>
+        <div className="space-y-4 max-w-sm mx-auto">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-80 w-full" />
         </div>
       </div>
     );
