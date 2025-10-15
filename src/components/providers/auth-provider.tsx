@@ -60,7 +60,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (userCredential.user) {
       await updateProfile(userCredential.user, { displayName: name });
       // Manually trigger a re-render by creating a new user object
-      setUser(prevUser => ({ ...prevUser, ...userCredential.user, displayName: name }));
+      setUser(prevUser => {
+        if (!prevUser) {
+           const newUser = { ...userCredential.user, displayName: name };
+           return newUser as User;
+        }
+        return { ...prevUser, ...userCredential.user, displayName: name };
+      });
     }
     return userCredential;
   };
@@ -83,7 +89,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const sendPasswordReset = (email: string) => {
-    return sendPasswordResetEmail(auth, email);
+    return sendPasswordResetEmail(auth, email, {
+      url: `${window.location.origin}/login`,
+    });
   }
 
   const updateUserProfilePicture = async (file: File) => {
@@ -101,6 +109,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Create a new object to force re-render
     setUser(prevUser => {
       if (!prevUser) return null;
+      // This creates a *new* user object, which forces React to re-render components
+      // that depend on the `user` object.
       return { ...prevUser, photoURL: newPhotoURL };
     });
   };
