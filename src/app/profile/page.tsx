@@ -43,7 +43,7 @@ export default function ProfilePage() {
 
           <main className="flex-grow p-4">
             <div className="flex flex-col items-center">
-                <div className="relative mb-6">
+                <div className="relative mb-4">
                     <Image
                         src={user?.photoURL || "https://picsum.photos/seed/profile-pic/200/200"}
                         alt="Profile Picture"
@@ -56,6 +56,8 @@ export default function ProfilePage() {
                         <Camera className="h-5 w-5 text-muted-foreground" />
                     </Button>
                 </div>
+                
+                {user?.displayName && <h2 className="text-2xl font-bold mb-6">{user.displayName}</h2>}
 
                 <div className="w-full">
                     <div className="mb-2">

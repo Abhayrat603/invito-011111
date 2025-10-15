@@ -58,7 +58,7 @@ export default function SignupPage() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await signUp(values.email, values.password);
+      await signUp(values.email, values.password, values.name);
       await sendVerificationEmail();
       toast({
         title: "Account Created",
