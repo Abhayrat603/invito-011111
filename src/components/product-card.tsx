@@ -61,7 +61,7 @@ export function ProductCard({ product, onSale = false }: { product: Product, onS
                   <div className="bg-emerald-100/50 rounded-lg p-3 flex flex-col items-center">
                       {productImage && (
                           <Image
-                              src="https://picsum.photos/seed/wedding-invite/600/600"
+                              src={productImage.imageUrl}
                               alt={product.name}
                               width={500}
                               height={500}
@@ -79,7 +79,7 @@ export function ProductCard({ product, onSale = false }: { product: Product, onS
                 </h3>
                 <p className="text-sm text-muted-foreground text-center mb-4">{product.category}</p>
                 <div className="flex items-center justify-between mt-4">
-                    <span className="font-bold text-base text-destructive">₹{product.price.toFixed(0)}</span>
+                    <span className="font-bold text-sm text-destructive">₹{product.price.toFixed(0)}</span>
                     <div className="flex items-center gap-2">
                          <Button size="sm" variant="outline" className="bg-white hover:bg-gray-100 rounded-full shadow-sm text-foreground" onClick={handleAddToCart}>
                             <ShoppingCart className="mr-1.5 h-4 w-4"/>
