@@ -57,7 +57,7 @@ export default function ProfilePage() {
                     </Button>
                 </div>
 
-                <div className="w-full space-y-3">
+                <div className="w-full space-y-4">
                     <ProfileMenuItem icon={User} text="My Account" href="#" />
                     <ProfileMenuItem icon={Bell} text="Notifications" href="#" />
                     <ProfileMenuItem icon={Settings} text="Settings" href="#" />
