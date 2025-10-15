@@ -78,9 +78,7 @@ export default function EcommerceHomePage() {
                        <div className="absolute inset-0 bg-black/10 rounded-lg"></div>
                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                             <div className="bg-white/80 backdrop-blur-sm p-8 rounded-lg">
-                                <p className="font-semibold text-primary uppercase text-sm">Create Your Moment</p>
                                 <h2 className="text-3xl font-bold my-2 leading-tight text-foreground">BEAUTIFUL INVITATIONS<br/>FOR ANY OCCASION</h2>
-                                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-8 py-3 mt-2">Start Designing</Button>
                             </div>
                        </div>
                        <div className="absolute top-4 right-4 text-orange-400">
