@@ -35,24 +35,25 @@ export default function EcommerceHomePage() {
 
   const scrollViewportRef = useRef<HTMLDivElement>(null);
   const isHoveringRef = useRef(false);
-  const animationFrameRef = useRef<number>();
 
   useEffect(() => {
     const scrollEl = scrollViewportRef.current;
     if (!scrollEl) return;
+
+    let animationFrameId: number;
 
     const scroll = () => {
       if (!isHoveringRef.current) {
         if (scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth) {
           scrollEl.scrollLeft = 0;
         } else {
-          scrollEl.scrollLeft += 2;
+          scrollEl.scrollLeft += 1;
         }
       }
-      animationFrameRef.current = requestAnimationFrame(scroll);
+      animationFrameId = requestAnimationFrame(scroll);
     };
 
-    animationFrameRef.current = requestAnimationFrame(scroll);
+    animationFrameId = requestAnimationFrame(scroll);
 
     const handleMouseEnter = () => { isHoveringRef.current = true; };
     const handleMouseLeave = () => { isHoveringRef.current = false; };
@@ -64,9 +65,7 @@ export default function EcommerceHomePage() {
 
 
     return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      cancelAnimationFrame(animationFrameId);
       if (scrollEl) {
         scrollEl.removeEventListener('mouseenter', handleMouseEnter);
         scrollEl.removeEventListener('mouseleave', handleMouseLeave);
@@ -147,7 +146,7 @@ export default function EcommerceHomePage() {
               </header>
 
               <main className="pb-4">
-                  <section className="mb-6">
+                  <section className="mb-4">
                       <ScrollArea className="w-full whitespace-nowrap" viewportRef={scrollViewportRef}>
                         <div className="flex w-max space-x-2 p-4">
                           {categories.map((category) => {
@@ -182,10 +181,10 @@ export default function EcommerceHomePage() {
                         <ScrollBar orientation="horizontal" />
                       </ScrollArea>
                   </section>
-
+                  
+                  <h2 className="text-xl font-bold text-center mb-6 whitespace-nowrap">{searchQuery ? `Results for "${searchQuery}"` : (selectedCategory ? selectedCategory : "Trending Inovation Card")}</h2>
+                  
                   <section className="px-4">
-                      <h2 className="text-2xl font-bold text-center mb-6">{searchQuery ? `Results for "${searchQuery}"` : (selectedCategory ? selectedCategory : "Trending Inovation Card")}</h2>
-                      
                       {displayedProducts.length > 0 ? (
                           <>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
