@@ -138,7 +138,7 @@ export default function SignupPage() {
                           <FormControl>
                             <div className="relative">
                                <Input type={showPassword ? "text" : "password"} placeholder="Password" {...field} className="bg-secondary rounded-full border-none h-12 px-6 pr-12" />
-                               <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground hover:bg-secondary" onClick={() => setShowPassword(p => !p)}>
+                               <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground/50 hover:bg-secondary" onClick={() => setShowPassword(p => !p)}>
                                 {showPassword ? <EyeOff/> : <Eye />}
                                </Button>
                             </div>
@@ -155,7 +155,7 @@ export default function SignupPage() {
                           <FormControl>
                              <div className="relative">
                                <Input type={showPassword ? "text" : "password"} placeholder="Confirm Password" {...field} className="bg-secondary rounded-full border-none h-12 px-6 pr-12" />
-                               <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground hover:bg-secondary" onClick={() => setShowPassword(p => !p)}>
+                               <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground/50 hover:bg-secondary" onClick={() => setShowPassword(p => !p)}>
                                 {showPassword ? <EyeOff/> : <Eye />}
                                </Button>
                             </div>
@@ -165,7 +165,7 @@ export default function SignupPage() {
                       )}
                     />
                     <Button type="submit" className="w-full rounded-full h-12 text-base" disabled={form.formState.isSubmitting}>
-                       {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
+                       {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin text-foreground/50"/>}
                       Sign Up
                     </Button>
                   </form>
