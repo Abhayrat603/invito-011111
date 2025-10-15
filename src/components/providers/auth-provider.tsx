@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       if(currentUser) {
         if (currentUser.emailVerified) {
-            const idToken = await currentUser.getIdToken(true); // Force refresh
+            const idToken = await currentUser.getIdToken();
             await createSessionCookie(idToken);
             if (isJustVerified) {
                  toast({
