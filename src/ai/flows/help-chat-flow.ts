@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A simple AI chat flow for the help center.
@@ -10,7 +11,8 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const HelpChatInputSchema = z.object({
+// Define schemas inside the function or in a separate file not marked with 'use server'
+const HelpChatInputSchema = z.object({
   history: z.array(z.object({
     role: z.enum(['user', 'model']),
     content: z.array(z.object({ text: z.string() })),
@@ -19,12 +21,8 @@ export const HelpChatInputSchema = z.object({
 });
 export type HelpChatInput = z.infer<typeof HelpChatInputSchema>;
 
-export const HelpChatOutputSchema = z.string();
+const HelpChatOutputSchema = z.string();
 export type HelpChatOutput = z.infer<typeof HelpChatOutputSchema>;
-
-export async function helpChat(input: HelpChatInput): Promise<HelpChatOutput> {
-  return helpChatFlow(input);
-}
 
 const helpChatFlow = ai.defineFlow(
   {
@@ -61,3 +59,7 @@ Keep your answers helpful and relevant to a fashion store context.`;
     return response.text;
   }
 );
+
+export async function helpChat(input: HelpChatInput): Promise<HelpChatOutput> {
+  return helpChatFlow(input);
+}
