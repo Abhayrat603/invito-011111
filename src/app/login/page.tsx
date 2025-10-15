@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -107,6 +108,11 @@ export default function LoginPage() {
                           </FormItem>
                         )}
                       />
+                      <div className="text-right">
+                        <Link href="#" className="text-sm text-primary/80 hover:underline">
+                            Forgot Password?
+                        </Link>
+                      </div>
                       <Button type="submit" className="w-full rounded-lg h-12 text-base bg-primary/90 hover:bg-primary text-primary-foreground" disabled={form.formState.isSubmitting}>
                         {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
                         Log In
