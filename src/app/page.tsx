@@ -8,15 +8,8 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MainLayout } from "@/components/main-layout";
-
-const DressIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-green-500">
-      <path d="M12 2l-3 6h-5l4 4-1.5 6.5 5.5-3.5 5.5 3.5-1.5-6.5 4-4h-5z"></path>
-      <path d="M12 11.5l-2 4h4z"></path>
-      <path d="M7.5 22l-1-10h11l-1 10z"></path>
-    </svg>
-  );
-
+import { products } from "@/lib/mock-data";
+import { ProductCard } from "@/components/product-card";
 
 export default function EcommerceHomePage() {
   return (
@@ -49,7 +42,7 @@ export default function EcommerceHomePage() {
                     </div>
                 </section>
                 
-                <section>
+                <section className="mb-8">
                     <div className="bg-card p-3 rounded-lg shadow-sm flex items-center space-x-4">
                         <div className="bg-gray-100 p-3 rounded-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#38A169" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" ><path d="M12 2l-3 6h-5l4 4-1.5 6.5L12 18l5.5 4.5L16 12l4-4h-5l-3-6z"/><path d="M10 8h4l-2 4-2-4z"/><path d="M7 22h10l1-10H6l1 10z"/></svg>
@@ -66,6 +59,14 @@ export default function EcommerceHomePage() {
                     </div>
                 </section>
 
+                <section>
+                    <h2 className="text-2xl font-bold text-center mb-6">Our Products</h2>
+                    <div className="grid grid-cols-2 gap-4">
+                        {products.slice(0, 4).map((product, index) => (
+                           <ProductCard key={product.id} product={product} onSale={index === 2} />
+                        ))}
+                    </div>
+                </section>
             </main>
         </div>
       </MainLayout>
