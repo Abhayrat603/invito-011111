@@ -78,8 +78,8 @@ export default function ReportPage() {
                 }
 
                 // Center the image on the page
-                const x = (pdfWidth - newImgWidth) / 2;
-                const y = 0; // Start from top
+                const x = 0;
+                const y = 0; 
 
                 pdf.addImage(imgData, 'PNG', x, y, newImgWidth, newImgHeight);
                 pdf.save("user-report.pdf");
@@ -219,3 +219,5 @@ export default function ReportPage() {
         </MainLayout>
     );
 }
+
+    
