@@ -141,7 +141,9 @@ export default function ProfilePage() {
                     <div className="mb-2">
                         <ProfileMenuItem icon={Sparkles} text="Help with AI" href="/ai-help" />
                     </div>
-                    <ProfileMenuItem icon={History} text="History" href="/history" />
+                    <div className="mb-2">
+                        <ProfileMenuItem icon={History} text="History" href="/history" />
+                    </div>
                     <ProfileMenuItem icon={Edit} text="Request For Edit" href="/request-edit" />
                     <ProfileMenuItem icon={HelpCircle} text="Help Center" href="/help-center" />
                     
