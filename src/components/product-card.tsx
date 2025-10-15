@@ -81,12 +81,12 @@ export function ProductCard({ product, onSale = false }: { product: Product, onS
                 <div className="flex items-center justify-between mt-4">
                     <span className="font-bold text-base text-destructive">₹{product.price.toFixed(0)}</span>
                     <div className="flex items-center gap-2">
-                         <Button variant="outline" className="bg-white hover:bg-gray-100 rounded-full shadow-sm text-foreground" onClick={handleAddToCart}>
-                            <ShoppingCart className="mr-2 h-4 w-4"/>
+                         <Button size="sm" variant="outline" className="bg-white hover:bg-gray-100 rounded-full shadow-sm text-foreground" onClick={handleAddToCart}>
+                            <ShoppingCart className="mr-1.5 h-4 w-4"/>
                             Add
                         </Button>
                         <Link href={`/products/${product.slug}`} passHref>
-                             <Button className="bg-amber-800 hover:bg-amber-900 rounded-full shadow-sm">
+                             <Button size="sm" className="bg-amber-800 hover:bg-amber-900 rounded-full shadow-sm">
                                 View
                             </Button>
                         </Link>
