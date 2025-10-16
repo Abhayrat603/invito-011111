@@ -127,10 +127,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             : item
         );
       }
-      toast({
-        title: "Added to Cart",
-        description: `Item has been added to your cart.`
-      });
       return [...prevCart, { productId, quantity }];
     });
   };
