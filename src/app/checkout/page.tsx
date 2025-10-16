@@ -62,7 +62,7 @@ export default function CheckoutPage() {
         });
         
         setIsSubmitting(false);
-        router.push("/history");
+        router.push(`/order-confirmation/${newOrder.id}`);
     };
 
     return (

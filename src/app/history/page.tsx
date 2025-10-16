@@ -3,8 +3,9 @@
 
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock, CheckCircle, XCircle, FileText, ShoppingCart, History as HistoryIcon } from "lucide-react";
+import { ArrowLeft, Clock, CheckCircle, XCircle, FileText, ShoppingCart, History as HistoryIcon, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from 'next/link';
 import { editRequests } from "@/lib/mock-data";
 import { useAppState } from "@/components/providers/app-state-provider";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
+  CardFooter,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
@@ -122,6 +124,15 @@ export default function HistoryPage() {
                                                 <span>₹{order.total.toFixed(2)}</span>
                                             </div>
                                         </CardContent>
+                                        <Separator />
+                                        <CardFooter className="p-2 bg-card">
+                                            <Link href={`/order-confirmation/${order.id}`} className="w-full">
+                                                <Button variant="ghost" className="w-full">
+                                                    <Eye className="mr-2 h-4 w-4" />
+                                                    View Order Details
+                                                </Button>
+                                            </Link>
+                                        </CardFooter>
                                     </Card>
                                 )
                             })}
