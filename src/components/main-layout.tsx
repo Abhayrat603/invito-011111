@@ -109,13 +109,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                             <li><a href="#" className="hover:underline">Careers</a></li>
                         </ul>
                     </div>
-                    <div>
-                        <h3 className="font-bold mb-2">CONTACT</h3>
-                        <ul className="space-y-2 text-sm text-amber-950/70">
-                            <li className="flex items-start"><WhatsAppIcon className="h-4 w-4 mr-2 mt-1 shrink-0"/>+91 8463062603</li>
-                            <li className="flex items-start"><Mail className="h-4 w-4 mr-2 mt-1 shrink-0"/>abhayrat603@gmail.com</li>
-                        </ul>
-                    </div>
                 </div>
 
                 <div className="border-t border-amber-900/20 pt-6">
