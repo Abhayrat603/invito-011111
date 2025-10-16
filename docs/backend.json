@@ -162,6 +162,18 @@
             "imageHint": { "type": "string" }
         },
         "required": ["description", "imageUrl", "imageHint"]
+    },
+    "MenuItem": {
+        "title": "MenuItem",
+        "description": "An item in the main navigation menu.",
+        "type": "object",
+        "properties": {
+            "name": { "type": "string" },
+            "href": { "type": "string" },
+            "icon": { "type": "string" },
+            "order": { "type": "number" }
+        },
+        "required": ["name", "href", "icon", "order"]
     }
   },
   "firestore": {
@@ -208,6 +220,10 @@
     "/images": {
         "schema": { "$ref": "#/entities/ImagePlaceholder" },
         "description": "Collection of all image placeholders."
+    },
+    "/menuItems": {
+        "schema": { "$ref": "#/entities/MenuItem" },
+        "description": "Collection of all main menu items."
     }
   },
   "auth": {

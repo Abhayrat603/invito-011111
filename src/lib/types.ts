@@ -119,3 +119,11 @@ export interface ImagePlaceholder {
   imageUrl: string;
   imageHint: string;
 }
+
+export interface MenuItem {
+    id: string;
+    name: string;
+    href: string;
+    icon: string;
+    order: number;
+}

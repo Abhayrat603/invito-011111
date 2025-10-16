@@ -2,7 +2,7 @@
 "use client";
 
 import React, { createContext, useContext, ReactNode, useCallback, useMemo } from 'react';
-import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser, AppRating, AppSettings, Testimonial, ImagePlaceholder } from '@/lib/types';
+import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser, AppRating, AppSettings, Testimonial, ImagePlaceholder, MenuItem } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from './auth-provider';
 import { 
@@ -22,6 +22,7 @@ import {
 import { db } from '@/lib/firebase';
 import { useCollection } from '@/hooks/use-collection';
 import { useDoc } from '@/hooks/use-doc';
+import { getIconForMenuItem } from '@/lib/icon-map';
 
 
 interface AppStateContextType {
@@ -36,6 +37,7 @@ interface AppStateContextType {
   appSettings: AppSettings;
   testimonial: Testimonial;
   images: ImagePlaceholder[];
+  menuItems: MenuItem[];
   
   addToCart: (productId: string, quantity?: number, isDeal?: boolean) => void;
   removeFromCart: (productId: string) => void;
@@ -66,6 +68,10 @@ interface AppStateContextType {
   updateShareLink: (newLink: string) => void;
   updateTestimonial: (testimonial: Testimonial) => void;
   findImage: (id: string) => ImagePlaceholder | undefined;
+
+  addMenuItem: (item: Omit<MenuItem, 'id' | 'icon' | 'order'>) => void;
+  updateMenuItem: (itemId: string, itemData: Partial<MenuItem>) => void;
+  deleteMenuItem: (itemId: string) => void;
 }
 
 const AppStateContext = createContext<AppStateContextType | undefined>(undefined);
@@ -128,6 +134,10 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const imagesQuery = useMemo(() => collection(db, 'images'), []);
   const { data: imagesData } = useCollection(imagesQuery);
   const images: ImagePlaceholder[] = imagesData as ImagePlaceholder[] || [];
+
+  const menuItemsQuery = useMemo(() => collection(db, 'menuItems'), []);
+  const { data: menuItemsData } = useCollection(menuItemsQuery);
+  const menuItems: MenuItem[] = menuItemsData as MenuItem[] || [];
 
   const cartCollectionRef = useMemo(() => user ? collection(db, `users/${user.uid}/cart`) : null, [user]);
   const { data: cartData } = useCollection(cartCollectionRef);
@@ -494,6 +504,27 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     await setDoc(testimonialRef, testimonialData, { merge: true });
   }, []);
 
+  const addMenuItem = useCallback(async (item: Omit<MenuItem, 'id' | 'icon' | 'order'>) => {
+    const newMenuItem = {
+      ...item,
+      icon: getIconForMenuItem(item.name),
+      order: menuItems.length, // Append to the end
+    };
+    await addDoc(collection(db, 'menuItems'), newMenuItem);
+  }, [menuItems.length]);
+
+  const updateMenuItem = useCallback(async (itemId: string, itemData: Partial<MenuItem>) => {
+    const itemRef = doc(db, 'menuItems', itemId);
+    const updatedData: Partial<MenuItem> = { ...itemData };
+    if (itemData.name) {
+      updatedData.icon = getIconForMenuItem(itemData.name);
+    }
+    await updateDoc(itemRef, updatedData);
+  }, []);
+
+  const deleteMenuItem = useCallback(async (itemId: string) => {
+    await deleteDoc(doc(db, 'menuItems', itemId));
+  }, []);
 
   const value = { 
     cart, wishlist, 
@@ -501,6 +532,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     products, deals, 
     editRequests, users, appRatings, appSettings, testimonial,
     images,
+    menuItems,
     addToCart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, clearCart, 
     toggleWishlist, isInWishlist, addOrder,
     addProduct, updateProduct, deleteProduct,
@@ -511,6 +543,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     updateShareLink,
     updateTestimonial,
     findImage,
+    addMenuItem, updateMenuItem, deleteMenuItem,
   };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;

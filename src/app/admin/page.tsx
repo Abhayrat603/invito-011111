@@ -5,7 +5,7 @@ import { MainLayout } from "@/components/main-layout";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Loader2, Shield, Users, ShoppingCart, CreditCard, Edit, Tags, Star, History, Settings, MessageSquare } from "lucide-react";
+import { Loader2, Shield, Users, ShoppingCart, CreditCard, Edit, Tags, Star, History, Settings, MessageSquare, Menu } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
 
@@ -61,6 +61,12 @@ export default function AdminPage() {
                 icon={Tags}
                 title="Manage Deals"
                 description="Add, edit, or remove deals"
+            />
+            <AdminCard 
+                href="/admin/menu"
+                icon={Menu}
+                title="Manage Menu"
+                description="Add, edit, or remove menu items"
             />
              <AdminCard 
                 href="/admin/users"

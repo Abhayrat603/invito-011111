@@ -2,37 +2,15 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Facebook, Instagram, Mail, Heart, Gift, School, Building, PartyPopper, CalendarDays, Edit, Clapperboard, Star, Info, FileText, X } from "lucide-react";
+import { ChevronRight, Facebook, Instagram, Mail, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SheetClose } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useAppState } from "@/components/providers/app-state-provider";
+import { getIconByName } from "@/lib/icon-map";
+import { useMemo } from "react";
 
-const Home = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-        <polyline points="9 22 9 12 15 12 15 22"/>
-    </svg>
-);
-
-const menuItems = [
-    { name: "Wedding Invitation", href: "#", icon: Heart },
-    { name: "Birthday Invitation", href: "#", icon: Gift },
-    { name: "Engagement Invitation", href: "#", icon: Star },
-    { name: "Anniversary Invitation", href: "#", icon: CalendarDays },
-    { name: "Housewarming Invitation", href: "#", icon: Home },
-    { name: "Baby Shower Invitation", href: "#", icon: Clapperboard },
-    { name: "Graduation Invitation", href: "#", icon: School },
-    { name: "Corporate Invitation", href: "#", icon: Building },
-    { name: "Party Invitation", href: "#", icon: PartyPopper },
-    { name: "E-Invite / Digital Invitation", href: "#", icon: Mail },
-    { name: "Save-the-Date Card", href: "#", icon: CalendarDays },
-    { name: "Formal Invitation", href: "#", icon: Info },
-    { name: "Casual Invitation", href: "#", icon: PartyPopper },
-    { name: "Handmade Invitation", href: "#", icon: Edit },
-    { name: "Poster Presentation", href: "#", icon: FileText },
-    { name: "Wedding Invitation Video", href: "#", icon: Clapperboard },
-];
 
 const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
@@ -54,6 +32,12 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export function MenuPageContent() {
     const pathname = usePathname();
+    const { menuItems } = useAppState();
+
+    const sortedMenuItems = useMemo(() => {
+        return [...menuItems].sort((a, b) => a.order - b.order);
+    }, [menuItems]);
+
     return (
         <div className="w-full h-full bg-background text-foreground flex flex-col">
             <header className="p-4 flex justify-between items-center border-b">
@@ -68,24 +52,27 @@ export function MenuPageContent() {
             <main className="flex-grow p-4 overflow-y-auto">
               <nav className="flex flex-col h-full">
                 <ul className="flex-grow space-y-1">
-                    {menuItems.map((item) => (
-                        <li key={item.name}>
-                            <SheetClose asChild>
-                                <Link href={item.href} passHref>
-                                    <div className={cn(
-                                        "flex justify-between items-center py-3 px-3 rounded-md transition-colors",
-                                        pathname === item.href ? "bg-primary/10 text-primary font-semibold" : "hover:bg-accent"
-                                    )}>
-                                        <div className="flex items-center overflow-hidden">
-                                            <item.icon className="h-5 w-5 mr-3 text-primary/80 shrink-0" />
-                                            <span className="text-sm truncate">{item.name}</span>
+                    {sortedMenuItems.map((item) => {
+                        const Icon = getIconByName(item.icon);
+                        return (
+                            <li key={item.id}>
+                                <SheetClose asChild>
+                                    <Link href={item.href} passHref>
+                                        <div className={cn(
+                                            "flex justify-between items-center py-3 px-3 rounded-md transition-colors",
+                                            pathname === item.href ? "bg-primary/10 text-primary font-semibold" : "hover:bg-accent"
+                                        )}>
+                                            <div className="flex items-center overflow-hidden">
+                                                <Icon className="h-5 w-5 mr-3 text-primary/80 shrink-0" />
+                                                <span className="text-sm truncate">{item.name}</span>
+                                            </div>
+                                            <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
                                         </div>
-                                        <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
-                                    </div>
-                                </Link>
-                            </SheetClose>
-                        </li>
-                    ))}
+                                    </Link>
+                                </SheetClose>
+                            </li>
+                        )
+                    })}
                 </ul>
                 
                 <div className="flex justify-center items-center space-x-4 py-4 mt-4 border-t">
