@@ -82,11 +82,9 @@ export default function ProductDetailPage() {
     <MainLayout>
       <div className="w-full mx-auto bg-background text-foreground flex flex-col">
         <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
-          <Button variant="ghost" size="icon" onClick={() => router.back()}>
-            <ArrowLeft />
-          </Button>
+          
           <div className="flex-grow flex items-center text-xs text-muted-foreground overflow-hidden">
-            <span className="mx-1 shrink-0">Home</span>
+            <Link href="/" className="mr-1 shrink-0 hover:underline">Home</Link>
             <ChevronRight className="h-4 w-4 shrink-0" />
             <span className="mx-1 shrink-0 truncate">{product.category}</span>
             <ChevronRight className="h-4 w-4 shrink-0" />
@@ -184,9 +182,3 @@ export default function ProductDetailPage() {
                  <li>High-quality, print-ready files with included fonts</li>
                  <li>Ideal for supermarkets, kirana shops, jewellery showrooms, and more</li>
              </ul>
-          </div>
-        </main>
-      </div>
-    </MainLayout>
-  );
-}

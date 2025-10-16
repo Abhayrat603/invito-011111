@@ -1,3 +1,4 @@
+
 "use client";
 
 import { MainLayout } from "@/components/main-layout";
@@ -27,16 +28,7 @@ export default function TermsAndConditionsPage() {
     return (
         <MainLayout>
             <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
-                <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
-                    <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                        <ArrowLeft />
-                    </Button>
-                    <div className="flex-grow flex items-center justify-center">
-                       <FileText className="h-6 w-6 text-primary mr-2"/>
-                       <h1 className="text-xl font-bold">Terms &amp; Conditions</h1>
-                    </div>
-                    <div className="w-10"></div>
-                </header>
+                
                 <main className="flex-grow p-4 md:p-6 space-y-8">
                      <div className="text-center mb-4">
                         <p className="text-muted-foreground">Effective Date: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
@@ -87,6 +79,4 @@ export default function TermsAndConditionsPage() {
                     </TermCard>
                 </main>
             </div>
-        </MainLayout>
-    );
-}
+        </MainLayout

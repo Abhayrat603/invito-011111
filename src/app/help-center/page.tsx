@@ -1,4 +1,3 @@
-
 "use client";
 
 import { MainLayout } from "@/components/main-layout";
@@ -75,16 +74,7 @@ export default function HelpCenterPage() {
     return (
         <MainLayout>
             <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
-                <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
-                    <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                        <ArrowLeft />
-                    </Button>
-                    <div className="flex-grow flex items-center justify-center">
-                       <LifeBuoy className="h-6 w-6 text-primary mr-2"/>
-                       <h1 className="text-xl font-bold">Help Center</h1>
-                    </div>
-                    <div className="w-10"></div>
-                </header>
+                
                 <main className="flex-grow p-4 md:p-6 space-y-8">
                     <div className="relative">
                         <Input placeholder="Search for help..." className="pr-10 h-12 rounded-full pl-5 bg-card" />

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { AuthRedirect } from "@/components/auth-redirect";
@@ -95,9 +94,7 @@ export default function ProfilePage() {
     <AuthRedirect to="/login" condition="is-not-auth">
       <MainLayout>
         <div className="w-full mx-auto bg-background text-foreground flex flex-col">
-          <header className="p-4 flex items-center justify-center">
-            <h1 className="text-xl font-bold text-center flex-grow">Profile</h1>
-          </header>
+          
 
           <main className="flex-grow p-4">
             <ImageCropper 

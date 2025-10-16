@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -97,13 +96,7 @@ export default function CheckoutPage() {
     return (
         <MainLayout>
             <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
-                <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
-                    <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                        <ArrowLeft />
-                    </Button>
-                    <h1 className="text-xl font-bold text-center flex-grow">Checkout</h1>
-                    <div className="w-10"></div>
-                </header>
+                
                 <main className="flex-grow p-4">
                     <div className="space-y-6">
                         <div>

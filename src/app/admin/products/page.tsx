@@ -1,4 +1,3 @@
-
 "use client";
 
 import { MainLayout } from "@/components/main-layout";
@@ -50,17 +49,7 @@ export default function AdminProductsPage() {
     return (
         <MainLayout>
             <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
-                <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
-                    <Button variant="ghost" size="icon" onClick={() => router.push('/admin')}>
-                        <ArrowLeft />
-                    </Button>
-                    <h1 className="text-xl font-bold text-center flex-grow">Manage Products</h1>
-                    <Link href="/admin/products/add">
-                        <Button variant="outline" size="icon">
-                            <Plus className="h-4 w-4"/>
-                        </Button>
-                    </Link>
-                </header>
+                
                 <main className="flex-grow p-4">
                     <div className="rounded-lg border">
                         <Table>

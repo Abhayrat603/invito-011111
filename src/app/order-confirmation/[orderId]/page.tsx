@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useParams, useRouter } from 'next/navigation';
@@ -33,13 +32,7 @@ export default function OrderConfirmationPage() {
         return (
             <MainLayout>
                 <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
-                    <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
-                        <Button variant="ghost" size="icon" onClick={() => router.push('/')}>
-                            <ArrowLeft />
-                        </Button>
-                        <h1 className="text-xl font-bold text-center flex-grow">Order Not Found</h1>
-                        <div className="w-10"></div>
-                    </header>
+                    
                     <main className="flex-grow p-4 flex items-center justify-center">
                         <div className="text-center">
                             <p className="text-lg text-muted-foreground mb-4">We couldn't find the order details.</p>
@@ -54,13 +47,7 @@ export default function OrderConfirmationPage() {
     return (
         <MainLayout>
             <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
-                <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
-                    <Button variant="ghost" size="icon" onClick={() => router.push('/')}>
-                        <Home />
-                    </Button>
-                    <h1 className="text-xl font-bold text-center flex-grow">Order Confirmation</h1>
-                    <div className="w-10"></div>
-                </header>
+                
                 <main className="flex-grow p-4 md:p-6 space-y-6">
                     <Card className="text-center shadow-lg border-green-500/50">
                         <CardHeader>

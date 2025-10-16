@@ -1,4 +1,3 @@
-
 "use client";
 
 import { MainLayout } from "@/components/main-layout";
@@ -48,10 +47,7 @@ export default function AdminPage() {
   return (
     <MainLayout>
       <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
-        <header className="p-4 flex items-center justify-center border-b sticky top-0 bg-background z-10">
-            <Shield className="h-6 w-6 text-primary mr-2" />
-            <h1 className="text-xl font-bold">Admin Panel</h1>
-        </header>
+        
         <main className="flex-grow p-4 space-y-4">
             <AdminCard 
                 href="/admin/products"

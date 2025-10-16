@@ -75,10 +75,11 @@ export default function EcommerceHomePage() {
     }
   }, [user, loading, router]);
   
-  useEffect(() => {
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
     let results = products;
-    if (searchQuery) {
-      const lowercasedQuery = searchQuery.toLowerCase();
+    if (query) {
+      const lowercasedQuery = query.toLowerCase();
       results = results.filter(product =>
         product.name.toLowerCase().includes(lowercasedQuery) ||
         product.description.toLowerCase().includes(lowercasedQuery)
@@ -90,6 +91,22 @@ export default function EcommerceHomePage() {
 
     setFilteredProducts(results);
     setCurrentPage(0); // Reset to first page on new search
+  }
+
+  useEffect(() => {
+    let results = products;
+    if (searchQuery) {
+        const lowercasedQuery = searchQuery.toLowerCase();
+        results = results.filter(product =>
+            product.name.toLowerCase().includes(lowercasedQuery) ||
+            product.description.toLowerCase().includes(lowercasedQuery)
+        );
+    }
+    if (selectedCategory) {
+        results = results.filter(p => p.category === selectedCategory);
+    }
+    setFilteredProducts(results);
+    setCurrentPage(0);
   }, [searchQuery, selectedCategory]);
 
   const handleCategorySelect = (categoryName: string | null) => {
@@ -108,31 +125,12 @@ export default function EcommerceHomePage() {
   const displayedProducts = filteredProducts.slice(currentPage * productsPerPage, (currentPage + 1) * productsPerPage);
 
   return (
-    <MainLayout>
+    <MainLayout onSearch={handleSearch}>
       <AuthRedirect to="/login" condition="is-not-auth">
         <div className="bg-background text-foreground">
-              <header className="p-4">
-                  <h1 className="text-4xl font-bold text-center mb-4 font-headline text-primary">Invite Designer</h1>
-                  <div className="relative">
-                      <Input 
-                          placeholder="Search for invitations..." 
-                          className="bg-card border-border rounded-lg h-12 pl-4 pr-10 focus-visible:ring-primary/50" 
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                      />
-                      {searchQuery ? (
-                          <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full" onClick={() => setSearchQuery('')}>
-                              <X className="h-5 w-5 text-muted-foreground"/>
-                          </Button>
-                      ) : (
-                          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"/>
-                      )}
-                  </div>
-              </header>
-
-              <main className="pb-4">
-                  <section className="px-4 mb-6">
-                    <h2 className="text-2xl font-headline font-bold text-primary text-left mt-8 mb-2">Deal of the Day</h2>
+             <main className="pb-4">
+                  <section className="px-4 my-6">
+                    <h2 className="text-2xl font-headline font-bold text-primary text-left mb-2">Deal of the Day</h2>
                      <Carousel
                         plugins={[
                             Autoplay({ delay: 4000, stopOnInteraction: true }),
@@ -157,7 +155,7 @@ export default function EcommerceHomePage() {
                       </Carousel>
                   </section>
                   
-                  <h2 className="text-2xl font-headline font-bold text-primary text-left mt-8 mb-2 px-4">Trending Invitation Card</h2>
+                  <h2 className="text-2xl font-headline font-bold text-primary text-left mb-2 px-4">Trending Invitation Card</h2>
                   <section className="mb-4">
                       <ScrollArea className="w-full whitespace-nowrap" viewportRef={scrollViewportRef}>
                         <div className="flex w-max space-x-2 p-4">

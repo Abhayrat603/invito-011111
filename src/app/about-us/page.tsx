@@ -1,3 +1,4 @@
+
 "use client";
 
 import { MainLayout } from "@/components/main-layout";
@@ -41,16 +42,7 @@ export default function AboutUsPage() {
     return (
         <MainLayout>
             <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
-                <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
-                    <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                        <ArrowLeft />
-                    </Button>
-                     <div className="flex-grow flex items-center justify-center">
-                       <Info className="h-6 w-6 text-primary mr-2"/>
-                       <h1 className="text-xl font-bold">About Us</h1>
-                    </div>
-                    <div className="w-10"></div>
-                </header>
+                
                 <main className="flex-grow">
                     <div className="relative h-64 w-full">
                          <Image 
@@ -94,8 +86,7 @@ export default function AboutUsPage() {
 
                         <InfoCard icon={Leaf} title="Sustainability & Responsibility">
                             <div className="text-foreground/80 space-y-3 leading-relaxed">
-                                <p>In today's world, we recognize the importance of environmental responsibility. We actively encourage the use of our digital invitations as a beautiful, eco-friendly, and instantaneous alternative to traditional paper. For those who cherish the tangible feel of a printed card, we provide guidance and recommendations for using recycled paper stocks and partnering with sustainable, local printing services. This is a journey of continuous improvement, and we are steadfast in our commitment to making a positive, lasting impact on our planet.</p>
-                            </div>
+                                <p>In today's world, we recognize the importance of environmental responsibility. We actively encourage the use of our digital invitations as a beautiful, eco-friendly, and instantaneous alternative to traditional paper. For those who cherish the tangible feel of a printed card, we provide guidance and recommendations for using recycled paper stocks and partnering with sustainable, local printing services. This is a journey of continuous improvement, and we are steadfast in our commitment to making a positive, lasting impact on our planet.</p>                            </div>
                         </InfoCard>
                         
                         <div className="text-center space-y-4">
@@ -107,6 +98,4 @@ export default function AboutUsPage() {
                     </div>
                 </main>
             </div>
-        </MainLayout>
-    );
-}
+        </

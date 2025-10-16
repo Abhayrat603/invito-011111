@@ -66,13 +66,7 @@ export default function EditPhonePage() {
     <AuthRedirect to="/login" condition="is-not-auth">
       <MainLayout>
         <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col">
-          <header className="p-4 flex items-center border-b">
-             <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                <ArrowLeft />
-            </Button>
-            <h1 className="text-xl font-bold text-center flex-grow">Change Phone Number</h1>
-            <div className="w-10"></div>
-          </header>
+          
           <main className="flex-grow p-4">
               <Card className="border-none shadow-none">
                 <CardHeader>
@@ -112,5 +106,4 @@ export default function EditPhonePage() {
         </div>
       </MainLayout>
     </AuthRedirect>
-  );
-}
+  
