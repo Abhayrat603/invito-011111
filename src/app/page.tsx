@@ -132,7 +132,7 @@ export default function EcommerceHomePage() {
 
               <main className="pb-4">
                   <section className="px-4 mb-6">
-                    <h2 className="text-2xl font-headline text-primary text-left mt-8 mb-2">Deal of the Day</h2>
+                    <h2 className="text-2xl font-headline font-bold text-primary text-left mt-8 mb-2">Deal of the Day</h2>
                      <Carousel
                         plugins={[
                             Autoplay({ delay: 4000, stopOnInteraction: true }),
@@ -157,7 +157,7 @@ export default function EcommerceHomePage() {
                       </Carousel>
                   </section>
                   
-                  <h2 className="text-2xl font-headline text-primary text-left mt-8 mb-2 px-4">New Invitation</h2>
+                  <h2 className="text-2xl font-headline font-bold text-primary text-left mt-8 mb-2 px-4">Trending Invitation Card</h2>
                   <section className="mb-4">
                       <ScrollArea className="w-full whitespace-nowrap" viewportRef={scrollViewportRef}>
                         <div className="flex w-max space-x-2 p-4">
@@ -225,7 +225,7 @@ export default function EcommerceHomePage() {
                     )}
 
                   <section className="px-4 mt-8 space-y-6">
-                    <h2 className="text-2xl font-headline text-primary text-left mb-6">Testimonial</h2>
+                    <h2 className="text-2xl font-headline font-bold text-primary text-left mb-6">Testimonial</h2>
                     <TestimonialCard />
                   </section>
                   
