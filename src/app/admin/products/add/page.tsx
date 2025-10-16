@@ -24,6 +24,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import { useAppState } from "@/components/providers/app-state-provider";
 import Image from "next/image";
+import { Switch } from "@/components/ui/switch";
 
 const formSchema = z.object({
   name: z.string().min(3, { message: "Product name must be at least 3 characters." }),
@@ -32,6 +33,7 @@ const formSchema = z.object({
   category: z.string({ required_error: "Please select a category." }),
   imageUrl: z.string().url({ message: "Please enter a valid URL." }),
   zipFileUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
+  isPaid: z.boolean().default(true),
 });
 
 export default function AddProductPage() {
@@ -49,16 +51,24 @@ export default function AddProductPage() {
             price: 0,
             imageUrl: "",
             zipFileUrl: "",
+            isPaid: true,
         },
     });
 
     const imageUrl = form.watch("imageUrl");
+    const isPaid = form.watch("isPaid");
 
     useEffect(() => {
         if (imageUrl) {
             setImagePreview(imageUrl);
         }
     }, [imageUrl]);
+
+    useEffect(() => {
+        if (!isPaid) {
+            form.setValue("price", 0);
+        }
+    }, [isPaid, form]);
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true);
@@ -124,11 +134,29 @@ export default function AddProductPage() {
                             />
                              <FormField
                                 control={form.control}
+                                name="isPaid"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                        <div className="space-y-0.5">
+                                            <FormLabel>Paid Product</FormLabel>
+                                            <FormMessage />
+                                        </div>
+                                        <FormControl>
+                                            <Switch
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
                                 name="price"
                                 render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Price (₹)</FormLabel>
-                                    <FormControl><Input type="number" step="0.01" placeholder="E.g., 5.99" {...field} /></FormControl>
+                                    <FormControl><Input type="number" step="0.01" placeholder="E.g., 5.99" {...field} disabled={!isPaid} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                                 )}

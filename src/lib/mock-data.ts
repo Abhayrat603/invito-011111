@@ -28,6 +28,7 @@ export const products: Product[] = [
     category: 'Wedding',
     createdAt: new Date(),
     zipFileUrl: 'https://example.com/classic-wedding.zip',
+    isPaid: true,
   },
   {
     id: 'prod2',
@@ -39,6 +40,7 @@ export const products: Product[] = [
     category: 'Birthday',
     createdAt: new Date(),
     zipFileUrl: 'https://example.com/modern-birthday.zip',
+    isPaid: true,
   },
   {
     id: 'prod3',
@@ -49,6 +51,7 @@ export const products: Product[] = [
     images: ['product-corporate-1', 'product-corporate-2'],
     category: 'Corporate',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod4',
@@ -59,6 +62,7 @@ export const products: Product[] = [
     images: ['product-party-1', 'product-party-2'],
     category: 'Party',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod5',
@@ -69,6 +73,7 @@ export const products: Product[] = [
     images: ['product-bridal-1', 'product-bridal-2'],
     category: 'Wedding',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod6',
@@ -79,6 +84,7 @@ export const products: Product[] = [
     images: ['product-dino-1', 'product-dino-2'],
     category: 'Birthday',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod7',
@@ -89,6 +95,7 @@ export const products: Product[] = [
     images: ['product-anniversary-1', 'product-anniversary-2'],
     category: 'Anniversary',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod8',
@@ -99,6 +106,7 @@ export const products: Product[] = [
     images: ['product-conference-1', 'product-conference-2'],
     category: 'Corporate',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod9',
@@ -109,6 +117,7 @@ export const products: Product[] = [
     images: ['product-visiting-card-1', 'product-visiting-card-2'],
     category: 'Corporate',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod10',
@@ -119,6 +128,7 @@ export const products: Product[] = [
     images: ['product-rustic-wedding-1', 'product-rustic-wedding-2'],
     category: 'Wedding',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod11',
@@ -129,6 +139,7 @@ export const products: Product[] = [
     images: ['product-golden-anniv-1', 'product-golden-anniv-2'],
     category: 'Anniversary',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod12',
@@ -139,6 +150,7 @@ export const products: Product[] = [
     images: ['product-sweet-16-1', 'product-sweet-16-2'],
     category: 'Birthday',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod13',
@@ -149,6 +161,7 @@ export const products: Product[] = [
     images: ['product-garden-party-1', 'product-garden-party-2'],
     category: 'Party',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod14',
@@ -159,6 +172,7 @@ export const products: Product[] = [
     images: ['product-vintage-eng-1', 'product-vintage-eng-2'],
     category: 'Engagement',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod15',
@@ -169,6 +183,7 @@ export const products: Product[] = [
     images: ['product-housewarming-1', 'product-housewarming-2'],
     category: 'Housewarming',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod16',
@@ -179,6 +194,7 @@ export const products: Product[] = [
     images: ['product-baby-shower-1', 'product-baby-shower-2'],
     category: 'Baby Shower',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod17',
@@ -189,6 +205,7 @@ export const products: Product[] = [
     images: ['product-grad-1', 'product-grad-2'],
     category: 'Graduation',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod18',
@@ -199,6 +216,7 @@ export const products: Product[] = [
     images: ['product-save-date-1', 'product-save-date-2'],
     category: 'Save the Date',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod19',
@@ -209,6 +227,7 @@ export const products: Product[] = [
     images: ['product-holiday-1', 'product-holiday-2'],
     category: 'Party',
     createdAt: new Date(),
+    isPaid: true,
   },
   {
     id: 'prod20',
@@ -219,6 +238,7 @@ export const products: Product[] = [
     images: ['product-launch-1', 'product-launch-2'],
     category: 'E-Invite',
     createdAt: new Date(),
+    isPaid: true,
   },
 ];
 
@@ -328,6 +348,7 @@ export const dealProduct: DealProduct = {
   sold: 20,
   rating: 3.5,
   zipFileUrl: 'https://example.com/shampoo.zip',
+  isPaid: true,
 };
 
 const offerEndDate2 = new Date();
@@ -347,6 +368,7 @@ export const dealProduct2: DealProduct = {
   stock: 30,
   sold: 8,
   rating: 4.5,
+  isPaid: true,
 };
 
 const offerEndDate3 = new Date();
@@ -366,6 +388,7 @@ export const dealProduct3: DealProduct = {
   stock: 100,
   sold: 45,
   rating: 4.8,
+  isPaid: true,
 };
 
 export const initialUsers: AppUser[] = [

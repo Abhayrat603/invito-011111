@@ -1,3 +1,4 @@
+
 export interface UserProfile {
   uid: string;
   email: string | null;
@@ -29,6 +30,7 @@ export interface Product {
   category: string;
   createdAt: Date;
   zipFileUrl?: string;
+  isPaid: boolean;
 }
 
 export interface DealProduct extends Product {

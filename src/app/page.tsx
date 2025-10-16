@@ -232,7 +232,7 @@ export default function EcommerceHomePage() {
                   
                    <section className="px-4 grid grid-cols-1 gap-4">
                         {displayedProducts.map(product => (
-                            <ProductCard key={product.id} product={product} onSale={true} />
+                            <ProductCard key={product.id} product={product} />
                         ))}
                     </section>
 

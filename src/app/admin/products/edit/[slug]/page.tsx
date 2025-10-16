@@ -26,6 +26,7 @@ import type { Product } from "@/lib/types";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useAppState } from "@/components/providers/app-state-provider";
+import { Switch } from "@/components/ui/switch";
 
 const findImage = (id: string) => {
   return PlaceHolderImages.find(img => img.id === id);
@@ -38,6 +39,7 @@ const formSchema = z.object({
   category: z.string({ required_error: "Please select a category." }),
   imageUrl: z.string().url({ message: "Please enter a valid URL." }),
   zipFileUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
+  isPaid: z.boolean().default(true),
 });
 
 export default function EditProductPage() {
@@ -55,12 +57,19 @@ export default function EditProductPage() {
     });
     
     const imageUrl = form.watch("imageUrl");
+    const isPaid = form.watch("isPaid");
 
     useEffect(() => {
         if(imageUrl) {
             setImagePreview(imageUrl);
         }
     }, [imageUrl]);
+
+    useEffect(() => {
+        if (!isPaid) {
+            form.setValue("price", 0);
+        }
+    }, [isPaid, form]);
 
     useEffect(() => {
         const productToEdit = products.find(p => p.slug === slug);
@@ -76,6 +85,7 @@ export default function EditProductPage() {
                 category: productToEdit.category,
                 imageUrl: currentImageUrl,
                 zipFileUrl: productToEdit.zipFileUrl || '',
+                isPaid: productToEdit.isPaid,
             });
             setImagePreview(currentImageUrl);
         } else {
@@ -91,8 +101,6 @@ export default function EditProductPage() {
         if (!product) return;
         setIsSubmitting(true);
         
-        // This is a mock update. We'll update the placeholder image system
-        // For a real app, you would upload the image and get a new URL
         const imageId = `product-image-${product.id}`;
         const existingImageIndex = PlaceHolderImages.findIndex(img => img.id === imageId);
         if (existingImageIndex > -1) {
@@ -107,12 +115,8 @@ export default function EditProductPage() {
         }
 
         updateProduct(product.id, {
-            name: values.name,
-            description: values.description,
-            price: values.price,
-            category: values.category,
+            ...values,
             images: [imageId, product.images[1] || ''],
-            zipFileUrl: values.zipFileUrl,
         });
         
         toast({
@@ -189,11 +193,29 @@ export default function EditProductPage() {
                             />
                              <FormField
                                 control={form.control}
+                                name="isPaid"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                        <div className="space-y-0.5">
+                                            <FormLabel>Paid Product</FormLabel>
+                                            <FormMessage />
+                                        </div>
+                                        <FormControl>
+                                            <Switch
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
                                 name="price"
                                 render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Price (₹)</FormLabel>
-                                    <FormControl><Input type="number" step="0.01" placeholder="E.g., 5.99" {...field} /></FormControl>
+                                    <FormControl><Input type="number" step="0.01" placeholder="E.g., 5.99" {...field} disabled={!isPaid} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                                 )}

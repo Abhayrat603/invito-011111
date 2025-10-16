@@ -15,7 +15,7 @@ const findImage = (id: string) => {
     return PlaceHolderImages.find(img => img.id === id);
 }
 
-export function ProductCard({ product, onSale = false }: { product: Product, onSale?: boolean }) {
+export function ProductCard({ product }: { product: Product }) {
     const { addToCart, toggleWishlist, isInWishlist } = useAppState();
     const { toast } = useToast();
     
@@ -46,7 +46,7 @@ export function ProductCard({ product, onSale = false }: { product: Product, onS
     return (
         <div className="group/card bg-amber-50/20 text-card-foreground rounded-xl shadow-sm overflow-hidden border relative transition-all hover:shadow-lg">
             
-            {onSale && (
+            {product.isPaid && (
                  <div className="absolute top-3 left-3 bg-yellow-500 text-white font-bold px-3 py-1 rounded-md z-10 text-sm shadow-md">
                     Paid
                 </div>

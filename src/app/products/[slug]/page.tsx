@@ -89,7 +89,6 @@ export default function ProductDetailPage() {
   const isLiked = isInWishlist(product.id);
   const mainImage = findImage(product.images[0]);
   const thumbnailImage = findImage(product.images[1] || product.images[0]);
-  const onSale = true;
 
   return (
     <MainLayout>
@@ -133,7 +132,7 @@ export default function ProductDetailPage() {
           </div>
           
           <div className="space-y-4">
-            {onSale && <Badge variant="outline" className="text-sm font-semibold border-yellow-500 text-yellow-600">Paid</Badge>}
+            {product.isPaid && <Badge variant="outline" className="text-sm font-semibold border-yellow-500 text-yellow-600">Paid</Badge>}
             <h1 className="text-lg font-bold leading-tight">{product.name}</h1>
             
             <div className="flex items-center justify-between">

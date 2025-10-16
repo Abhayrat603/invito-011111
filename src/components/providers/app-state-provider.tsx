@@ -48,7 +48,7 @@ interface AppStateContextType {
   updateProduct: (productId: string, productData: Partial<Product>) => void;
   deleteProduct: (productId: string) => void;
 
-  addDeal: (deal: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images'> & { imageUrl: string }) => void;
+  addDeal: (deal: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images' | 'isPaid'> & { imageUrl: string }) => void;
   updateDeal: (dealId: string, dealData: Partial<DealProduct>) => void;
   deleteDeal: (dealId: string) => void;
   updateDealStockOnOrder: (cartProducts: any[]) => void;
@@ -352,8 +352,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
           imageHint: 'custom product'
       };
       PlaceHolderImages.push(newImage);
-      // This is a bit of a hack to ensure the main JSON file is also updated if it were a real filesystem
-      // In this environment, we just need to ensure our stateful `PlaceHolderImages` has the data.
       
       const newProduct: Product = {
         ...productData,
@@ -383,7 +381,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     setProducts(prev => prev.filter(p => p.id !== productId));
   }, []);
 
-  const addDeal = useCallback((dealData: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images'> & { imageUrl: string }) => {
+  const addDeal = useCallback((dealData: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images' | 'isPaid'> & { imageUrl: string }) => {
     setDeals(prev => {
       const newId = `deal${Date.now()}`;
       const imageId = `product-deal-${newId}`;
@@ -404,6 +402,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         images: [imageId],
         sold: 0,
         rating: Math.random() * 2 + 3, // 3 to 5 stars
+        isPaid: true, // Deals are always paid
       };
       return [newDeal, ...prev];
     });
