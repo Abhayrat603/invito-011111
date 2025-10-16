@@ -106,7 +106,7 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
   return (
     <div className="w-full max-w-md mx-auto bg-background text-foreground min-h-screen flex flex-col">
        {showHeader && (
-         <header className="px-4 py-2 flex items-center justify-between gap-4 border-b sticky top-0 bg-background z-10">
+         <header className="px-4 py-2 flex items-center justify-between gap-4 border-b sticky top-0 bg-background z-30">
             <Link href="/" className="flex items-center gap-2">
                 <div className="bg-[#694736] text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-lg">
                     I
@@ -122,7 +122,7 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
          </header>
       )}
       {isSearchOpen && (
-        <div className="p-4 border-b bg-background sticky top-[61px] z-10">
+        <div className="p-4 border-b bg-background sticky top-[61px] z-20">
            <div className="relative">
               <Input
                 placeholder="Search products..."
@@ -194,7 +194,7 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
           <MenuPageContent />
         </SheetContent>
 
-        <nav className="fixed bottom-0 left-0 right-0 bg-card border-t max-w-md mx-auto z-20">
+        <nav className="fixed bottom-0 left-0 right-0 bg-card border-t max-w-md mx-auto z-40">
             <div className="flex justify-around items-center h-16">
               <SheetTrigger asChild>
                 <div className="flex flex-col items-center justify-center gap-1 text-muted-foreground cursor-pointer text-amber-900/60 dark:text-amber-200/70">
