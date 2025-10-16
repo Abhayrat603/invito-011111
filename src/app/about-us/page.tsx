@@ -1,4 +1,3 @@
-
 "use client";
 
 import { MainLayout } from "@/components/main-layout";
@@ -70,38 +69,38 @@ export default function AboutUsPage() {
                     <div className="p-6 md:p-8 space-y-8">
                         <div className="text-center">
                             <p className="text-lg text-foreground/80 leading-relaxed">
-                                At Invite Designer, we believe every great event starts with a beautiful invitation. It's the first glimpse your guests have of the special day you're planning. We're dedicated to providing stunning, customizable digital and print invitations crafted with quality and passion.
+                                At Invite Designer, we believe every great event starts with a beautiful invitation. It's the first glimpse your guests have of the special day you're planning, setting the tone and building anticipation. We are a passionate team of designers, artists, and creators dedicated to providing stunning, customizable digital and print invitations crafted with exceptional quality and boundless creativity. Our platform is more than just a store; it’s a space where your vision for the perfect event comes to life.
                             </p>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-b border-border/50 py-8">
-                            <FeatureCard icon={Zap} title="Our Mission" description="To empower everyone to create beautiful, personalized invitations for life's most important moments." />
-                            <FeatureCard icon={Eye} title="Our Vision" description="To be the leading platform for digital and print invitations, known for creativity, quality, and ease of use." />
-                            <FeatureCard icon={Heart} title="Our Values" description="Creativity, Quality, and Customer Happiness are at the core of everything we design." />
+                            <FeatureCard icon={Zap} title="Our Mission" description="To empower everyone to create beautiful, memorable, and personalized invitations for life's most important moments, making high-quality design accessible and affordable for all." />
+                            <FeatureCard icon={Eye} title="Our Vision" description="To become the world's leading platform for digital and print invitations, celebrated for our innovation, artistic excellence, and an unwavering commitment to our customers' happiness and creative expression." />
+                            <FeatureCard icon={Heart} title="Our Values" description="Creativity, Quality, and Customer Happiness are the foundational pillars that support every design we craft and every decision we make. We believe in the power of great design to connect people." />
                         </div>
 
                         <InfoCard icon={Users} title="Our Story">
                             <div className="text-foreground/80 space-y-3 leading-relaxed">
-                                <p>Founded in 2023, Invite Designer was born from a desire to make high-quality design accessible to everyone. We saw a need for invitations that were not only beautiful but also easy to customize and affordable. We wanted to build a brand that helps people celebrate their special moments in style, without the hassle.</p>
-                                <p>From a small design studio to a growing online platform, our growth is driven by our amazing customers and their stories. Every invitation we create is a part of a celebration, and we're honored to be included.</p>
+                                <p>Founded in the vibrant year of 2023, Invite Designer was born from a simple yet powerful idea: to make high-quality, bespoke design accessible to everyone, regardless of their budget or design skills. Our founders, a small group of graphic designers and event enthusiasts, noticed a gap in the market for invitations that were not only beautiful but also truly easy to customize and affordable. They wanted to build a brand that helps people celebrate their special moments—from weddings to birthdays, and every milestone in between—in style, without the traditional hassle and high costs.</p>
+                                <p>What started as a boutique design studio has blossomed into a thriving online platform, serving a global community of celebrators. Our growth is a testament to the stories and support of our amazing customers. Every invitation we create becomes a small part of a larger celebration, a piece of someone's personal history, and we are deeply honored to be included in so many joyous occasions around the world.</p>
                             </div>
                         </InfoCard>
 
                          <InfoCard icon={Award} title="Commitment to Quality">
                             <div className="text-foreground/80 space-y-3 leading-relaxed">
-                                <p>We are obsessed with quality. From the digital templates we design to the paper we recommend for printing, every detail is meticulously considered. We partner with talented designers and artists who share our commitment to excellence, ensuring every Invite Designer piece is a work of art.</p>
+                                <p>We are relentlessly passionate about quality. It’s a non-negotiable aspect of our work. From the initial spark of a design concept to the final digital template or printed card, every detail is meticulously considered and refined. We partner with a curated network of talented independent designers and artists who share our unwavering commitment to excellence. This ensures that every piece from Invite Designer is not just a product, but a work of art that you can be proud to share with your loved ones.</p>
                             </div>
                         </InfoCard>
 
-                        <InfoCard icon={Leaf} title="Sustainability">
+                        <InfoCard icon={Leaf} title="Sustainability & Responsibility">
                             <div className="text-foreground/80 space-y-3 leading-relaxed">
-                                <p>We encourage digital invitations as a beautiful, eco-friendly alternative to paper. For those who love print, we recommend using recycled paper and sustainable printing practices. It's a journey of constant improvement, and we are committed to making a positive impact.</p>
+                                <p>In today's world, we recognize the importance of environmental responsibility. We actively encourage the use of our digital invitations as a beautiful, eco-friendly, and instantaneous alternative to traditional paper. For those who cherish the tangible feel of a printed card, we provide guidance and recommendations for using recycled paper stocks and partnering with sustainable, local printing services. This is a journey of continuous improvement, and we are steadfast in our commitment to making a positive, lasting impact on our planet.</p>
                             </div>
                         </InfoCard>
                         
                         <div className="text-center space-y-4">
                              <h3 className="text-3xl font-headline text-primary">Join Our Journey</h3>
-                             <p className="text-muted-foreground">Follow us on our social media channels to stay updated with our latest designs, tips, and special offers. Become a part of the Invite Designer family today!</p>
+                             <p className="text-muted-foreground">Become a part of the Invite Designer family today! Follow us on our social media channels to stay updated with our latest designs, exclusive collections, party-planning tips, and special offers. We love seeing how you use our designs, so be sure to tag us in your event photos!</p>
                              <Button size="lg" className="rounded-full">Follow Us</Button>
                         </div>
 

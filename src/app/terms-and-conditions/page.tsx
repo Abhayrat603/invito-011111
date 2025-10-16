@@ -1,13 +1,12 @@
-
 "use client";
 
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, FileText, AlertTriangle, Copyright, CheckSquare, Scale, Ban, Box, User } from "lucide-react";
+import { ArrowLeft, FileText, AlertTriangle, Copyright, CheckSquare, Scale, Ban, Box, User, Edit, Shield, Info, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const TermCard = ({ icon: Icon, title, children }: { icon: React.ElementType, title: string, children: React.ReactNode }) => (
-    <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50 transition-all hover:shadow-lg hover:border-primary/50">
+    <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50">
         <div className="flex items-start mb-4">
             <div className="bg-primary/10 p-3 rounded-full mr-4 mt-1">
                 <Icon className="h-6 w-6 text-primary" />
@@ -43,32 +42,48 @@ export default function TermsAndConditionsPage() {
                         <p className="text-muted-foreground">Effective Date: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                     </div>
 
+                    <TermCard icon={Info} title="Introduction">
+                        <p>Welcome to Invite Designer. These Terms and Conditions ("Terms") govern your use of our website, located at invitedesigner.com, and any related services provided by us (collectively, the "Service"). Please read these Terms carefully. By accessing or using the Service, you agree to be bound by these Terms and our Privacy Policy. If you do not agree to these Terms, you must not use our Service.</p>
+                    </TermCard>
+
                     <TermCard icon={CheckSquare} title="Acceptance of Terms">
-                        <p>By accessing and using Invite Designer (the "Service"), you accept and agree to be bound by the terms and provision of this agreement. Any participation in this service, including purchasing templates or requesting edits, will constitute acceptance of this agreement. If you do not agree to abide by these terms, please do not use this service.</p>
+                        <p>By creating an account, purchasing a product, or otherwise using the Service, you confirm that you have read, understood, and agree to be bound by this agreement. Any participation, including browsing, will constitute acceptance. We reserve the right to update or modify these Terms at any time without prior notice. Your continued use of the Service after any such changes constitutes your acceptance of the new Terms. We encourage you to review this page periodically for any updates.</p>
                     </TermCard>
 
-                    <TermCard icon={User} title="Your Account">
-                        <p>If you create an account on the Service, you are responsible for maintaining the security of your account and you are fully responsible for all activities that occur under the account. You must immediately notify us of any unauthorized uses of your account or any other breaches of security. We will not be liable for any acts or omissions by you, including any damages incurred as a result of such acts or omissions.</p>
+                    <TermCard icon={User} title="User Accounts and Responsibilities">
+                        <p>To access certain features of the Service, you may be required to create an account. You are responsible for maintaining the confidentiality of your account password and for all activities that occur under your account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate. You must notify us immediately of any unauthorized use of your account or any other breach of security. Invite Designer will not be liable for any loss or damage arising from your failure to comply with this section.</p>
                     </TermCard>
 
-                    <TermCard icon={AlertTriangle} title="User Conduct">
-                        <p>You agree not to use the Service for any unlawful purpose or to solicit others to perform or participate in any unlawful acts. You are prohibited from using the site or its content to harass, abuse, insult, harm, defame, slander, disparage, intimidate, or discriminate based on gender, sexual orientation, religion, ethnicity, race, age, national origin, or disability.</p>
+                    <TermCard icon={Ban} title="Prohibited Conduct and Use">
+                        <p>You agree not to use the Service for any unlawful purpose or any purpose prohibited under this clause. You agree not to use the Service in any way that could damage the Service, the business of Invite Designer, or any person. Prohibited activities include, but are not limited to: harassing or abusing other users; violating the intellectual property rights of the company or any third party; engaging in fraudulent activity; and uploading or disseminating any computer viruses or other malicious software.</p>
                     </TermCard>
 
-                    <TermCard icon={Copyright} title="Intellectual Property">
-                        <p>The Service and its original content (excluding content provided by users), features, and functionality are and will remain the exclusive property of Invite Designer and its licensors. All templates are for personal use only and may not be resold or redistributed. You are granted a limited license only, for purposes of viewing and using the material contained on this Service for your personal events.</p>
+                    <TermCard icon={Box} title="Products, Services, and Payments">
+                        <p>All prices for products and services are listed in Indian Rupees (INR) unless otherwise stated. We reserve the right to change prices at any time without notice. We accept various forms of payment as indicated at checkout. By providing payment information, you represent and warrant that you are authorized to use the designated payment method. We reserve the right to refuse or cancel any order for any reason, including limitations on quantities available, inaccuracies in product or pricing information, or problems identified by our fraud avoidance department.</p>
                     </TermCard>
 
-                     <TermCard icon={Box} title="Products and Services">
-                        <p>We reserve the right to refuse any order you place with us. Prices for our products (templates and edit services) are subject to change without notice. We have made every effort to display as accurately as possible the colors and images of our products. We cannot guarantee that your computer monitor's display of any color will be accurate.</p>
+                    <TermCard icon={Copyright} title="Intellectual Property and License">
+                        <p>All content on the Service, including but not limited to text, graphics, logos, images, and digital templates ("Content"), is the property of Invite Designer or its content suppliers and is protected by international copyright laws. When you purchase a template, you are granted a limited, non-exclusive, non-transferable license for personal, non-commercial use only. You may not resell, redistribute, share, or otherwise exploit any template for commercial purposes. Modification of our templates for resale is strictly prohibited.</p>
                     </TermCard>
 
-                    <TermCard icon={Ban} title="Termination">
-                        <p>We may terminate or suspend your account and bar access to the Service immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever, including a breach of the Terms. All provisions of the Terms which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity, and limitations of liability.</p>
+                    <TermCard icon={Edit} title="User-Generated Content">
+                        <p>If you submit content to us, such as for a custom edit request, you grant Invite Designer a non-exclusive, worldwide, royalty-free license to use, reproduce, and modify that content for the purpose of fulfilling your request. You warrant that you have the right to submit this content and that it does not infringe on the rights of any third party. We are not responsible for any user-generated content and do not endorse any opinions contained in such content.</p>
                     </TermCard>
-                    
-                    <TermCard icon={Scale} title="Governing Law">
-                        <p>These Terms shall be governed and construed in accordance with the laws of India, without regard to its conflict of law provisions. Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions will remain in effect.</p>
+
+                    <TermCard icon={AlertTriangle} title="Disclaimer of Warranties &amp; Limitation of Liability">
+                        <p>The Service is provided on an "as is" and "as available" basis. Invite Designer makes no warranties, expressed or implied, and hereby disclaims all other warranties. In no event shall Invite Designer, nor any of its officers, directors, and employees, be liable to you for anything arising out of or in any way connected with your use of this Service, whether such liability is under contract, tort or otherwise, and Invite Designer shall not be liable for any indirect, consequential, or special liability arising out of or in any way related to your use of this Service.</p>
+                    </TermCard>
+
+                    <TermCard icon={Shield} title="Indemnification">
+                        <p>You agree to indemnify, defend, and hold harmless Invite Designer, its affiliates, officers, directors, employees, agents, and licensors from and against any and all claims, liabilities, damages, losses, costs, expenses, or fees (including reasonable attorneys' fees) that such parties may incur as a result of or arising from your (or anyone using your account's) violation of these Terms.</p>
+                    </TermCard>
+
+                    <TermCard icon={Scale} title="Governing Law &amp; Jurisdiction">
+                        <p>These Terms shall be governed and construed in accordance with the laws of India, without regard to its conflict of law provisions. You agree to submit to the personal and exclusive jurisdiction of the courts located in Indore, Madhya Pradesh, India to resolve any dispute or claim arising from these Terms.</p>
+                    </TermCard>
+
+                    <TermCard icon={Mail} title="Contact Information">
+                        <p>Questions about the Terms and Conditions should be sent to us at <a href="mailto:abhayrat603@gmail.com" className="text-primary hover:underline">abhayrat603@gmail.com</a>.</p>
                     </TermCard>
                 </main>
             </div>
