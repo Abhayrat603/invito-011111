@@ -163,7 +163,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                         className="rounded-full shadow-lg flex items-center justify-center w-12 h-12"
                         aria-label="Send an email"
                     >
-                        <Image src="https://i.ibb.co/WNxMRJ2/vecteezy-gmail-png-icon-16716465.png" alt="Email" width={48} height={48} />
+                        <Image src="https://i.ibb.co/WNxMRJ2v/vecteezy-gmail-png-icon-16716465.png" alt="Email" width={48} height={48} />
                     </Link>
                     <Link 
                         href="https://wa.me/918463062603"
