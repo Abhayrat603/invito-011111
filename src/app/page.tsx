@@ -171,7 +171,6 @@ export default function EcommerceHomePage() {
                           <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"/>
                       )}
                   </div>
-                   <h2 className="text-lg font-semibold text-center mt-4 mb-2 whitespace-nowrap text-muted-foreground">Trending Invitation Card</h2>
               </header>
 
               <main className="pb-4">
@@ -192,6 +191,7 @@ export default function EcommerceHomePage() {
                         <ScrollBar orientation="horizontal" />
                      </ScrollArea>
                   </section>
+                  <h2 className="text-lg font-semibold text-center mt-4 mb-2 whitespace-nowrap text-muted-foreground">Trending Invitation Card</h2>
                   <section className="mb-4">
                       <ScrollArea className="w-full whitespace-nowrap" viewportRef={scrollViewportRef}>
                         <div className="flex w-max space-x-2 p-4">
