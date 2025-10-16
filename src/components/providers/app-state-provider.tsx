@@ -345,21 +345,24 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       const newId = `prod${Date.now()}`;
       const imageId = `product-image-${newId}`;
       
-      PlaceHolderImages.push({
+      const newImage = {
           id: imageId,
           description: productData.name,
           imageUrl: productData.imageUrl,
           imageHint: 'custom product'
-      });
+      };
+      PlaceHolderImages.push(newImage);
+      // This is a bit of a hack to ensure the main JSON file is also updated if it were a real filesystem
+      // In this environment, we just need to ensure our stateful `PlaceHolderImages` has the data.
       
       const newProduct: Product = {
         ...productData,
         id: newId,
-        slug: productData.name.toLowerCase().replace(/\\s+/g, '-'),
+        slug: productData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
         createdAt: new Date(),
         images: [imageId, 'product-placeholder-2'],
       };
-      return [...prev, newProduct];
+      return [newProduct, ...prev];
     });
   }, []);
 
@@ -368,7 +371,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         if (p.id === productId) {
             const updatedProduct = { ...p, ...productData };
             if (productData.name) {
-                updatedProduct.slug = productData.name.toLowerCase().replace(/\\s+/g, '-');
+                updatedProduct.slug = productData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
             }
             return updatedProduct;
         }
@@ -385,23 +388,24 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       const newId = `deal${Date.now()}`;
       const imageId = `product-deal-${newId}`;
 
-      PlaceHolderImages.push({
+      const newImage = {
           id: imageId,
           description: dealData.name,
           imageUrl: dealData.imageUrl,
           imageHint: 'custom deal'
-      });
-      
+      };
+      PlaceHolderImages.push(newImage);
+
       const newDeal: DealProduct = {
         ...dealData,
         id: newId,
-        slug: dealData.name.toLowerCase().replace(/\\s+/g, '-'),
+        slug: dealData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
         createdAt: new Date(),
         images: [imageId],
         sold: 0,
         rating: Math.random() * 2 + 3, // 3 to 5 stars
       };
-      return [...prev, newDeal];
+      return [newDeal, ...prev];
     });
   }, []);
 
@@ -410,7 +414,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         if (d.id === dealId) {
             const updatedDeal = { ...d, ...dealData };
             if (dealData.name) {
-                updatedDeal.slug = dealData.name.toLowerCase().replace(/\\s+/g, '-');
+                updatedDeal.slug = dealData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
             }
             return updatedDeal;
         }
@@ -446,7 +450,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         requestedAt: new Date(),
         updatedAt: new Date(),
       };
-      return [...prev, newRequest];
+      return [newRequest, ...prev];
     });
   }, []);
   

@@ -13,6 +13,8 @@ export const categories: Category[] = [
   { id: 'cat4', name: 'Party', imageId: 'category-party' },
   { id: 'cat10', name: 'E-Invite', imageId: 'category-e-invite' },
   { id: 'cat11', name: 'Save the Date', imageId: 'category-save-the-date' },
+  { id: 'cat15', name: 'Poster Presentation', imageId: 'category-poster' },
+  { id: 'cat16', name: 'Wedding Invitation Video', imageId: 'category-video' },
 ];
 
 export const products: Product[] = [

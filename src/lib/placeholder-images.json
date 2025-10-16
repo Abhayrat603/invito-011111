@@ -341,6 +341,18 @@
       "description": "Summer collection promotional banner background image",
       "imageUrl": "https://picsum.photos/seed/summer-dress/600/400",
       "imageHint": "summer dress"
+    },
+    {
+      "id": "category-poster",
+      "description": "A poster presentation design",
+      "imageUrl": "https://picsum.photos/seed/cat-poster/100/100",
+      "imageHint": "poster presentation"
+    },
+    {
+      "id": "category-video",
+      "description": "A wedding invitation video thumbnail",
+      "imageUrl": "https://picsum.photos/seed/cat-video/100/100",
+      "imageHint": "video play"
     }
   ]
 }
