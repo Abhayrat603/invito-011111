@@ -49,18 +49,18 @@ const CountdownTimer = ({ expiryDate }: { expiryDate: Date }) => {
     const format = (num: number) => num.toString().padStart(2, '0');
 
     return (
-        <div className="flex justify-center gap-2">
-            <div className="bg-muted p-2 rounded-lg text-center w-16">
-                <div className="text-lg font-bold text-foreground">{format(timeLeft.hours)}</div>
-                <div className="text-xs text-muted-foreground">Hours</div>
+        <div className="flex justify-center gap-1.5">
+            <div className="bg-muted p-1.5 rounded-md text-center w-14">
+                <div className="text-base font-bold text-foreground">{format(timeLeft.hours)}</div>
+                <div className="text-[10px] text-muted-foreground">Hours</div>
             </div>
-            <div className="bg-muted p-2 rounded-lg text-center w-16">
-                <div className="text-lg font-bold text-foreground">{format(timeLeft.minutes)}</div>
-                <div className="text-xs text-muted-foreground">Min</div>
+            <div className="bg-muted p-1.5 rounded-md text-center w-14">
+                <div className="text-base font-bold text-foreground">{format(timeLeft.minutes)}</div>
+                <div className="text-[10px] text-muted-foreground">Min</div>
             </div>
-            <div className="bg-muted p-2 rounded-lg text-center w-16">
-                <div className="text-lg font-bold text-foreground">{format(timeLeft.seconds)}</div>
-                <div className="text-xs text-muted-foreground">Sec</div>
+            <div className="bg-muted p-1.5 rounded-md text-center w-14">
+                <div className="text-base font-bold text-foreground">{format(timeLeft.seconds)}</div>
+                <div className="text-[10px] text-muted-foreground">Sec</div>
             </div>
         </div>
     );

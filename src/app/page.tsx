@@ -179,13 +179,13 @@ export default function EcommerceHomePage() {
                     <h2 className="text-2xl font-headline text-primary text-left mb-6">Deal of the Day</h2>
                      <ScrollArea>
                         <div className="flex space-x-4 pb-4">
-                            <div className="w-[300px] shrink-0">
+                            <div className="w-[250px] shrink-0">
                                 <DealOfTheDayCard product={dealProduct} />
                             </div>
-                            <div className="w-[300px] shrink-0">
+                            <div className="w-[250px] shrink-0">
                                 <DealOfTheDayCard product={dealProduct2} />
                             </div>
-                            <div className="w-[300px] shrink-0">
+                            <div className="w-[250px] shrink-0">
                                 <DealOfTheDayCard product={dealProduct3} />
                             </div>
                         </div>
