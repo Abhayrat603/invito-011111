@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -544,7 +545,7 @@ const SidebarMenuButton = React.forwardRef<
   (
     {
       asChild = false,
-      isActive = false,
+      isActive,
       variant = "default",
       size = "default",
       tooltip,
