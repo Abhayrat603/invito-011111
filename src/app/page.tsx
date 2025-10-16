@@ -214,7 +214,7 @@ export default function EcommerceHomePage() {
                   </section>
                   
                   <section className="px-4">
-                      <h2 className="text-2xl font-headline text-primary mb-6">New Arrivals</h2>
+                      <h2 className="text-2xl font-headline text-primary text-left mb-6">New Arrivals</h2>
                       {displayedProducts.length > 0 ? (
                           <>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -243,7 +243,7 @@ export default function EcommerceHomePage() {
                   </section>
                   
                    <section className="px-4 mt-8">
-                      <h2 className="text-2xl font-headline text-primary mb-6">New Arrivals</h2>
+                      <h2 className="text-2xl font-headline text-primary text-left mb-6">New Arrivals</h2>
                       {displayedProducts.length > 0 ? (
                           <>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -272,7 +272,7 @@ export default function EcommerceHomePage() {
                   </section>
 
                   <section className="px-4 mt-8 space-y-6">
-                    <h2 className="text-2xl font-headline text-primary text-left">Testimonial</h2>
+                    <h2 className="text-2xl font-headline text-primary text-left mb-6">Testimonial</h2>
                     <TestimonialCard />
                   </section>
                   
