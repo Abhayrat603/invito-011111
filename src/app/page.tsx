@@ -178,20 +178,20 @@ export default function EcommerceHomePage() {
                     <h2 className="text-2xl font-headline text-primary text-left mb-6">Deal of the Day</h2>
                      <ScrollArea>
                         <div className="flex space-x-4 pb-4">
-                            <div className="w-[280px] shrink-0">
+                            <div className="w-[300px] shrink-0">
                                 <DealOfTheDayCard product={dealProduct} />
                             </div>
-                            <div className="w-[280px] shrink-0">
+                            <div className="w-[300px] shrink-0">
                                 <DealOfTheDayCard product={dealProduct2} />
                             </div>
-                            <div className="w-[280px] shrink-0">
+                            <div className="w-[300px] shrink-0">
                                 <DealOfTheDayCard product={dealProduct3} />
                             </div>
                         </div>
                         <ScrollBar orientation="horizontal" />
                      </ScrollArea>
                   </section>
-                  <h2 className="text-lg font-semibold text-center mt-4 mb-2 whitespace-nowrap text-muted-foreground">Trending Invitation Card</h2>
+                  <h2 className="text-2xl font-headline text-primary text-left mb-6 px-4">Trending Invitation Card</h2>
                   <section className="mb-4">
                       <ScrollArea className="w-full whitespace-nowrap" viewportRef={scrollViewportRef}>
                         <div className="flex w-max space-x-2 p-4">
