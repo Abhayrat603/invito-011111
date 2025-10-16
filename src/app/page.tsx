@@ -154,8 +154,8 @@ export default function EcommerceHomePage() {
                             </CarouselItem>
                           ))}
                         </CarouselContent>
-                        <CarouselPrevious className="h-8 w-8 left-1 bg-background/50 hover:bg-background/80" />
-                        <CarouselNext className="h-8 w-8 right-1 bg-background/50 hover:bg-background/80" />
+                        <CarouselPrevious className="h-8 w-8 -left-2 bg-background/50 hover:bg-background/80" />
+                        <CarouselNext className="h-8 w-8 -right-2 bg-background/50 hover:bg-background/80" />
                       </Carousel>
                   </section>
                   
