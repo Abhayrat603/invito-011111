@@ -3,7 +3,7 @@
 
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock, CheckCircle, XCircle } from "lucide-react";
+import { ArrowLeft, Clock, CheckCircle, XCircle, User, Mail, Calendar, Edit, Timer } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/components/providers/app-state-provider";
 import { Badge } from "@/components/ui/badge";
@@ -95,7 +95,24 @@ export default function AdminRequestsPage() {
                                 </CardHeader>
                                 <Separator />
                                 <CardContent className="p-4 space-y-4">
-                                    <p className="text-sm text-foreground/80">{request.requestDetails}</p>
+                                    <div>
+                                        <h4 className="text-sm font-semibold mb-2 flex items-center"><User className="h-4 w-4 mr-2 text-primary" />Requester Details</h4>
+                                        <div className="text-sm text-muted-foreground space-y-1 pl-6">
+                                            <p><strong>Name:</strong> {request.userName}</p>
+                                            <p><strong>Email:</strong> {request.userEmail}</p>
+                                        </div>
+                                    </div>
+                                    <Separator />
+                                    <div>
+                                        <h4 className="text-sm font-semibold mb-2 flex items-center"><Edit className="h-4 w-4 mr-2 text-primary" />Request Details</h4>
+                                        <p className="text-sm text-foreground/80 pl-6">{request.requestDetails}</p>
+                                    </div>
+                                    <Separator />
+                                     <div>
+                                        <h4 className="text-sm font-semibold mb-2 flex items-center"><Timer className="h-4 w-4 mr-2 text-primary" />Turnaround Time</h4>
+                                        <p className="text-sm text-foreground/80 pl-6">{request.turnaroundTime}</p>
+                                    </div>
+                                    <Separator />
                                     <div>
                                         <label className="text-xs font-medium text-muted-foreground">Change Status</label>
                                         <Select 

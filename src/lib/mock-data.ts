@@ -1,5 +1,5 @@
 
-import type { Product, Category, EditRequest, Order, DealProduct, AppUser } from './types';
+import type { Product, Category, EditRequest, Order, DealProduct, AppUser, AppRating } from './types';
 
 export const categories: Category[] = [
   { id: 'cat1', name: 'Wedding', imageId: 'category-wedding' },
@@ -25,6 +25,7 @@ export const products: Product[] = [
     images: ['product-wedding-1', 'product-wedding-2'],
     category: 'Wedding',
     createdAt: new Date(),
+    zipFileUrl: 'https://example.com/classic-wedding.zip',
   },
   {
     id: 'prod2',
@@ -35,6 +36,7 @@ export const products: Product[] = [
     images: ['product-birthday-1', 'product-birthday-2'],
     category: 'Birthday',
     createdAt: new Date(),
+    zipFileUrl: 'https://example.com/modern-birthday.zip',
   },
   {
     id: 'prod3',
@@ -227,6 +229,10 @@ export const editRequests: EditRequest[] = [
     status: 'Approved',
     requestedAt: new Date('2023-10-01T10:00:00Z'),
     updatedAt: new Date('2023-10-01T18:30:00Z'),
+    userId: 'usr1',
+    userName: 'John Doe',
+    userEmail: 'john.doe@example.com',
+    turnaroundTime: '2 Days',
   },
   {
     id: 'req2',
@@ -236,6 +242,10 @@ export const editRequests: EditRequest[] = [
     status: 'Pending',
     requestedAt: new Date('2023-10-05T14:15:00Z'),
     updatedAt: new Date('2023-10-05T14:15:00Z'),
+    userId: 'usr2',
+    userName: 'Jane Smith',
+    userEmail: 'jane.smith@example.com',
+    turnaroundTime: 'Urgent',
   },
   {
     id: 'req3',
@@ -245,6 +255,10 @@ export const editRequests: EditRequest[] = [
     status: 'Pending',
     requestedAt: new Date('2023-10-06T09:00:00Z'),
     updatedAt: new Date('2023-10-06T09:00:00Z'),
+    userId: 'usr1',
+    userName: 'John Doe',
+    userEmail: 'john.doe@example.com',
+    turnaroundTime: '1 Day',
   },
   {
     id: 'req4',
@@ -254,6 +268,10 @@ export const editRequests: EditRequest[] = [
     status: 'Rejected',
     requestedAt: new Date('2023-09-28T11:00:00Z'),
     updatedAt: new Date('2023-09-29T16:45:00Z'),
+    userId: 'usr2',
+    userName: 'Jane Smith',
+    userEmail: 'jane.smith@example.com',
+    turnaroundTime: '2 Days',
   },
 ];
 
@@ -307,6 +325,7 @@ export const dealProduct: DealProduct = {
   stock: 60,
   sold: 20,
   rating: 3.5,
+  zipFileUrl: 'https://example.com/shampoo.zip',
 };
 
 const offerEndDate2 = new Date();
@@ -351,4 +370,10 @@ export const initialUsers: AppUser[] = [
   { id: 'usr1', name: 'John Doe', email: 'john.doe@example.com', phone: '1234567890', createdAt: new Date('2023-10-01') },
   { id: 'usr2', name: 'Jane Smith', email: 'jane.smith@example.com', phone: '0987654321', createdAt: new Date('2023-09-25') },
   { id: 'usr3', name: 'Admin User', email: 'abhayrat603@gmail.com', phone: '8463062603', createdAt: new Date('2023-09-20') },
+];
+
+export const initialAppRatings: AppRating[] = [
+  { id: 'rating1', userId: 'usr1', userName: 'John Doe', rating: 5, comment: "This app is amazing! So easy to create beautiful invitations. Highly recommended!", createdAt: new Date('2023-10-05T10:00:00Z') },
+  { id: 'rating2', userId: 'usr2', userName: 'Jane Smith', rating: 4, comment: "Great selection of designs. The edit request feature is very useful. Sometimes the app can be a little slow, but overall a great experience.", createdAt: new Date('2023-10-04T15:30:00Z') },
+  { id: 'rating3', userId: 'usr3', userName: 'Admin User', rating: 5, comment: "As the admin, I find the panel very intuitive and easy to manage products and users.", createdAt: new Date('2023-10-03T12:00:00Z') },
 ];

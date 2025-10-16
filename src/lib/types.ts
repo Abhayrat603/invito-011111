@@ -72,10 +72,23 @@ export interface Order {
 
 export interface EditRequest {
   id: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
   productName: string;
   productId: string;
   requestDetails: string;
+  turnaroundTime: 'Urgent' | '1 Day' | '2 Days';
   status: 'Pending' | 'Approved' | 'Rejected';
   requestedAt: Date;
   updatedAt: Date;
+}
+
+export interface AppRating {
+  id: string;
+  userId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  createdAt: Date;
 }

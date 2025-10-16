@@ -2,7 +2,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
-import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser } from '@/lib/types';
+import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser, AppRating } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { 
     products as initialProducts, 
@@ -11,7 +11,8 @@ import {
     dealProduct3 as initialDealProduct3,
     editRequests as initialEditRequests,
     orders as initialOrders,
-    initialUsers
+    initialUsers,
+    initialAppRatings,
 } from '@/lib/mock-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
@@ -25,6 +26,7 @@ interface AppStateContextType {
   deals: DealProduct[];
   editRequests: EditRequest[];
   users: AppUser[];
+  appRatings: AppRating[];
   
   addToCart: (productId: string, quantity?: number, isDeal?: boolean) => void;
   removeFromCart: (productId: string) => void;
@@ -46,9 +48,11 @@ interface AppStateContextType {
   deleteDeal: (dealId: string) => void;
   updateDealStockOnOrder: (cartProducts: any[]) => void;
 
+  addEditRequest: (request: Omit<EditRequest, 'id' | 'status' | 'requestedAt' | 'updatedAt'>) => void;
   updateEditRequestStatus: (requestId: string, status: 'Pending' | 'Approved' | 'Rejected') => void;
 
   addUser: (user: AppUser) => void;
+  addRating: (rating: Omit<AppRating, 'id' | 'createdAt'>) => void;
 }
 
 const AppStateContext = createContext<AppStateContextType | undefined>(undefined);
@@ -160,6 +164,21 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         return initialUsers;
     }
   });
+  
+  const [appRatings, setAppRatings] = useState<AppRating[]>(() => {
+    if (!isClient) return initialAppRatings;
+    try {
+      const item = window.localStorage.getItem('appRatings');
+      const ratingsData = item ? JSON.parse(item) : initialAppRatings;
+      return ratingsData.map((rating: any) => ({
+        ...rating,
+        createdAt: new Date(rating.createdAt),
+      }));
+    } catch (error) {
+      console.error(error);
+      return initialAppRatings;
+    }
+  });
 
 
   useEffect(() => { if (isClient) { window.localStorage.setItem('products', JSON.stringify(products)); }}, [products, isClient]);
@@ -169,6 +188,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   useEffect(() => { if (isClient) { window.localStorage.setItem('orders', JSON.stringify(orders)); }}, [orders, isClient]);
   useEffect(() => { if (isClient) { window.localStorage.setItem('editRequests', JSON.stringify(editRequests)); }}, [editRequests, isClient]);
   useEffect(() => { if (isClient) { window.localStorage.setItem('users', JSON.stringify(users)); }}, [users, isClient]);
+  useEffect(() => { if (isClient) { window.localStorage.setItem('appRatings', JSON.stringify(appRatings)); }}, [appRatings, isClient]);
 
   const addToCart = useCallback((productId: string, quantity: number = 1, isDeal: boolean = false) => {
     setCart(prevCart => {
@@ -387,6 +407,19 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
      });
   }, []);
 
+  const addEditRequest = useCallback((request: Omit<EditRequest, 'id' | 'status' | 'requestedAt' | 'updatedAt'>) => {
+    setEditRequests(prev => {
+      const newRequest: EditRequest = {
+        ...request,
+        id: `req${Date.now()}`,
+        status: 'Pending',
+        requestedAt: new Date(),
+        updatedAt: new Date(),
+      };
+      return [...prev, newRequest];
+    });
+  }, []);
+  
   const updateEditRequestStatus = useCallback((requestId: string, status: 'Pending' | 'Approved' | 'Rejected') => {
     setEditRequests(prev => prev.map(req => req.id === requestId ? { ...req, status, updatedAt: new Date() } : req));
   }, []);
@@ -401,14 +434,26 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const addRating = useCallback((rating: Omit<AppRating, 'id' | 'createdAt'>) => {
+    setAppRatings(prev => {
+        const newRating: AppRating = {
+            ...rating,
+            id: `rating${Date.now()}`,
+            createdAt: new Date(),
+        };
+        return [newRating, ...prev];
+    });
+  }, []);
+
   const value = { 
-    cart, wishlist, orders, products, deals, editRequests, users,
+    cart, wishlist, orders, products, deals, editRequests, users, appRatings,
     addToCart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, clearCart, 
     toggleWishlist, isInWishlist, addOrder,
     addProduct, updateProduct, deleteProduct,
     addDeal, updateDeal, deleteDeal, updateDealStockOnOrder,
-    updateEditRequestStatus,
+    addEditRequest, updateEditRequestStatus,
     addUser,
+    addRating,
   };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
