@@ -107,14 +107,7 @@ export default function EcommerceHomePage() {
   const productsPerPage = 10;
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const mainContentRef = useRef<HTMLElement | null>(null);
-  
-  useEffect(() => {
-    const mainElement = document.querySelector('main[data-main-layout-scroll]');
-    if (mainElement) {
-        mainContentRef.current = mainElement as HTMLElement;
-    }
-  }, []);
+  const mainContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!loading && user && !user.emailVerified) {
@@ -165,7 +158,7 @@ export default function EcommerceHomePage() {
   const displayedProducts = filteredProducts.slice(currentPage * productsPerPage, (currentPage + 1) * productsPerPage);
 
   return (
-    <MainLayout onSearch={handleSearch}>
+    <MainLayout onSearch={handleSearch} mainRef={mainContentRef}>
       <AuthRedirect to="/login" condition="is-not-auth">
         <div className="bg-background text-foreground">
              <div className="pb-4">

@@ -53,12 +53,11 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 
-export function MainLayout({ children, onSearch }: { children: React.ReactNode, onSearch?: (query: string) => void }) {
+export function MainLayout({ children, onSearch, mainRef }: { children: React.ReactNode, onSearch?: (query: string) => void, mainRef?: React.RefObject<HTMLDivElement> }) {
   const pathname = usePathname();
   const { user, signOut } = useAuth();
   const { cart, wishlist } = useAppState();
   const [isFabMenuOpen, setIsFabMenuOpen] = useState(false);
-  const mainContentRef = useRef<HTMLDivElement>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   
@@ -72,10 +71,10 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
   };
 
   useEffect(() => {
-    if (mainContentRef.current) {
-        mainContentRef.current.scrollTop = 0;
+    if (mainRef?.current) {
+        mainRef.current.scrollTop = 0;
     }
-  }, [pathname]);
+  }, [pathname, mainRef]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
@@ -141,7 +140,7 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
             </div>
         </div>
       )}
-      <main ref={mainContentRef} className="flex-grow pb-16 overflow-y-auto" data-main-layout-scroll>
+      <main ref={mainRef} className="flex-grow pb-16 overflow-y-auto" data-main-layout-scroll>
         {children}
       </main>
 
