@@ -147,7 +147,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                         className="bg-purple-600 text-white rounded-full p-2.5 shadow-lg hover:bg-purple-700 flex items-center justify-center w-10 h-10"
                         aria-label="Help with AI"
                     >
-                        <Sparkles className="h-5 w-5" strokeWidth={1.5} />
+                        <Image src="https://i.ibb.co/VYXGRgSc/IMG-20251016-080138.png" alt="AI Help" width={20} height={20} />
                     </Link>
                     <Link 
                         href="mailto:abhayrat603@gmail.com"
@@ -174,7 +174,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 className="bg-blue-600 text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-700 transition-transform duration-300 flex items-center justify-center"
                 aria-label="Toggle contact menu"
             >
-                {isFabMenuOpen ? <X className="h-6 w-6" /> : <Image src="https://i.ibb.co/VYXGRgSc/IMG-20251016-080138.png" alt="Open Menu" width={24} height={24} />}
+                {isFabMenuOpen ? <X className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
             </Button>
         </div>
     </div>
