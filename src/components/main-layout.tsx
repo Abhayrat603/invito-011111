@@ -90,6 +90,7 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
     if (onSearch) {
       onSearch("");
     }
+    setIsSearchOpen(false);
   }
 
   const navItems = [
@@ -114,27 +115,31 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
             </Link>
 
             <div className="flex items-center gap-2">
-              {isSearchOpen && (
-                <div className="relative flex-grow">
-                  <Input
-                    placeholder="Search products..."
-                    className="bg-card border-border rounded-full h-9 pl-4 pr-10 text-sm"
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    autoFocus
-                  />
-                  {searchQuery && (
-                    <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full" onClick={handleClearSearch}>
-                      <X className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                  )}
-                </div>
-              )}
-              <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(!isSearchOpen)}>
+              <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(prev => !prev)}>
                   <Search className="h-5 w-5" />
               </Button>
             </div>
          </header>
+      )}
+      {isSearchOpen && (
+        <div className="p-4 border-b bg-background sticky top-[61px] z-10">
+           <div className="relative">
+              <Input
+                placeholder="Search products..."
+                className="bg-card border-border rounded-full h-9 pl-4 pr-10 text-sm"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                autoFocus
+              />
+              {searchQuery ? (
+                <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full" onClick={handleClearSearch}>
+                  <X className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              ) : (
+                <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              )}
+            </div>
+        </div>
       )}
       <main ref={mainContentRef} className="flex-grow pb-16 overflow-y-auto">
         {children}
@@ -242,5 +247,3 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
     </div>
   );
 }
-
-    
