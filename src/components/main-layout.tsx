@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ShoppingBag, Heart, User, Menu as MenuIcon, Mail, Sparkles } from "lucide-react";
+import { Home, ShoppingBag, Heart, User, Menu as MenuIcon, Mail, Sparkles, Plus, X } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -14,6 +14,8 @@ import {
 import { MenuPageContent } from "@/app/menu/page";
 import { cn } from "@/lib/utils";
 import { useAppState } from "./providers/app-state-provider";
+import { useState } from "react";
+import { Button } from "./ui/button";
 
 const NavItem = ({ href, icon: Icon, label, pathname, count }: { href: string, icon: React.ElementType, label: string, pathname: string, count?: number }) => (
     <Link href={href}>
@@ -50,6 +52,7 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { cart, wishlist } = useAppState();
+  const [isFabMenuOpen, setIsFabMenuOpen] = useState(false);
 
   const navItems = [
     { href: "/menu", icon: MenuIcon, label: "Menu" },
@@ -71,11 +74,11 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                     <div>
                         <h3 className="font-bold mb-2">POPULAR CATEGORIES</h3>
                         <ul className="space-y-2 text-sm text-amber-950/70">
-                            <li><a href="#" className="hover:underline">Wedding Invitation</a></li>
-                            <li><a href="#" className="hover:underline">Birthday Invitation</a></li>
-                            <li><a href="#" className="hover:underline">Corporate</a></li>
-                            <li><a href="#" className="hover:underline">Party</a></li>
-                            <li><a href="#" className="hover:underline">E-Invites</a></li>
+                            <li><a href="/products/classic-wedding-invitation" className="hover:underline">Wedding Invitation</a></li>
+                            <li><a href="/products/modern-birthday-bash" className="hover:underline">Birthday Invitation</a></li>
+                            <li><a href="/products/corporate-gala-invite" className="hover:underline">Corporate</a></li>
+                            <li><a href="/products/summer-pool-party" className="hover:underline">Party</a></li>
+                            <li><a href="/products/classic-wedding-invitation" className="hover:underline">E-Invites</a></li>
                         </ul>
                     </div>
                     <div>
@@ -135,32 +138,43 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             </div>
         </nav>
       </Sheet>
-        <div className="fixed bottom-24 right-5 z-30 flex flex-col gap-3">
-             <Link
-                href="/ai-help"
-                className="bg-purple-600 text-white rounded-full p-3 shadow-lg hover:bg-purple-700 transition-colors"
-                aria-label="Help with AI"
+        <div className="fixed bottom-24 right-5 z-30 flex flex-col items-center gap-3">
+             {isFabMenuOpen && (
+                <div className="flex flex-col items-center gap-3 transition-all duration-300">
+                    <Link
+                        href="/ai-help"
+                        className="bg-purple-600 text-white rounded-full p-3 shadow-lg hover:bg-purple-700"
+                        aria-label="Help with AI"
+                    >
+                        <Sparkles className="h-8 w-8" strokeWidth={1.5} />
+                    </Link>
+                    <Link 
+                        href="mailto:abhayrat603@gmail.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-primary text-primary-foreground rounded-full p-3 shadow-lg hover:bg-primary/90"
+                        aria-label="Send an email"
+                    >
+                        <Mail className="h-8 w-8" strokeWidth={1.5} />
+                    </Link>
+                    <Link 
+                        href="https://wa.me/918463062603"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-green-500 text-white rounded-full p-3 shadow-lg hover:bg-green-600"
+                        aria-label="Chat on WhatsApp"
+                    >
+                        <WhatsAppIcon className="h-8 w-8" strokeWidth={1.5} />
+                    </Link>
+                </div>
+            )}
+             <Button
+                onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
+                className="bg-blue-600 text-white rounded-full w-16 h-16 shadow-lg hover:bg-blue-700 transition-transform duration-300"
+                aria-label="Toggle contact menu"
             >
-                <Sparkles className="h-8 w-8" strokeWidth={1.5} />
-            </Link>
-             <Link 
-                href="mailto:abhayrat603@gmail.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-primary text-primary-foreground rounded-full p-3 shadow-lg hover:bg-primary/90 transition-colors"
-                aria-label="Send an email"
-            >
-                <Mail className="h-8 w-8" strokeWidth={1.5} />
-            </Link>
-            <Link 
-                href="https://wa.me/918463062603"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-green-500 text-white rounded-full p-3 shadow-lg hover:bg-green-600 transition-colors"
-                aria-label="Chat on WhatsApp"
-            >
-                <WhatsAppIcon className="h-8 w-8" strokeWidth={1.5} />
-            </Link>
+                {isFabMenuOpen ? <X className="h-8 w-8" /> : <Plus className="h-8 w-8" />}
+            </Button>
         </div>
     </div>
   );
