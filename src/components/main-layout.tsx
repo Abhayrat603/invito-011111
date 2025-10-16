@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ShoppingBag, Heart, User, Menu as MenuIcon, MapPin, Mail, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
+import { Home, ShoppingBag, Heart, User, Menu as MenuIcon, Mail } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -14,7 +14,6 @@ import {
 import { MenuPageContent } from "@/app/menu/page";
 import { cn } from "@/lib/utils";
 import { useAppState } from "./providers/app-state-provider";
-import Image from "next/image";
 
 const NavItem = ({ href, icon: Icon, label, pathname, count }: { href: string, icon: React.ElementType, label: string, pathname: string, count?: number }) => (
     <Link href={href}>
@@ -28,6 +27,23 @@ const NavItem = ({ href, icon: Icon, label, pathname, count }: { href: string, i
             )}
         </div>
     </Link>
+);
+
+const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+    </svg>
 );
 
 
@@ -85,6 +101,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                     <div>
                         <h3 className="font-bold mb-2">CONTACT</h3>
                         <ul className="space-y-2 text-sm text-amber-950/70">
+                            <li className="flex items-start"><WhatsAppIcon className="h-4 w-4 mr-2 mt-1 shrink-0"/>+91 8463062603</li>
                             <li className="flex items-start"><Mail className="h-4 w-4 mr-2 mt-1 shrink-0"/>abhayrat603@gmail.com</li>
                         </ul>
                     </div>
