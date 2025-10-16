@@ -13,12 +13,13 @@ import { Product, DealProduct as DealProductType, Order } from "@/lib/types";
 import Image from "next/image";
 
 const allItems: (Product | DealProductType)[] = [...allProducts, dealProduct, dealProduct2, dealProduct3];
+const allDealProducts: DealProductType[] = [dealProduct, dealProduct2, dealProduct3];
 
 export default function CheckoutPage() {
     const router = useRouter();
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { cart, addOrder, clearCart } = useAppState();
+    const { cart, addOrder, clearCart, orders } = useAppState();
 
     const cartProducts = cart.map(cartItem => {
         const product = allItems.find(p => p.id === cartItem.productId);
@@ -34,6 +35,24 @@ export default function CheckoutPage() {
     const handlePayment = async () => {
         setIsSubmitting(true);
         console.log("Simulating Razorpay payment for:", `₹${total.toFixed(2)}`);
+
+        // Check if a deal product in the cart has already been purchased.
+        for (const cartItem of cartProducts) {
+            if (cartItem && 'discountPrice' in cartItem) { // It's a deal product
+                const alreadyPurchased = orders.some(order => 
+                    order.items.some(item => item.productId === cartItem.id)
+                );
+                if (alreadyPurchased) {
+                    toast({
+                        variant: "destructive",
+                        title: "Purchase limit reached",
+                        description: `You have already purchased the deal "${cartItem.name}".`,
+                    });
+                    setIsSubmitting(false);
+                    return;
+                }
+            }
+        }
         
         // Simulate API call to Razorpay
         await new Promise(resolve => setTimeout(resolve, 2000));
@@ -51,6 +70,16 @@ export default function CheckoutPage() {
             status: 'Delivered', // Simulating instant delivery for digital goods
             createdAt: new Date(),
         };
+
+        // Decrease stock for deal products
+        cartProducts.forEach(p => {
+            if (p && 'discountPrice' in p) {
+                const deal = allDealProducts.find(dp => dp.id === p.id);
+                if (deal) {
+                    deal.sold += p.quantity;
+                }
+            }
+        });
 
         // Add order to state and clear cart
         addOrder(newOrder);

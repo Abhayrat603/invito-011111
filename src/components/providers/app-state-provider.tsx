@@ -4,12 +4,15 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import type { CartItem, WishlistItem, Order } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+import { dealProduct, dealProduct2, dealProduct3 } from '@/lib/mock-data';
+
+const allDealProducts = [dealProduct, dealProduct2, dealProduct3];
 
 interface AppStateContextType {
   cart: CartItem[];
   wishlist: WishlistItem[];
   orders: Order[];
-  addToCart: (productId: string, quantity?: number) => void;
+  addToCart: (productId: string, quantity?: number, isDeal?: boolean) => void;
   removeFromCart: (productId: string) => void;
   increaseCartQuantity: (productId: string) => void;
   decreaseCartQuantity: (productId: string) => void;
@@ -91,9 +94,32 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     }
   }, [orders, isClient]);
 
-  const addToCart = (productId: string, quantity: number = 1) => {
+  const addToCart = (productId: string, quantity: number = 1, isDeal: boolean = false) => {
+    
+    if (isDeal) {
+      const alreadyPurchased = orders.some(order => order.items.some(item => item.productId === productId));
+      if (alreadyPurchased) {
+        toast({
+            variant: "destructive",
+            title: "Already Purchased",
+            description: "You can only buy a deal item once.",
+        });
+        return;
+      }
+    }
+
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.productId === productId);
+      
+      if (isDeal && existingItem) {
+        toast({
+            variant: "destructive",
+            title: "Already in Cart",
+            description: "Deal items can only be added to the cart once.",
+        });
+        return prevCart;
+      }
+
       if (existingItem) {
         return prevCart.map(item =>
           item.productId === productId
@@ -101,11 +127,24 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             : item
         );
       }
+      toast({
+        title: "Added to Cart",
+        description: `Item has been added to your cart.`
+      });
       return [...prevCart, { productId, quantity }];
     });
   };
 
   const increaseCartQuantity = (productId: string) => {
+    const isDeal = allDealProducts.some(p => p.id === productId);
+    if(isDeal) {
+        toast({
+            variant: "destructive",
+            title: "Purchase Limit",
+            description: "You can only buy one of this deal item.",
+        });
+        return;
+    }
     setCart(prevCart => {
         return prevCart.map(item =>
           item.productId === productId

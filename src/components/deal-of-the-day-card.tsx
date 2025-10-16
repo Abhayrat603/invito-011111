@@ -3,7 +3,6 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Star, StarHalf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
@@ -66,19 +65,6 @@ const CountdownTimer = ({ expiryDate }: { expiryDate: Date }) => {
     );
 };
 
-const StarRating = ({ rating }: { rating: number }) => {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 !== 0;
-    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-
-    return (
-        <div className="flex items-center gap-0.5 text-yellow-500">
-            {[...Array(fullStars)].map((_, i) => <Star key={`full-${i}`} className="h-4 w-4 fill-current" />)}
-            {halfStar && <StarHalf className="h-4 w-4 fill-current" />}
-            {[...Array(emptyStars)].map((_, i) => <Star key={`empty-${i}`} className="h-4 w-4" />)}
-        </div>
-    );
-};
 
 export function DealOfTheDayCard({ product }: { product: DealProduct }) {
     const { addToCart } = useAppState();
@@ -94,11 +80,7 @@ export function DealOfTheDayCard({ product }: { product: DealProduct }) {
     }
 
     const handleAddToCart = () => {
-        addToCart(product.id);
-        toast({
-            title: 'Added to Cart',
-            description: `${product.name} has been added to your cart.`
-        });
+        addToCart(product.id, 1, true);
     };
 
     const productImage = findImage(product.images[0]);
@@ -119,7 +101,6 @@ export function DealOfTheDayCard({ product }: { product: DealProduct }) {
                 )}
             </div>
             <div className="p-4 space-y-3">
-                <StarRating rating={product.rating} />
                 <h3 className="font-semibold text-base leading-tight truncate">{product.name}</h3>
                 <p className="text-xs text-muted-foreground line-clamp-2">{product.description}</p>
                 <div className="flex items-baseline gap-2">
