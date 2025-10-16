@@ -8,23 +8,28 @@ import { ArrowLeft, Trash2, Plus, Minus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/components/providers/app-state-provider";
 import Image from "next/image";
-import { products as allProducts } from "@/lib/mock-data";
+import { products as allProducts, dealProduct, dealProduct2, dealProduct3 } from "@/lib/mock-data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Link from "next/link";
-import { ProductCard } from "@/components/product-card";
+import { Product, DealProduct as DealProductType } from "@/lib/types";
 
 const findImage = (id: string) => {
   return PlaceHolderImages.find(img => img.id === id);
 };
 
+const allItems: (Product | DealProductType)[] = [...allProducts, dealProduct, dealProduct2, dealProduct3];
 
 export default function CartPage() {
     const router = useRouter();
     const { cart, removeFromCart, increaseCartQuantity, decreaseCartQuantity } = useAppState();
 
     const cartProducts = cart.map(cartItem => {
-        const product = allProducts.find(p => p.id === cartItem.productId);
-        return product ? { ...product, quantity: cartItem.quantity } : null;
+        const product = allItems.find(p => p.id === cartItem.productId);
+        if (product) {
+            const price = 'discountPrice' in product ? product.discountPrice : product.price;
+            return { ...product, quantity: cartItem.quantity, displayPrice: price };
+        }
+        return null;
     }).filter(p => p !== null);
 
   return (
@@ -66,7 +71,7 @@ export default function CartPage() {
                                 <div className="flex-grow">
                                     <h3 className="font-semibold text-sm line-clamp-1">{product.name}</h3>
                                     <p className="text-xs text-muted-foreground">{product.category}</p>
-                                    <p className="font-bold text-lg mt-1 text-destructive">₹{product.price.toFixed(2)}</p>
+                                    <p className="font-bold text-lg mt-1 text-destructive">₹{product.displayPrice.toFixed(2)}</p>
                                 </div>
                                 <div className="flex flex-col items-end gap-2">
                                      <div className="flex items-center gap-2">
@@ -88,9 +93,11 @@ export default function CartPage() {
                      <div className="mt-6 pt-4 border-t">
                         <div className="flex justify-between items-center text-lg font-bold">
                             <span>Total</span>
-                            <span className="text-destructive">₹{cartProducts.reduce((acc, p) => acc + (p?.price || 0) * (p?.quantity || 0), 0).toFixed(2)}</span>
+                            <span className="text-destructive">₹{cartProducts.reduce((acc, p) => acc + (p?.displayPrice || 0) * (p?.quantity || 0), 0).toFixed(2)}</span>
                         </div>
-                        <Button className="w-full mt-4 h-12">Proceed to Checkout</Button>
+                        <Link href="/checkout" passHref>
+                          <Button className="w-full mt-4 h-12">Proceed to Checkout</Button>
+                        </Link>
                     </div>
                 </div>
             )}
