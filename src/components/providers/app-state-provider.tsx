@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { createContext, useContext, ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, ReactNode, useCallback, useMemo } from 'react';
 import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser, AppRating, AppSettings } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -86,34 +86,44 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
   const { user } = useAuth();
 
-  const { data: productsData } = useCollection(collection(db, 'products'));
+  const productsQuery = useMemo(() => collection(db, 'products'), []);
+  const { data: productsData } = useCollection(productsQuery);
   const products: Product[] = productsData ? convertTimestamps(productsData, ['createdAt']) as Product[] : [];
 
-  const { data: dealsData } = useCollection(collection(db, 'deals'));
+  const dealsQuery = useMemo(() => collection(db, 'deals'), []);
+  const { data: dealsData } = useCollection(dealsQuery);
   const deals: DealProduct[] = dealsData ? convertTimestamps(dealsData, ['createdAt', 'offerEndsAt']) as DealProduct[] : [];
 
-  const { data: usersData } = useCollection(collection(db, 'users'));
+  const usersQuery = useMemo(() => collection(db, 'users'), []);
+  const { data: usersData } = useCollection(usersQuery);
   const users: AppUser[] = usersData ? convertTimestamps(usersData, ['createdAt']) as AppUser[] : [];
 
-  const { data: appRatingsData } = useCollection(collection(db, 'appRatings'));
+  const appRatingsQuery = useMemo(() => collection(db, 'appRatings'), []);
+  const { data: appRatingsData } = useCollection(appRatingsQuery);
   const appRatings: AppRating[] = appRatingsData ? convertTimestamps(appRatingsData, ['createdAt']) as AppRating[] : [];
 
-  const { data: editRequestsData } = useCollection(collection(db, 'editRequests'));
+  const editRequestsQuery = useMemo(() => collection(db, 'editRequests'), []);
+  const { data: editRequestsData } = useCollection(editRequestsQuery);
   const editRequests: EditRequest[] = editRequestsData ? convertTimestamps(editRequestsData, ['requestedAt', 'updatedAt']) as EditRequest[] : [];
   
-  const { data: appSettingsData } = useDoc(doc(db, 'settings', 'app'));
+  const appSettingsDoc = useMemo(() => doc(db, 'settings', 'app'), []);
+  const { data: appSettingsData } = useDoc(appSettingsDoc);
   const appSettings: AppSettings = appSettingsData ? appSettingsData as AppSettings : initialAppSettings;
 
-  const { data: cartData } = useCollection(user ? collection(db, `users/${user.uid}/cart`) : null);
+  const cartCollection = useMemo(() => user ? collection(db, `users/${user.uid}/cart`) : null, [user]);
+  const { data: cartData } = useCollection(cartCollection);
   const cart: CartItem[] = cartData as CartItem[] || [];
 
-  const { data: wishlistData } = useCollection(user ? collection(db, `users/${user.uid}/wishlist`) : null);
+  const wishlistCollection = useMemo(() => user ? collection(db, `users/${user.uid}/wishlist`) : null, [user]);
+  const { data: wishlistData } = useCollection(wishlistCollection);
   const wishlist: WishlistItem[] = wishlistData ? convertTimestamps(wishlistData, ['addedAt']) as WishlistItem[] : [];
 
-  const { data: userOrdersData } = useCollection(user ? query(collection(db, 'orders'), where('userId', '==', user.uid)) : null);
+  const userOrdersQuery = useMemo(() => user ? query(collection(db, 'orders'), where('userId', '==', user.uid)) : null, [user]);
+  const { data: userOrdersData } = useCollection(userOrdersQuery);
   const userOrders: Order[] = userOrdersData ? convertTimestamps(userOrdersData, ['createdAt']) as Order[] : [];
   
-  const { data: adminOrdersData } = useCollection(user && user.email === 'abhayrat603@gmail.com' ? collection(db, 'orders') : null);
+  const allOrdersQuery = useMemo(() => (user && user.email === 'abhayrat603@gmail.com') ? collection(db, 'orders') : null, [user]);
+  const { data: adminOrdersData } = useCollection(allOrdersQuery);
   const allOrders: Order[] = adminOrdersData ? convertTimestamps(adminOrdersData, ['createdAt']) as Order[] : [];
   
   const orders = user?.email === 'abhayrat603@gmail.com' ? allOrders : userOrders;
