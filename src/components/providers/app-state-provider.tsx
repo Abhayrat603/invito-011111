@@ -163,6 +163,9 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       }
     }
 
+    const allItems = [...products, ...deals];
+    const product = allItems.find(p => p.id === productId);
+
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.productId === productId);
       
@@ -175,25 +178,19 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         return prevCart;
       }
 
-      const allItems = [...products, ...deals];
-      const product = allItems.find(p => p.id === productId);
-
       if (existingItem) {
-        toast({
-            title: "Added to Cart",
-            description: `${quantity} x ${product?.name || 'item'} has been added to your cart.`
-        });
         return prevCart.map(item =>
           item.productId === productId
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
-      toast({
-          title: "Added to Cart",
-          description: `${quantity} x ${product?.name || 'item'} has been added to your cart.`
-      });
       return [...prevCart, { productId, quantity }];
+    });
+    
+    toast({
+        title: "Added to Cart",
+        description: `${quantity} x ${product?.name || 'item'} has been added to your cart.`
     });
   };
 
@@ -249,12 +246,23 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   };
 
   const toggleWishlist = (productId: string) => {
+    let wasAdded = false;
     setWishlist(prevWishlist => {
       const existingItem = prevWishlist.find(item => item.productId === productId);
       if (existingItem) {
         return prevWishlist.filter(item => item.productId !== productId);
+      } else {
+        wasAdded = true;
+        return [...prevWishlist, { productId, addedAt: new Date() }];
       }
-      return [...prevWishlist, { productId, addedAt: new Date() }];
+    });
+    
+    const allProducts = [...products, ...deals];
+    const product = allProducts.find(p => p.id === productId);
+    
+    toast({
+      title: wasAdded ? "Added to Wishlist" : "Removed from Wishlist",
+      description: `${product?.name} has been ${wasAdded ? 'added to' : 'removed from'} your wishlist.`,
     });
   };
 
