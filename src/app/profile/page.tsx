@@ -154,19 +154,6 @@ export default function ProfilePage() {
                         <ProfileMenuItem icon={HelpCircle} text="Help Center" href="/help-center" />
                     </div>
                     
-                    <div className="pt-1 mb-2">
-                        <ProfileMenuItem icon={Shield} text="Privacy Policy" href="/privacy-policy"/>
-                    </div>
-                     <div className="mb-2">
-                        <ProfileMenuItem icon={FileText} text="Terms & Conditions" href="/terms-and-conditions"/>
-                    </div>
-                    <div className="mb-2">
-                        <ProfileMenuItem icon={Info} text="About Us" href="/about-us"/>
-                    </div>
-                    <div className="mb-2">
-                        <ProfileMenuItem icon={Mail} text="Contact Us" href="/contact-us" />
-                    </div>
-
                     <div className="pt-3">
                         <ProfileMenuItem icon={LogOut} text="Log Out" onClick={signOut} isLogout />
                     </div>
