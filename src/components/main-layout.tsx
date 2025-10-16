@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ShoppingBag, Heart, User, Menu as MenuIcon, Mail, Sparkles, Plus, X, Search } from "lucide-react";
+import { Home, ShoppingBag, Heart, User, Menu as MenuIcon, Mail, Sparkles, Plus, X, Search, LogOut } from "lucide-react";
 import Image from "next/image";
 import {
   Sheet,
@@ -12,12 +12,22 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MenuPageContent } from "@/app/menu/page";
 import { cn } from "@/lib/utils";
 import { useAppState } from "./providers/app-state-provider";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { useAuth } from "./providers/auth-provider";
 
 const NavItem = ({ href, icon: Icon, label, pathname, count }: { href: string, icon: React.ElementType, label: string, pathname: string, count?: number }) => (
     <Link href={href}>
@@ -53,33 +63,19 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export function MainLayout({ children, onSearch }: { children: React.ReactNode, onSearch?: (query: string) => void }) {
   const pathname = usePathname();
+  const { user, signOut } = useAuth();
   const { cart, wishlist } = useAppState();
   const [isFabMenuOpen, setIsFabMenuOpen] = useState(false);
   const mainContentRef = useRef<HTMLDivElement>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    if (onSearch) {
-      onSearch(query);
+  
+  const getUserInitials = (name: string | null | undefined) => {
+    if (!name) return "U";
+    const nameParts = name.split(' ');
+    if (nameParts.length > 1) {
+      return `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`.toUpperCase();
     }
-  }
-
-  const clearSearch = () => {
-    setSearchQuery("");
-    if(onSearch) {
-      onSearch("");
-    }
-  }
-
-  useEffect(() => {
-    // Only apply search logic on the homepage
-    if (pathname === '/' && onSearch) {
-      onSearch(searchQuery);
-    }
-  }, [searchQuery, pathname, onSearch]);
-
+    return name.substring(0, 2).toUpperCase();
+  };
 
   useEffect(() => {
     if (mainContentRef.current) {
@@ -101,22 +97,32 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
     <div className="w-full max-w-md mx-auto bg-background text-foreground min-h-screen flex flex-col">
        {showHeader && (
          <header className="p-4 flex items-center justify-between gap-4 border-b">
-            <h1 className="text-2xl font-bold font-headline text-primary">Invito</h1>
-            <div className="relative flex-grow max-w-[200px]">
-              <Input
-                placeholder="Search..."
-                className="bg-card border-border rounded-full h-9 pl-4 pr-10 text-sm"
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
-              {searchQuery ? (
-                <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full" onClick={clearSearch}>
-                  <X className="h-4 w-4 text-muted-foreground" />
-                </Button>
-              ) : (
-                <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              )}
-            </div>
+            <Link href="/" className="flex items-center gap-2">
+                <div className="bg-[#694736] text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-lg">
+                    I
+                </div>
+                <h1 className="text-xl font-bold">Invitedit</h1>
+            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                 <Avatar className="cursor-pointer">
+                    <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'User'} />
+                    <AvatarFallback>{getUserInitials(user?.displayName)}</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild><Link href="/profile">Profile</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link href="/history">History</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link href="/wishlist">Wishlist</Link></DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={signOut} className="text-destructive">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
          </header>
       )}
       <main ref={mainContentRef} className="flex-grow pb-16 overflow-y-auto">
