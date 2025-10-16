@@ -62,6 +62,17 @@ export default function EcommerceHomePage() {
   const animationFrameIdRef = useRef<number>();
   let frameCount = 0; // To slow down the animation
 
+  const dealProducts = [dealProduct, dealProduct2, dealProduct3];
+  const [currentDealIndex, setCurrentDealIndex] = useState(0);
+
+  const handleNextDeal = () => {
+    setCurrentDealIndex((prev) => (prev + 1) % dealProducts.length);
+  };
+
+  const handlePrevDeal = () => {
+    setCurrentDealIndex((prev) => (prev - 1 + dealProducts.length) % dealProducts.length);
+  };
+
   useEffect(() => {
     const scrollEl = scrollViewportRef.current;
     if (!scrollEl) return;
@@ -176,20 +187,21 @@ export default function EcommerceHomePage() {
               <main className="pb-4">
                   <section className="px-4 mb-6">
                     <h2 className="text-2xl font-headline text-primary text-left mb-6">Deal of the Day</h2>
-                     <ScrollArea>
-                        <div className="flex space-x-4 pb-4">
-                            <div className="w-[300px] shrink-0">
-                                <DealOfTheDayCard product={dealProduct} />
-                            </div>
-                            <div className="w-[300px] shrink-0">
-                                <DealOfTheDayCard product={dealProduct2} />
-                            </div>
-                            <div className="w-[300px] shrink-0">
-                                <DealOfTheDayCard product={dealProduct3} />
-                            </div>
+                     <div className="relative">
+                        <div className="w-[300px] shrink-0 mx-auto">
+                           <DealOfTheDayCard product={dealProducts[currentDealIndex]} />
                         </div>
-                        <ScrollBar orientation="horizontal" />
-                     </ScrollArea>
+                        {dealProducts.length > 1 && (
+                            <div className="absolute top-1/2 left-0 right-0 flex justify-between items-center transform -translate-y-1/2">
+                                <Button variant="outline" size="icon" onClick={handlePrevDeal} className="rounded-full">
+                                    <ChevronLeft className="h-4 w-4" />
+                                </Button>
+                                <Button variant="outline" size="icon" onClick={handleNextDeal} className="rounded-full">
+                                    <ChevronRight className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        )}
+                     </div>
                   </section>
                   <h2 className="text-2xl font-headline text-primary text-left mt-6 mb-2 px-4">Trending Invitation Card</h2>
                   <section className="mb-4">
