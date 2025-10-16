@@ -172,19 +172,19 @@ export function MainLayout({ children, onSearch, mainRef }: { children: React.Re
                         <Link href="/ai-help" className="flex items-center gap-3" aria-label="Help with AI">
                             <span className="bg-background text-foreground text-[10px] font-medium px-2 py-1 rounded-full shadow-lg">Help with AI</span>
                             <div className="rounded-full shadow-lg flex items-center justify-center w-10 h-10">
-                                <Image src="https://i.ibb.co/VYXGRgSc/IMG-20251016-080138.png" alt="AI Help" width={40} height={40} />
+                                <Image src="https://i.ibb.co/VYXGRgS/IMG-20251016-080138.png" alt="AI Help" width={40} height={40} />
                             </div>
                         </Link>
                         <Link href="mailto:abhayrat603@gmail.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3" aria-label="Send an email">
                            <span className="bg-background text-foreground text-[10px] font-medium px-2 py-1 rounded-full shadow-lg">Email</span>
                             <div className="rounded-full shadow-lg flex items-center justify-center w-10 h-10">
-                                <Image src="https://i.ibb.co/WNxMRJ2v/vecteezy-gmail-png-icon-16716465.png" alt="Email" width={40} height={40} />
+                                <Image src="https://i.ibb.co/WNxMRJ2/vecteezy-gmail-png-icon-16716465.png" alt="Email" width={40} height={40} />
                             </div>
                         </Link>
                         <Link href="https://wa.me/918463062603" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3" aria-label="Chat on WhatsApp">
                             <span className="bg-background text-foreground text-[10px] font-medium px-2 py-1 rounded-full shadow-lg">WhatsApp</span>
                             <div className="relative rounded-full shadow-lg flex items-center justify-center w-10 h-10 overflow-hidden">
-                                <Image src="https://i.ibb.co/Z1WdFS28/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" layout="fill" objectFit="cover" />
+                                <Image src="https://i.ibb.co/Z1WdFS2/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" layout="fill" objectFit="cover" />
                             </div>
                         </Link>
                     </div>
