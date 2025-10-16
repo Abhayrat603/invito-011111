@@ -2,7 +2,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
-import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser, AppRating } from '@/lib/types';
+import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser, AppRating, AppSettings } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { 
     products as initialProducts, 
@@ -18,6 +18,10 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const allInitialDeals = [initialDealProduct, initialDealProduct2, initialDealProduct3];
 
+const initialAppSettings: AppSettings = {
+    shareLink: 'https://invitedesigner.com'
+};
+
 interface AppStateContextType {
   cart: CartItem[];
   wishlist: WishlistItem[];
@@ -27,6 +31,7 @@ interface AppStateContextType {
   editRequests: EditRequest[];
   users: AppUser[];
   appRatings: AppRating[];
+  appSettings: AppSettings;
   
   addToCart: (productId: string, quantity?: number, isDeal?: boolean) => void;
   removeFromCart: (productId: string) => void;
@@ -53,6 +58,8 @@ interface AppStateContextType {
 
   addUser: (user: AppUser) => void;
   addRating: (rating: Omit<AppRating, 'id' | 'createdAt'>) => void;
+
+  updateShareLink: (newLink: string) => void;
 }
 
 const AppStateContext = createContext<AppStateContextType | undefined>(undefined);
@@ -179,6 +186,17 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       return initialAppRatings;
     }
   });
+  
+  const [appSettings, setAppSettings] = useState<AppSettings>(() => {
+    if (!isClient) return initialAppSettings;
+    try {
+      const item = window.localStorage.getItem('appSettings');
+      return item ? JSON.parse(item) : initialAppSettings;
+    } catch (error) {
+      console.error(error);
+      return initialAppSettings;
+    }
+  });
 
 
   useEffect(() => { if (isClient) { window.localStorage.setItem('products', JSON.stringify(products)); }}, [products, isClient]);
@@ -189,6 +207,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   useEffect(() => { if (isClient) { window.localStorage.setItem('editRequests', JSON.stringify(editRequests)); }}, [editRequests, isClient]);
   useEffect(() => { if (isClient) { window.localStorage.setItem('users', JSON.stringify(users)); }}, [users, isClient]);
   useEffect(() => { if (isClient) { window.localStorage.setItem('appRatings', JSON.stringify(appRatings)); }}, [appRatings, isClient]);
+  useEffect(() => { if (isClient) { window.localStorage.setItem('appSettings', JSON.stringify(appSettings)); }}, [appSettings, isClient]);
 
   const addToCart = useCallback((productId: string, quantity: number = 1, isDeal: boolean = false) => {
     let itemAdded = false;
@@ -456,8 +475,12 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const updateShareLink = useCallback((newLink: string) => {
+    setAppSettings(prev => ({ ...prev, shareLink: newLink }));
+  }, []);
+
   const value = { 
-    cart, wishlist, orders, products, deals, editRequests, users, appRatings,
+    cart, wishlist, orders, products, deals, editRequests, users, appRatings, appSettings,
     addToCart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, clearCart, 
     toggleWishlist, isInWishlist, addOrder,
     addProduct, updateProduct, deleteProduct,
@@ -465,6 +488,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     addEditRequest, updateEditRequestStatus,
     addUser,
     addRating,
+    updateShareLink,
   };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;

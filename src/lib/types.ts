@@ -92,3 +92,7 @@ export interface AppRating {
   comment: string;
   createdAt: Date;
 }
+
+export interface AppSettings {
+  shareLink: string;
+}

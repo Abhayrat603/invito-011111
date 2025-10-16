@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useAppState } from "@/components/providers/app-state-provider";
 
 const ProfileMenuItem = ({ icon: Icon, text, href, onClick, isLogout = false, className }: { icon: React.ElementType, text: string, href?: string, onClick?: () => void, isLogout?: boolean, className?: string }) => {
   const content = (
@@ -33,13 +34,14 @@ const ProfileMenuItem = ({ icon: Icon, text, href, onClick, isLogout = false, cl
 
 export default function ProfilePage() {
     const { signOut, user } = useAuth();
+    const { appSettings } = useAppState();
     const { toast } = useToast();
 
     const handleShare = async () => {
       const shareData = {
         title: "Invite Designer",
         text: "Create and customize beautiful invitation cards for every occasion!",
-        url: window.location.origin,
+        url: appSettings.shareLink,
       };
 
       try {

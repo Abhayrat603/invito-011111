@@ -4,7 +4,7 @@ import { MainLayout } from "@/components/main-layout";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Loader2, Shield, Users, ShoppingCart, CreditCard, Edit, Tags, Star, History } from "lucide-react";
+import { Loader2, Shield, Users, ShoppingCart, CreditCard, Edit, Tags, Star, History, Settings } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
 
@@ -90,6 +90,12 @@ export default function AdminPage() {
                 icon={Star}
                 title="App Ratings"
                 description="View user feedback and ratings"
+            />
+             <AdminCard 
+                href="/admin/settings"
+                icon={Settings}
+                title="App Settings"
+                description="Configure application settings"
             />
         </main>
       </div>
