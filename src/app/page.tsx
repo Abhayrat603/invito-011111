@@ -29,7 +29,7 @@ const TestimonialCard = () => {
     const testimonialImage = findImage('testimonial-alan');
     return (
         <Card className="bg-card shadow-lg border-border/50 rounded-2xl">
-            <CardContent className="p-8 flex flex-col items-start text-left">
+            <CardContent className="p-8 flex flex-col items-center text-center">
                 <Avatar className="w-24 h-24 mb-4 border-4 border-background shadow-md">
                     <AvatarImage src={testimonialImage?.imageUrl} alt="Alan Doe" data-ai-hint="woman portrait" />
                     <AvatarFallback>AD</AvatarFallback>
@@ -58,9 +58,6 @@ const SummerCollectionCard = () => {
              <div className="absolute bottom-10 right-10 w-40 h-40 bg-accent/10 rounded-full filter blur-xl opacity-50"></div>
 
             <div className="relative z-10 text-center flex flex-col items-center justify-center h-full">
-                <div className="bg-foreground text-background text-xs font-bold px-3 py-1 rounded-full mb-4 shadow-md">
-                    25% DISCOUNT
-                </div>
                 <h3 className="text-4xl font-headline text-foreground mb-2">Summer Collection</h3>
                 <p className="text-muted-foreground mb-4">Starting @ ₹800</p>
                 <Button variant="default" size="lg" className="rounded-full shadow-lg">SHOP NOW</Button>
@@ -268,7 +265,7 @@ export default function EcommerceHomePage() {
                   </section>
                   
                    <section className="px-4 mt-8">
-                      <h2 className="text-2xl font-headline text-primary text-center mb-6">New Arrivals</h2>
+                      <h2 className="text-2xl font-headline text-primary mb-6">New Arrivals</h2>
                       {displayedProducts.length > 0 ? (
                           <>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -297,7 +294,7 @@ export default function EcommerceHomePage() {
                   </section>
 
                   <section className="px-4 mt-8 space-y-6">
-                    <h2 className="text-2xl font-headline text-primary text-center">Testimonial</h2>
+                    <h2 className="text-2xl font-headline text-primary text-left">Testimonial</h2>
                     <TestimonialCard />
                   </section>
                   
