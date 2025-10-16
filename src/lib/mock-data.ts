@@ -1,3 +1,4 @@
+
 import type { Product, Category, EditRequest, Order, DealProduct } from './types';
 
 export const categories: Category[] = [
@@ -206,4 +207,23 @@ export const dealProduct: DealProduct = {
   stock: 60,
   sold: 20,
   rating: 3.5,
+};
+
+const offerEndDate2 = new Date();
+offerEndDate2.setDate(offerEndDate2.getDate() + 1);
+
+export const dealProduct2: DealProduct = {
+  id: 'dealprod2',
+  slug: 'luxury-watch-set',
+  name: 'Luxury Watch & Wallet Set',
+  description: 'An elegant gift set featuring a classic timepiece and a leather wallet.',
+  price: 500,
+  discountPrice: 399,
+  images: ['product-deal-2'],
+  category: 'Gifts',
+  createdAt: new Date(),
+  offerEndsAt: offerEndDate2,
+  stock: 30,
+  sold: 8,
+  rating: 4.5,
 };

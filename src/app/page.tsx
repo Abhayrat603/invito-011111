@@ -20,6 +20,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
+import { dealProduct2 } from "@/lib/mock-data";
 
 const findImage = (id: string) => {
     return PlaceHolderImages.find(img => img.id === id);
@@ -29,13 +30,13 @@ const TestimonialCard = () => {
     const testimonialImage = findImage('testimonial-alan');
     return (
         <Card className="bg-card shadow-lg border-border/50 rounded-2xl">
-            <CardContent className="p-8 flex flex-col items-center text-center">
-                <Avatar className="w-24 h-24 mb-4 border-4 border-background shadow-md">
+            <CardContent className="p-8 flex flex-col items-start text-left">
+                <Avatar className="w-24 h-24 mb-4 border-4 border-background shadow-md self-center">
                     <AvatarImage src={testimonialImage?.imageUrl} alt="Alan Doe" data-ai-hint="woman portrait" />
                     <AvatarFallback>AD</AvatarFallback>
                 </Avatar>
-                <h3 className="text-xl font-bold text-foreground">ALAN DOE</h3>
-                <p className="text-sm text-muted-foreground mb-4">CEO & Founder Invision</p>
+                <h3 className="text-xl font-bold text-foreground self-center">ALAN DOE</h3>
+                <p className="text-sm text-muted-foreground mb-4 self-center">CEO & Founder Invision</p>
                 <Quote className="w-10 h-10 text-primary/50 my-2 transform -scale-y-100" />
                 <p className="text-foreground/80 italic">
                     "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor dolor sit amet."
@@ -175,7 +176,18 @@ export default function EcommerceHomePage() {
 
               <main className="pb-4">
                   <section className="px-4 mb-6">
-                    <DealOfTheDayCard product={dealProduct} />
+                    <h2 className="text-2xl font-headline text-primary text-left mb-6">Deal of the Day</h2>
+                     <ScrollArea>
+                        <div className="flex space-x-4 pb-4">
+                            <div className="w-[300px] shrink-0">
+                                <DealOfTheDayCard product={dealProduct} />
+                            </div>
+                            <div className="w-[300px] shrink-0">
+                                <DealOfTheDayCard product={dealProduct2} />
+                            </div>
+                        </div>
+                        <ScrollBar orientation="horizontal" />
+                     </ScrollArea>
                   </section>
                   <section className="mb-4">
                       <ScrollArea className="w-full whitespace-nowrap" viewportRef={scrollViewportRef}>
@@ -214,35 +226,6 @@ export default function EcommerceHomePage() {
                   </section>
                   
                   <section className="px-4">
-                      <h2 className="text-2xl font-headline text-primary text-left mb-6">New Arrivals</h2>
-                      {displayedProducts.length > 0 ? (
-                          <>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                  {displayedProducts.map((product, index) => (
-                                  <ProductCard key={product.id} product={product} onSale={index % 2 === 0} />
-                                  ))}
-                              </div>
-
-                              {totalPages > 1 && (
-                                  <div className="flex justify-between items-center p-4 mt-4">
-                                      <Button variant="outline" onClick={handlePrev} disabled={currentPage === 0}>
-                                          <ChevronLeft className="mr-2 h-4 w-4" /> Previous
-                                      </Button>
-                                      <Button variant="outline" onClick={handleNext} disabled={currentPage === totalPages - 1}>
-                                          Next <ChevronRight className="ml-2 h-4 w-4" />
-                                      </Button>
-                                  </div>
-                              )}
-                          </>
-                      ) : (
-                          <div className="text-center py-10">
-                              <p className="text-lg text-muted-foreground">{selectedCategory ? `No results found in ${selectedCategory}` : 'No results found.'}</p>
-                              <Button variant="link" onClick={() => { setSearchQuery(''); setSelectedCategory(null); }}>Clear filters</Button>
-                          </div>
-                      )}
-                  </section>
-                  
-                   <section className="px-4 mt-8">
                       <h2 className="text-2xl font-headline text-primary text-left mb-6">New Arrivals</h2>
                       {displayedProducts.length > 0 ? (
                           <>

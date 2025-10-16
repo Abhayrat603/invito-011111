@@ -199,6 +199,12 @@
       "imageHint": "grooming kit"
     },
     {
+      "id": "product-deal-2",
+      "description": "Luxury watch and wallet gift set",
+      "imageUrl": "https://picsum.photos/seed/watchset/500/500",
+      "imageHint": "watch wallet"
+    },
+    {
       "id": "testimonial-alan",
       "description": "Portrait of Alan Doe",
       "imageUrl": "https://picsum.photos/seed/alan-doe/200/200",
