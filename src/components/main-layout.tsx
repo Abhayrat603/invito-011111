@@ -15,7 +15,7 @@ import {
 import { MenuPageContent } from "@/app/menu/page";
 import { cn } from "@/lib/utils";
 import { useAppState } from "./providers/app-state-provider";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "./ui/button";
 
 const NavItem = ({ href, icon: Icon, label, pathname, count }: { href: string, icon: React.ElementType, label: string, pathname: string, count?: number }) => (
@@ -54,6 +54,13 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { cart, wishlist } = useAppState();
   const [isFabMenuOpen, setIsFabMenuOpen] = useState(false);
+  const mainContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (mainContentRef.current) {
+        mainContentRef.current.scrollTop = 0;
+    }
+  }, [pathname]);
 
   const navItems = [
     { href: "/menu", icon: MenuIcon, label: "Menu" },
@@ -65,7 +72,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="w-full max-w-md mx-auto bg-background text-foreground min-h-screen flex flex-col">
-      <main className="flex-grow pb-16 overflow-y-auto">
+      <main ref={mainContentRef} className="flex-grow pb-16 overflow-y-auto">
         {children}
       </main>
 
