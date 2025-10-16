@@ -1,5 +1,5 @@
 
-import type { Product, Category, EditRequest, Order, DealProduct } from './types';
+import type { Product, Category, EditRequest, Order, DealProduct, AppUser } from './types';
 
 export const categories: Category[] = [
   { id: 'cat1', name: 'Wedding', imageId: 'category-wedding' },
@@ -346,3 +346,9 @@ export const dealProduct3: DealProduct = {
   sold: 45,
   rating: 4.8,
 };
+
+export const initialUsers: AppUser[] = [
+  { id: 'usr1', name: 'John Doe', email: 'john.doe@example.com', phone: '1234567890', createdAt: new Date('2023-10-01') },
+  { id: 'usr2', name: 'Jane Smith', email: 'jane.smith@example.com', phone: '0987654321', createdAt: new Date('2023-09-25') },
+  { id: 'usr3', name: 'Admin User', email: 'abhayrat603@gmail.com', phone: '8463062603', createdAt: new Date('2023-09-20') },
+];

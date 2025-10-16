@@ -3,19 +3,15 @@
 
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-
-// In a real app, this data would come from your user database
-const mockUsers = [
-  { id: 'usr1', name: 'John Doe', email: 'john.doe@example.com', registered: '2023-10-01' },
-  { id: 'usr2', name: 'Jane Smith', email: 'jane.smith@example.com', registered: '2023-09-25' },
-  { id: 'usr3', name: 'Admin User', email: 'abhayrat603@gmail.com', registered: '2023-09-20' },
-];
+import { useAppState } from "@/components/providers/app-state-provider";
+import { format } from "date-fns";
 
 export default function AdminUsersPage() {
     const router = useRouter();
+    const { users } = useAppState();
 
     return (
         <MainLayout>
@@ -28,14 +24,24 @@ export default function AdminUsersPage() {
                     <div className="w-10"></div>
                 </header>
                 <main className="flex-grow p-4 space-y-4">
-                    {mockUsers.map(user => (
+                    {users.map(user => (
                         <Card key={user.id}>
                             <CardHeader>
-                                <CardTitle className="text-lg">{user.name}</CardTitle>
-                                <CardDescription>{user.email}</CardDescription>
+                                <CardTitle className="text-lg flex items-center gap-2">
+                                    <User className="h-5 w-5 text-primary" /> {user.name}
+                                </CardTitle>
+                                <CardDescription className="flex items-center gap-2 pt-1">
+                                    <Mail className="h-4 w-4 text-muted-foreground" /> {user.email}
+                                </CardDescription>
                             </CardHeader>
-                            <CardContent>
-                                <p className="text-sm text-muted-foreground">Registered on: {user.registered}</p>
+                            <CardContent className="space-y-2 text-sm">
+                                <p className="flex items-center gap-2">
+                                    <Phone className="h-4 w-4 text-muted-foreground" /> 
+                                    {user.phone ? `+91 ${user.phone}` : 'No phone number'}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                    Registered on: {format(new Date(user.createdAt), "PPP")}
+                                </p>
                             </CardContent>
                         </Card>
                     ))}

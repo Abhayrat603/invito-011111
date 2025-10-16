@@ -2,7 +2,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
-import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest } from '@/lib/types';
+import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { 
     products as initialProducts, 
@@ -10,7 +10,8 @@ import {
     dealProduct2 as initialDealProduct2, 
     dealProduct3 as initialDealProduct3,
     editRequests as initialEditRequests,
-    orders as initialOrders
+    orders as initialOrders,
+    initialUsers
 } from '@/lib/mock-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
@@ -23,6 +24,7 @@ interface AppStateContextType {
   products: Product[];
   deals: DealProduct[];
   editRequests: EditRequest[];
+  users: AppUser[];
   
   addToCart: (productId: string, quantity?: number, isDeal?: boolean) => void;
   removeFromCart: (productId: string) => void;
@@ -45,6 +47,8 @@ interface AppStateContextType {
   updateDealStockOnOrder: (cartProducts: any[]) => void;
 
   updateEditRequestStatus: (requestId: string, status: 'Pending' | 'Approved' | 'Rejected') => void;
+
+  addUser: (user: AppUser) => void;
 }
 
 const AppStateContext = createContext<AppStateContextType | undefined>(undefined);
@@ -141,6 +145,21 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         return initialEditRequests;
     }
   });
+  
+  const [users, setUsers] = useState<AppUser[]>(() => {
+    if (!isClient) return initialUsers;
+    try {
+        const item = window.localStorage.getItem('users');
+        const usersData = item ? JSON.parse(item) : initialUsers;
+        return usersData.map((user: any) => ({
+            ...user,
+            createdAt: new Date(user.createdAt),
+        }));
+    } catch (error) {
+        console.error(error);
+        return initialUsers;
+    }
+  });
 
 
   useEffect(() => { if (isClient) { window.localStorage.setItem('products', JSON.stringify(products)); }}, [products, isClient]);
@@ -149,24 +168,25 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   useEffect(() => { if (isClient) { window.localStorage.setItem('wishlist', JSON.stringify(wishlist)); }}, [wishlist, isClient]);
   useEffect(() => { if (isClient) { window.localStorage.setItem('orders', JSON.stringify(orders)); }}, [orders, isClient]);
   useEffect(() => { if (isClient) { window.localStorage.setItem('editRequests', JSON.stringify(editRequests)); }}, [editRequests, isClient]);
+  useEffect(() => { if (isClient) { window.localStorage.setItem('users', JSON.stringify(users)); }}, [users, isClient]);
 
   const addToCart = useCallback((productId: string, quantity: number = 1, isDeal: boolean = false) => {
-    if (isDeal) {
-      const alreadyPurchased = orders.some(order => order.items.some(item => item.productId === productId));
-      if (alreadyPurchased) {
-        toast({
-            variant: "destructive",
-            title: "Already Purchased",
-            description: "You can only buy a deal item once.",
-        });
-        return;
-      }
-    }
-
-    const allItems = [...products, ...deals];
-    const product = allItems.find(p => p.id === productId);
-
     setCart(prevCart => {
+      const allItems = [...products, ...deals];
+      const product = allItems.find(p => p.id === productId);
+
+      if (isDeal) {
+        const alreadyPurchased = orders.some(order => order.items.some(item => item.productId === productId));
+        if (alreadyPurchased) {
+          toast({
+              variant: "destructive",
+              title: "Already Purchased",
+              description: "You can only buy a deal item once.",
+          });
+          return prevCart;
+        }
+      }
+
       const existingItem = prevCart.find(item => item.productId === productId);
       
       if (isDeal && existingItem) {
@@ -177,6 +197,11 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         });
         return prevCart;
       }
+      
+      toast({
+          title: "Added to Cart",
+          description: `${quantity} x ${product?.name || 'item'} has been added to your cart.`
+      });
 
       if (existingItem) {
         return prevCart.map(item =>
@@ -186,11 +211,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         );
       }
       return [...prevCart, { productId, quantity }];
-    });
-    
-    toast({
-        title: "Added to Cart",
-        description: `${quantity} x ${product?.name || 'item'} has been added to your cart.`
     });
   }, [orders, products, deals, toast]);
 
@@ -246,21 +266,22 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const toggleWishlist = useCallback((productId: string) => {
-    let inWishlist = false;
     setWishlist(prevWishlist => {
+      const product = products.find(p => p.id === productId);
       const existingItem = prevWishlist.find(item => item.productId === productId);
       if (existingItem) {
-        inWishlist = true;
+        toast({
+          title: "Removed from Wishlist",
+          description: `${product?.name} has been removed from your wishlist.`
+        });
         return prevWishlist.filter(item => item.productId !== productId);
       } else {
-        inWishlist = false;
+        toast({
+            title: "Added to Wishlist",
+            description: `${product?.name} has been added to your wishlist.`
+        });
         return [...prevWishlist, { productId, addedAt: new Date() }];
       }
-    });
-    const product = products.find(p => p.id === productId);
-    toast({
-        title: inWishlist ? "Removed from Wishlist" : "Added to Wishlist",
-        description: `${product?.name} has been ${inWishlist ? 'removed from' : 'added to'} your wishlist.`
     });
   }, [products, toast]);
 
@@ -270,24 +291,26 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   }, [wishlist]);
 
   const addProduct = useCallback((productData: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'> & { imageUrl: string }) => {
-    const newId = `prod${Date.now()}`;
-    const imageId = `product-image-${newId}`;
-    
-    PlaceHolderImages.push({
-        id: imageId,
-        description: productData.name,
-        imageUrl: productData.imageUrl,
-        imageHint: 'custom product'
+    setProducts(prev => {
+      const newId = `prod${Date.now()}`;
+      const imageId = `product-image-${newId}`;
+      
+      PlaceHolderImages.push({
+          id: imageId,
+          description: productData.name,
+          imageUrl: productData.imageUrl,
+          imageHint: 'custom product'
+      });
+      
+      const newProduct: Product = {
+        ...productData,
+        id: newId,
+        slug: productData.name.toLowerCase().replace(/\\s+/g, '-'),
+        createdAt: new Date(),
+        images: [imageId, 'product-placeholder-2'],
+      };
+      return [...prev, newProduct];
     });
-    
-    const newProduct: Product = {
-      ...productData,
-      id: newId,
-      slug: productData.name.toLowerCase().replace(/\s+/g, '-'),
-      createdAt: new Date(),
-      images: [imageId, 'product-placeholder-2'],
-    };
-    setProducts(prev => [...prev, newProduct]);
   }, []);
 
   const updateProduct = useCallback((productId: string, productData: Partial<Product>) => {
@@ -295,7 +318,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         if (p.id === productId) {
             const updatedProduct = { ...p, ...productData };
             if (productData.name) {
-                updatedProduct.slug = productData.name.toLowerCase().replace(/\s+/g, '-');
+                updatedProduct.slug = productData.name.toLowerCase().replace(/\\s+/g, '-');
             }
             return updatedProduct;
         }
@@ -308,26 +331,28 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const addDeal = useCallback((dealData: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images'> & { imageUrl: string }) => {
-    const newId = `deal${Date.now()}`;
-    const imageId = `product-deal-${newId}`;
+    setDeals(prev => {
+      const newId = `deal${Date.now()}`;
+      const imageId = `product-deal-${newId}`;
 
-    PlaceHolderImages.push({
-        id: imageId,
-        description: dealData.name,
-        imageUrl: dealData.imageUrl,
-        imageHint: 'custom deal'
+      PlaceHolderImages.push({
+          id: imageId,
+          description: dealData.name,
+          imageUrl: dealData.imageUrl,
+          imageHint: 'custom deal'
+      });
+      
+      const newDeal: DealProduct = {
+        ...dealData,
+        id: newId,
+        slug: dealData.name.toLowerCase().replace(/\\s+/g, '-'),
+        createdAt: new Date(),
+        images: [imageId],
+        sold: 0,
+        rating: Math.random() * 2 + 3, // 3 to 5 stars
+      };
+      return [...prev, newDeal];
     });
-    
-    const newDeal: DealProduct = {
-      ...dealData,
-      id: newId,
-      slug: dealData.name.toLowerCase().replace(/\s+/g, '-'),
-      createdAt: new Date(),
-      images: [imageId],
-      sold: 0,
-      rating: Math.random() * 2 + 3, // 3 to 5 stars
-    };
-    setDeals(prev => [...prev, newDeal]);
   }, []);
 
   const updateDeal = useCallback((dealId: string, dealData: Partial<DealProduct>) => {
@@ -335,7 +360,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         if (d.id === dealId) {
             const updatedDeal = { ...d, ...dealData };
             if (dealData.name) {
-                updatedDeal.slug = dealData.name.toLowerCase().replace(/\s+/g, '-');
+                updatedDeal.slug = dealData.name.toLowerCase().replace(/\\s+/g, '-');
             }
             return updatedDeal;
         }
@@ -366,13 +391,24 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     setEditRequests(prev => prev.map(req => req.id === requestId ? { ...req, status, updatedAt: new Date() } : req));
   }, []);
 
+  const addUser = useCallback((user: AppUser) => {
+    setUsers(prev => {
+        // Avoid adding duplicate users
+        if (prev.some(u => u.email === user.email)) {
+            return prev;
+        }
+        return [...prev, user];
+    });
+  }, []);
+
   const value = { 
-    cart, wishlist, orders, products, deals, editRequests,
+    cart, wishlist, orders, products, deals, editRequests, users,
     addToCart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, clearCart, 
     toggleWishlist, isInWishlist, addOrder,
     addProduct, updateProduct, deleteProduct,
     addDeal, updateDeal, deleteDeal, updateDealStockOnOrder,
     updateEditRequestStatus,
+    addUser,
   };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;

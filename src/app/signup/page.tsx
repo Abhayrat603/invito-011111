@@ -25,12 +25,14 @@ import { useToast } from "@/hooks/use-toast";
 import { AuthRedirect } from "@/components/auth-redirect";
 import { Loader2, Eye, EyeOff, User, Phone, Mail, Lock } from "lucide-react";
 import Image from "next/image";
+import { useAppState } from "@/components/providers/app-state-provider";
+import type { AppUser } from "@/lib/types";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   phone: z.string().length(10, { message: "Please enter a valid 10-digit phone number." }),
   email: z.string().email({ message: "Invalid email address." }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters, and include uppercase, lowercase, a number, and a special character." }).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/, {
+  password: z.string().min(6, { message: "Password must be at least 6 characters, and include uppercase, lowercase, a number, and a special character." }).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$/, {
     message: "Password must include uppercase, lowercase, a number, and a special character.",
   }),
   confirmPassword: z.string(),
@@ -41,6 +43,7 @@ const formSchema = z.object({
 
 export default function SignupPage() {
   const { signUp, sendVerificationEmail } = useAuth();
+  const { addUser } = useAppState();
   const router = useRouter();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = React.useState(false);
@@ -58,7 +61,17 @@ export default function SignupPage() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await signUp(values.email, values.password, values.name);
+      const userCredential = await signUp(values.email, values.password, values.name);
+      
+      const newUser: AppUser = {
+        id: userCredential.user.uid,
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        createdAt: new Date(),
+      };
+      addUser(newUser);
+
       await sendVerificationEmail();
       toast({
         title: "Account Created",

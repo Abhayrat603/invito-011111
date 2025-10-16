@@ -5,6 +5,14 @@ export interface UserProfile {
   createdAt: Date;
 }
 
+export interface AppUser {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  createdAt: Date;
+}
+
 export interface Category {
   id: string;
   name: string;
