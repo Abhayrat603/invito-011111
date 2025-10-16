@@ -135,15 +135,26 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             </div>
         </nav>
       </Sheet>
-        <Link 
-            href="https://wa.me/918463062603"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="fixed bottom-24 right-5 bg-green-500 text-white rounded-full p-3 shadow-lg z-30 hover:bg-green-600 transition-colors"
-            aria-label="Chat on WhatsApp"
-        >
-            <WhatsAppIcon className="h-8 w-8" strokeWidth={1.5} />
-        </Link>
+        <div className="fixed bottom-24 right-5 z-30 flex flex-col gap-3">
+             <Link 
+                href="mailto:abhayrat603@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-primary text-primary-foreground rounded-full p-3 shadow-lg hover:bg-primary/90 transition-colors"
+                aria-label="Send an email"
+            >
+                <Mail className="h-8 w-8" strokeWidth={1.5} />
+            </Link>
+            <Link 
+                href="https://wa.me/918463062603"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-green-500 text-white rounded-full p-3 shadow-lg hover:bg-green-600 transition-colors"
+                aria-label="Chat on WhatsApp"
+            >
+                <WhatsAppIcon className="h-8 w-8" strokeWidth={1.5} />
+            </Link>
+        </div>
     </div>
   );
 }
