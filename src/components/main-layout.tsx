@@ -144,7 +144,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 <div className="flex flex-col items-center gap-3 transition-all duration-300">
                     <Link
                         href="/ai-help"
-                        className="bg-transparent text-white rounded-full p-2.5 shadow-lg flex items-center justify-center w-10 h-10"
+                        className="text-white rounded-full p-2.5 shadow-lg flex items-center justify-center w-10 h-10"
                         aria-label="Help with AI"
                     >
                         <Image src="https://i.ibb.co/VYXGRgSc/IMG-20251016-080138.png" alt="AI Help" width={30} height={30} />
@@ -153,7 +153,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                         href="mailto:abhayrat603@gmail.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-transparent text-primary-foreground rounded-full p-2.5 shadow-lg flex items-center justify-center w-10 h-10"
+                        className="text-primary-foreground rounded-full p-2.5 shadow-lg flex items-center justify-center w-10 h-10"
                         aria-label="Send an email"
                     >
                         <Image src="https://i.ibb.co/WNxMRJ2v/vecteezy-gmail-png-icon-16716465.png" alt="Email" width={30} height={30} />
@@ -162,7 +162,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                         href="https://wa.me/918463062603"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-transparent text-white rounded-full p-2.5 shadow-lg flex items-center justify-center w-10 h-10"
+                        className="text-white rounded-full p-2.5 shadow-lg flex items-center justify-center w-10 h-10"
                         aria-label="Chat on WhatsApp"
                     >
                         <Image src="https://i.ibb.co/Z1WdFS28/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" width={30} height={30} />
