@@ -50,7 +50,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       </main>
 
       {pathname === '/' && (
-           <footer className="bg-gray-800 text-white p-6">
+           <footer className="bg-amber-950/90 text-white p-6">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-6">
                     <div>
                         <h3 className="font-bold mb-2">POPULAR CATEGORIES</h3>
