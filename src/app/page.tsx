@@ -54,6 +54,47 @@ const TestimonialCard = () => {
     );
 };
 
+const PageFooter = () => (
+    <footer style={{ backgroundColor: '#FCF9EA' }} className="text-amber-950 p-6">
+        <div className="grid grid-cols-1 gap-8 mb-6">
+            <div>
+                <h3 className="font-bold mb-2">POPULAR CATEGORIES</h3>
+                <ul className="space-y-2 text-sm text-amber-950/70">
+                    <li><a href="/products/classic-wedding-invitation" className="hover:underline">Wedding Invitation</a></li>
+                    <li><a href="/products/modern-birthday-bash" className="hover:underline">Birthday Invitation</a></li>
+                    <li><a href="/products/corporate-gala-invite" className="hover:underline">Corporate</a></li>
+                    <li><a href="/products/summer-pool-party" className="hover:underline">Party</a></li>
+                    <li><a href="/products/classic-wedding-invitation" className="hover:underline">E-Invites</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 className="font-bold mb-2">PRODUCTS</h3>
+                <ul className="space-y-2 text-sm text-amber-950/70">
+                    <li><a href="#" className="hover:underline">New Designs</a></li>
+                    <li><a href="#" className="hover:underline">Special Offers</a></li>
+                    <li><a href="/request-edit" className="hover:underline">Request For Edit</a></li>
+                    <li><a href="/help-center" className="hover:underline">Help Center</a></li>
+                    <li><a href="#" className="hover:underline">Sitemap</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 className="font-bold mb-2">OUR COMPANY</h3>
+                <ul className="space-y-2 text-sm text-amber-950/70">
+                    <li><a href="/about-us" className="hover:underline">About Us</a></li>
+                    <li><a href="/contact-us" className="hover:underline">Contact Us</a></li>
+                    <li><a href="/terms-and-conditions" className="hover:underline">Terms & Conditions</a></li>
+                    <li><a href="/privacy-policy" className="hover:underline">Privacy Policy</a></li>
+                    <li><a href="#" className="hover:underline">Careers</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div className="border-t border-amber-900/20 pt-6">
+            <p className="text-center text-xs text-amber-950/60">Copyright &copy; Invite Designer All Rights Reserved.</p>
+        </div>
+    </footer>
+)
+
 export default function EcommerceHomePage() {
   const { user, loading } = useAuth();
   const { products, deals } = useAppState();
@@ -210,6 +251,7 @@ export default function EcommerceHomePage() {
                   </section>
                   
               </main>
+              <PageFooter />
           </div>
       </AuthRedirect>
     </MainLayout>
