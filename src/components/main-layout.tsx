@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, ShoppingBag, Heart, User, Menu as MenuIcon, Mail, Sparkles, Plus, X } from "lucide-react";
+import Image from "next/image";
 import {
   Sheet,
   SheetContent,
@@ -143,37 +144,37 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 <div className="flex flex-col items-center gap-3 transition-all duration-300">
                     <Link
                         href="/ai-help"
-                        className="bg-purple-600 text-white rounded-full p-2.5 shadow-lg hover:bg-purple-700"
+                        className="bg-purple-600 text-white rounded-full p-2.5 shadow-lg hover:bg-purple-700 flex items-center justify-center w-10 h-10"
                         aria-label="Help with AI"
                     >
-                        <Sparkles className="h-6 w-6" strokeWidth={1.5} />
+                        <Sparkles className="h-5 w-5" strokeWidth={1.5} />
                     </Link>
                     <Link 
                         href="mailto:abhayrat603@gmail.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-primary text-primary-foreground rounded-full p-2.5 shadow-lg hover:bg-primary/90"
+                        className="bg-primary text-primary-foreground rounded-full p-2.5 shadow-lg hover:bg-primary/90 flex items-center justify-center w-10 h-10"
                         aria-label="Send an email"
                     >
-                        <Mail className="h-6 w-6" strokeWidth={1.5} />
+                        <Image src="https://i.ibb.co/WNxMRJ2v/vecteezy-gmail-png-icon-16716465.png" alt="Email" width={20} height={20} />
                     </Link>
                     <Link 
                         href="https://wa.me/918463062603"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-green-500 text-white rounded-full p-2.5 shadow-lg hover:bg-green-600"
+                        className="bg-green-500 text-white rounded-full p-2.5 shadow-lg hover:bg-green-600 flex items-center justify-center w-10 h-10"
                         aria-label="Chat on WhatsApp"
                     >
-                        <WhatsAppIcon className="h-6 w-6" strokeWidth={1.5} />
+                        <Image src="https://i.ibb.co/Z1WdFS28/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" width={20} height={20} />
                     </Link>
                 </div>
             )}
              <Button
                 onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
-                className="bg-blue-600 text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-700 transition-transform duration-300"
+                className="bg-blue-600 text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-700 transition-transform duration-300 flex items-center justify-center"
                 aria-label="Toggle contact menu"
             >
-                {isFabMenuOpen ? <X className="h-7 w-7" /> : <Plus className="h-7 w-7" />}
+                {isFabMenuOpen ? <X className="h-6 w-6" /> : <Image src="https://i.ibb.co/VYXGRgSc/IMG-20251016-080138.png" alt="Open Menu" width={24} height={24} />}
             </Button>
         </div>
     </div>
