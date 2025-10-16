@@ -34,6 +34,7 @@ const formSchema = z.object({
   imageUrl: z.string().url({ message: "Please enter a valid URL." }),
   zipFileUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   isPaid: z.boolean().default(true),
+  size: z.string().optional(),
 });
 
 export default function AddProductPage() {
@@ -52,6 +53,7 @@ export default function AddProductPage() {
             imageUrl: "",
             zipFileUrl: "",
             isPaid: true,
+            size: "",
         },
     });
 
@@ -179,6 +181,17 @@ export default function AddProductPage() {
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="size"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Size</FormLabel>
+                                    <FormControl><Input placeholder="e.g., 10x4 inches" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                                 )}

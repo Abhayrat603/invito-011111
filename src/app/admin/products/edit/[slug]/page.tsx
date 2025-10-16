@@ -40,6 +40,7 @@ const formSchema = z.object({
   imageUrl: z.string().url({ message: "Please enter a valid URL." }),
   zipFileUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   isPaid: z.boolean().default(true),
+  size: z.string().optional(),
 });
 
 export default function EditProductPage() {
@@ -86,6 +87,7 @@ export default function EditProductPage() {
                 imageUrl: currentImageUrl,
                 zipFileUrl: productToEdit.zipFileUrl || '',
                 isPaid: productToEdit.isPaid,
+                size: productToEdit.size || "",
             });
             setImagePreview(currentImageUrl);
         } else {
@@ -238,6 +240,17 @@ export default function EditProductPage() {
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="size"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Size</FormLabel>
+                                    <FormControl><Input placeholder="e.g., 10x4 inches" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                                 )}

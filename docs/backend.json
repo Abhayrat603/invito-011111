@@ -14,7 +14,8 @@
         "category": { "type": "string" },
         "createdAt": { "type": "string", "format": "date-time" },
         "zipFileUrl": { "type": "string" },
-        "isPaid": { "type": "boolean" }
+        "isPaid": { "type": "boolean" },
+        "size": { "type": "string" }
       },
       "required": ["name", "slug", "description", "price", "images", "category", "createdAt", "isPaid"]
     },
@@ -147,9 +148,9 @@
       "schema": { "$ref": "#/entities/DealProduct" },
       "description": "Collection of all special deal products."
     },
-    "/users": {
+    "/users/{userId}": {
         "schema": { "$ref": "#/entities/AppUser" },
-        "description": "Collection of all app users."
+        "description": "A user's profile."
     },
     "/users/{userId}/cart": {
         "schema": { "$ref": "#/entities/CartItem" },

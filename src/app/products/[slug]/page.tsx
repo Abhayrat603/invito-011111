@@ -183,7 +183,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div>
                     <p className="font-semibold text-foreground">Dimension</p>
-                    <p className="text-muted-foreground">10x4</p>
+                    <p className="text-muted-foreground">{product.size || "10x4"}</p>
                 </div>
                 <div className="col-span-2">
                     <p className="font-semibold text-foreground">Required Software</p>

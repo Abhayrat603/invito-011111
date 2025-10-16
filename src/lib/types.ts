@@ -32,6 +32,7 @@ export interface Product {
   createdAt: Date | Timestamp;
   zipFileUrl?: string;
   isPaid: boolean;
+  size?: string;
 }
 
 export interface DealProduct extends Product {
@@ -101,5 +102,3 @@ export interface AppRating {
 export interface AppSettings {
   shareLink: string;
 }
-
-    
