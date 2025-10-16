@@ -50,11 +50,11 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       </main>
 
       {pathname === '/' && (
-           <footer className="bg-amber-950/90 text-white p-6">
+           <footer className="bg-[#FCF9EA] text-amber-950 p-6">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-6">
                     <div>
                         <h3 className="font-bold mb-2">POPULAR CATEGORIES</h3>
-                        <ul className="space-y-2 text-sm text-gray-400">
+                        <ul className="space-y-2 text-sm text-amber-950/70">
                             <li><a href="#" className="hover:underline">Wedding Invitation</a></li>
                             <li><a href="#" className="hover:underline">Birthday Invitation</a></li>
                             <li><a href="#" className="hover:underline">Corporate</a></li>
@@ -64,7 +64,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                     </div>
                     <div>
                         <h3 className="font-bold mb-2">PRODUCTS</h3>
-                        <ul className="space-y-2 text-sm text-gray-400">
+                        <ul className="space-y-2 text-sm text-amber-950/70">
                             <li><a href="#" className="hover:underline">New Designs</a></li>
                             <li><a href="#" className="hover:underline">Special Offers</a></li>
                             <li><a href="/request-edit" className="hover:underline">Request For Edit</a></li>
@@ -74,7 +74,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                     </div>
                     <div>
                         <h3 className="font-bold mb-2">OUR COMPANY</h3>
-                        <ul className="space-y-2 text-sm text-gray-400">
+                        <ul className="space-y-2 text-sm text-amber-950/70">
                             <li><a href="/about-us" className="hover:underline">About Us</a></li>
                             <li><a href="/contact-us" className="hover:underline">Contact Us</a></li>
                             <li><a href="/terms-and-conditions" className="hover:underline">Terms & Conditions</a></li>
@@ -84,24 +84,24 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                     </div>
                     <div>
                         <h3 className="font-bold mb-2">CONTACT</h3>
-                        <ul className="space-y-2 text-sm text-gray-400">
+                        <ul className="space-y-2 text-sm text-amber-950/70">
                            <li className="flex items-start"><Phone className="h-4 w-4 mr-2 mt-1 shrink-0"/>+91 8463062603</li>
                             <li className="flex items-start"><Mail className="h-4 w-4 mr-2 mt-1 shrink-0"/>abhayrat603@gmail.com</li>
                         </ul>
                     </div>
                 </div>
 
-                <div className="border-t border-gray-700 pt-6">
+                <div className="border-t border-amber-900/20 pt-6">
                      <div className="mb-4">
                         <h3 className="font-bold text-center mb-2">FOLLOW US</h3>
                         <div className="flex justify-center space-x-4">
-                            <a href="#" className="text-gray-400 hover:text-white"><Facebook /></a>
-                            <a href="#" className="text-gray-400 hover:text-white"><Instagram /></a>
-                            <a href="#" className="text-gray-400 hover:text-white"><Twitter /></a>
-                            <a href="#" className="text-gray-400 hover:text-white"><Linkedin /></a>
+                            <a href="#" className="text-amber-950/70 hover:text-amber-950"><Facebook /></a>
+                            <a href="#" className="text-amber-950/70 hover:text-amber-950"><Instagram /></a>
+                            <a href="#" className="text-amber-950/70 hover:text-amber-950"><Twitter /></a>
+                            <a href="#" className="text-amber-950/70 hover:text-amber-950"><Linkedin /></a>
                         </div>
                     </div>
-                    <p className="text-center text-xs text-gray-500">Copyright &copy; Invite Designer All Rights Reserved.</p>
+                    <p className="text-center text-xs text-amber-950/60">Copyright &copy; Invite Designer All Rights Reserved.</p>
                 </div>
             </footer>
         )}
