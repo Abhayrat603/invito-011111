@@ -24,14 +24,6 @@ const ImageCropper: React.FC<ImageCropperProps> = ({ image, onCropComplete, onCl
 
   const imageSrc = React.useMemo(() => URL.createObjectURL(image), [image]);
 
-  const onCropChange = useCallback((location: { x: number; y: number; }) => {
-    setCrop(location);
-  }, []);
-
-  const onZoomChange = useCallback((value: number) => {
-    setZoom(value);
-  }, []);
-
   const onCropCompleteCallback = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
@@ -59,8 +51,8 @@ const ImageCropper: React.FC<ImageCropperProps> = ({ image, onCropComplete, onCl
             crop={crop}
             zoom={zoom}
             aspect={1}
-            onCropChange={onCropChange}
-            onZoomChange={onZoomChange}
+            onCropChange={setCrop}
+            onZoomChange={setZoom}
             onCropComplete={onCropCompleteCallback}
           />
         </div>
@@ -71,7 +63,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({ image, onCropComplete, onCl
                 max={3}
                 step={0.1}
                 value={[zoom]}
-                onValueChange={(value) => onZoomChange(value[0])}
+                onValueChange={(value) => setZoom(value[0])}
             />
         </div>
         <DialogFooter>
