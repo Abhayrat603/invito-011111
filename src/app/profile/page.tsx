@@ -94,14 +94,17 @@ export default function ProfilePage() {
         text: "Create and customize beautiful invitation cards for every occasion!",
         url: window.location.origin,
       };
+      // Web Share API is only available in secure contexts (HTTPS)
+      const isSecureContext = window.isSecureContext;
+
       try {
-        if (navigator.share) {
+        if (navigator.share && isSecureContext) {
           await navigator.share(shareData);
           toast({
             title: "Shared successfully!",
           });
         } else {
-          // Fallback for browsers that don't support Web Share API
+          // Fallback for non-secure contexts or browsers that don't support Web Share API
           await navigator.clipboard.writeText(shareData.url);
           toast({
             title: "Link Copied!",
@@ -113,11 +116,20 @@ export default function ProfilePage() {
         if (error.name === 'AbortError') {
             return;
         }
-        toast({
-          variant: "destructive",
-          title: "Could not share",
-          description: "An error occurred while trying to share.",
-        });
+        // For other errors, fallback to clipboard copy
+        try {
+            await navigator.clipboard.writeText(shareData.url);
+            toast({
+                title: "Link Copied!",
+                description: "Sharing failed, so the link was copied to your clipboard instead.",
+            });
+        } catch (copyError) {
+             toast({
+                variant: "destructive",
+                title: "Could not share or copy",
+                description: "An unexpected error occurred.",
+            });
+        }
       }
     };
 
