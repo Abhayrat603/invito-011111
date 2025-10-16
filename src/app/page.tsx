@@ -8,7 +8,7 @@ import { Search, ChevronLeft, ChevronRight, X, Quote } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MainLayout } from "@/components/main-layout";
-import { products, categories, dealProduct } from "@/lib/mock-data";
+import { products, categories } from "@/lib/mock-data";
 import { ProductCard } from "@/components/product-card";
 import { DealOfTheDayCard } from "@/components/deal-of-the-day-card";
 import { useAuth } from "@/components/providers/auth-provider";
@@ -20,7 +20,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { dealProduct2, dealProduct3 } from "@/lib/mock-data";
+import { dealProduct, dealProduct2, dealProduct3 } from "@/lib/mock-data";
 
 const findImage = (id: string) => {
     return PlaceHolderImages.find(img => img.id === id);
@@ -270,7 +270,7 @@ export default function EcommerceHomePage() {
                   </section>
 
                   <section className="px-4 mt-8 space-y-6">
-                    <h2 className="text-2xl font-headline text-primary text-left mb-6">Testimonial</h2>
+                    <h2 className="text-2xl font-headline text-primary text-center mb-6">Testimonial</h2>
                     <TestimonialCard />
                   </section>
                   
@@ -280,3 +280,5 @@ export default function EcommerceHomePage() {
     </MainLayout>
   );
 }
+
+    
