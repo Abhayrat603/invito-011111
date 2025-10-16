@@ -172,7 +172,7 @@ export function MainLayout({ children, onSearch, mainRef }: { children: React.Re
                         <Link href="/ai-help" className="flex items-center gap-3" aria-label="Help with AI">
                             <span className="bg-background text-foreground text-[10px] font-medium px-2 py-1 rounded-full shadow-lg">Help with AI</span>
                             <div className="rounded-full shadow-lg flex items-center justify-center w-10 h-10">
-                                <Image src="https://i.imghippo.com/files/Ti9369Qrs.png" alt="AI Help" width={40} height={40} />
+                                <Image src="https://i.imghippo.com/files/ylK6367fhk.png" alt="AI Help" width={40} height={40} />
                             </div>
                         </Link>
                         <Link href="mailto:abhayrat603@gmail.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3" aria-label="Send an email">
