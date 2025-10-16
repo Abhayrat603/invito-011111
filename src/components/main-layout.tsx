@@ -157,8 +157,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                         </Link>
                         <Link href="https://wa.me/918463062603" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3" aria-label="Chat on WhatsApp">
                             <span className="bg-background text-foreground text-[10px] font-medium px-2 py-1 rounded-full shadow-lg">WhatsApp</span>
-                            <div className="rounded-full shadow-lg flex items-center justify-center w-10 h-10">
-                                <Image src="https://i.ibb.co/Z1WdFS28/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" width={40} height={40} />
+                            <div className="relative rounded-full shadow-lg flex items-center justify-center w-10 h-10 overflow-hidden">
+                                <Image src="https://i.ibb.co/Z1WdFS28/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" layout="fill" objectFit="cover" />
                             </div>
                         </Link>
                     </div>
@@ -166,10 +166,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 <div className="flex flex-col items-center">
                     <Button
                         onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
-                        className="bg-transparent text-white rounded-full w-12 h-12 shadow-lg hover:bg-transparent transition-transform duration-300 flex items-center justify-center p-0"
+                        className="bg-transparent text-white rounded-full w-10 h-10 shadow-lg hover:bg-transparent transition-transform duration-300 flex items-center justify-center p-0"
                         aria-label="Toggle contact menu"
                     >
-                        {isFabMenuOpen ? <X className="h-6 w-6 text-slate-700" /> : <Image src="https://i.ibb.co/8ZyBd6d/contact-us.png" alt="Contact Us" width={48} height={48} />}
+                        {isFabMenuOpen ? <X className="h-5 w-5 text-slate-700" /> : <Image src="https://i.ibb.co/8ZyBd6d/contact-us.png" alt="Contact Us" width={40} height={40} />}
                     </Button>
                     {!isFabMenuOpen && <span className="text-xs font-medium text-slate-700 mt-1">Contact</span>}
                 </div>
@@ -178,3 +178,5 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+
+    
