@@ -147,7 +147,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                         className="bg-purple-600 text-white rounded-full p-2.5 shadow-lg hover:bg-purple-700 flex items-center justify-center w-10 h-10"
                         aria-label="Help with AI"
                     >
-                        <Image src="https://i.ibb.co/VYXGRgSc/IMG-20251016-080138.png" alt="AI Help" width={20} height={20} />
+                        <Image src="https://i.ibb.co/VYXGRgSc/IMG-20251016-080138.png" alt="AI Help" width={24} height={24} />
                     </Link>
                     <Link 
                         href="mailto:abhayrat603@gmail.com"
@@ -156,7 +156,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                         className="bg-primary text-primary-foreground rounded-full p-2.5 shadow-lg hover:bg-primary/90 flex items-center justify-center w-10 h-10"
                         aria-label="Send an email"
                     >
-                        <Image src="https://i.ibb.co/WNxMRJ2v/vecteezy-gmail-png-icon-16716465.png" alt="Email" width={20} height={20} />
+                        <Image src="https://i.ibb.co/WNxMRJ2v/vecteezy-gmail-png-icon-16716465.png" alt="Email" width={24} height={24} />
                     </Link>
                     <Link 
                         href="https://wa.me/918463062603"
@@ -165,7 +165,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                         className="bg-green-500 text-white rounded-full p-2.5 shadow-lg hover:bg-green-600 flex items-center justify-center w-10 h-10"
                         aria-label="Chat on WhatsApp"
                     >
-                        <Image src="https://i.ibb.co/Z1WdFS28/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" width={20} height={20} />
+                        <Image src="https://i.ibb.co/Z1WdFS28/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" width={24} height={24} />
                     </Link>
                 </div>
             )}
