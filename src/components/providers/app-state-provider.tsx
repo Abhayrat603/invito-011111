@@ -34,11 +34,11 @@ interface AppStateContextType {
   
   addOrder: (order: Order) => void;
 
-  addProduct: (product: Omit<Product, 'id' | 'slug' | 'createdAt'>) => void;
+  addProduct: (product: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'>) => void;
   updateProduct: (productId: string, productData: Partial<Product>) => void;
   deleteProduct: (productId: string) => void;
 
-  addDeal: (deal: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating'>) => void;
+  addDeal: (deal: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images'>) => void;
   updateDeal: (dealId: string, dealData: Partial<DealProduct>) => void;
   deleteDeal: (dealId: string) => void;
   updateDealStockOnOrder: (cartProducts: any[]) => void;
@@ -175,10 +175,13 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         return prevCart;
       }
 
+      const allItems = [...products, ...deals];
+      const product = allItems.find(p => p.id === productId);
+
       if (existingItem) {
         toast({
             title: "Added to Cart",
-            description: `${quantity} x ${productId} has been added to your cart.`
+            description: `${quantity} x ${product?.name || 'item'} has been added to your cart.`
         });
         return prevCart.map(item =>
           item.productId === productId
@@ -188,7 +191,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       }
       toast({
           title: "Added to Cart",
-          description: `${quantity} x ${productId} has been added to your cart.`
+          description: `${quantity} x ${product?.name || 'item'} has been added to your cart.`
       });
       return [...prevCart, { productId, quantity }];
     });
@@ -259,7 +262,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     return wishlist.some(item => item.productId === productId);
   };
 
-  const addProduct = (productData: Omit<Product, 'id' | 'slug' | 'createdAt'>) => {
+  const addProduct = (productData: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'>) => {
     const newProduct: Product = {
       ...productData,
       id: `prod${Date.now()}`,
@@ -271,14 +274,23 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   };
 
   const updateProduct = (productId: string, productData: Partial<Product>) => {
-    setProducts(prev => prev.map(p => p.id === productId ? { ...p, ...productData, slug: productData.name ? productData.name.toLowerCase().replace(/\s+/g, '-') : p.slug } : p));
+    setProducts(prev => prev.map(p => {
+        if (p.id === productId) {
+            const updatedProduct = { ...p, ...productData };
+            if (productData.name) {
+                updatedProduct.slug = productData.name.toLowerCase().replace(/\s+/g, '-');
+            }
+            return updatedProduct;
+        }
+        return p;
+    }));
   };
   
   const deleteProduct = (productId: string) => {
     setProducts(prev => prev.filter(p => p.id !== productId));
   };
 
-  const addDeal = (dealData: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating'>) => {
+  const addDeal = (dealData: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images'>) => {
     const newDeal: DealProduct = {
       ...dealData,
       id: `deal${Date.now()}`,
@@ -292,7 +304,16 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   };
 
   const updateDeal = (dealId: string, dealData: Partial<DealProduct>) => {
-    setDeals(prev => prev.map(d => d.id === dealId ? { ...d, ...dealData, slug: dealData.name ? dealData.name.toLowerCase().replace(/\s+/g, '-') : d.slug } : d));
+    setDeals(prev => prev.map(d => {
+        if (d.id === dealId) {
+            const updatedDeal = { ...d, ...dealData };
+            if (dealData.name) {
+                updatedDeal.slug = dealData.name.toLowerCase().replace(/\s+/g, '-');
+            }
+            return updatedDeal;
+        }
+        return d;
+    }));
   };
 
   const deleteDeal = (dealId: string) => {
