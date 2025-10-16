@@ -7,13 +7,16 @@ import { useAppState } from "@/components/providers/app-state-provider";
 import { ProductCard } from "@/components/product-card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { Product, DealProduct } from "@/lib/types";
 
 export default function WishlistPage() {
-    const { wishlist, products } = useAppState();
+    const { wishlist, products, deals } = useAppState();
+
+    const allItems: (Product | DealProduct)[] = [...products, ...deals];
 
     const wishlistProducts = wishlist.map(wishlistItem => {
-        return products.find(p => p.id === wishlistItem.productId);
-    }).filter(p => p !== undefined);
+        return allItems.find(p => p.id === wishlistItem.productId);
+    }).filter((p): p is Product => p !== undefined);
 
   return (
     <AuthRedirect to="/login" condition="is-not-auth">
