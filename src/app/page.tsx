@@ -16,7 +16,6 @@ import { useAppState } from "@/components/providers/app-state-provider";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Loader2 } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -30,11 +29,8 @@ import {
 } from "@/components/ui/carousel";
 import type { Product } from "@/lib/types";
 
-const findImage = (id: string) => {
-    return PlaceHolderImages.find(img => img.id === id);
-}
-
 const TestimonialCard = () => {
+    const { findImage } = useAppState();
     const testimonialImage = findImage('testimonial-alan');
     return (
         <Card className="bg-card shadow-lg border-border/50 rounded-2xl">
@@ -97,7 +93,7 @@ const PageFooter = () => (
 
 export default function EcommerceHomePage() {
   const { user, loading } = useAuth();
-  const { products, deals } = useAppState();
+  const { products, deals, findImage } = useAppState();
   const router = useRouter();
   
   const [searchQuery, setSearchQuery] = useState("");

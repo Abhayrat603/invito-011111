@@ -74,13 +74,23 @@ export default function AddProductPage() {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true);
-        addProduct(values);
-        toast({
-            title: "Product Added",
-            description: `"${values.name}" has been successfully created.`,
-        });
-        setIsSubmitting(false);
-        router.push("/admin/products");
+        try {
+          await addProduct(values);
+          toast({
+              title: "Product Added",
+              description: `"${values.name}" has been successfully created.`,
+          });
+          router.push("/admin/products");
+        } catch (error) {
+            console.error("Failed to add product:", error);
+            toast({
+                variant: "destructive",
+                title: "Failed to add product",
+                description: "There was a problem saving the product. Please try again.",
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (

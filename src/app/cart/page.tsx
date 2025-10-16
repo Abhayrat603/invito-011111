@@ -7,16 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Trash2, Plus, Minus } from "lucide-react";
 import { useAppState } from "@/components/providers/app-state-provider";
 import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Link from "next/link";
 import { Product, DealProduct as DealProductType } from "@/lib/types";
 
-const findImage = (id: string) => {
-  return PlaceHolderImages.find(img => img.id === id);
-};
-
 export default function CartPage() {
-    const { cart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, products, deals } = useAppState();
+    const { cart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, products, deals, findImage } = useAppState();
     
     const allItems: (Product | DealProductType)[] = [...products, ...deals];
 

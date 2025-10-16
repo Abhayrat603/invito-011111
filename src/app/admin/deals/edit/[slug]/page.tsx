@@ -27,11 +27,6 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useAppState } from "@/components/providers/app-state-provider";
 import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
-
-const findImage = (id: string) => {
-  return PlaceHolderImages.find(img => img.id === id);
-};
 
 const formSchema = z.object({
   name: z.string().min(3, { message: "Deal name must be at least 3 characters." }),
@@ -52,7 +47,7 @@ export default function EditDealPage() {
     const { slug } = params;
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { deals, updateDeal } = useAppState();
+    const { deals, updateDeal, findImage } = useAppState();
     const [deal, setDeal] = useState<DealProduct | undefined>(undefined);
     const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
 
@@ -82,47 +77,43 @@ export default function EditDealPage() {
                 stock: dealToEdit.stock,
                 sold: dealToEdit.sold,
                 rating: dealToEdit.rating,
-                offerEndsAt: new Date(dealToEdit.offerEndsAt),
+                offerEndsAt: new Date(dealToEdit.offerEndsAt as any),
                 imageUrl: currentImageUrl,
                 zipFileUrl: dealToEdit.zipFileUrl || '',
             });
             setImagePreview(currentImageUrl);
-        } else {
+        } else if (deals.length > 0) { // Only show not found if deals have loaded
             toast({
                 variant: "destructive",
                 title: "Deal not found",
             });
             router.push('/admin/deals');
         }
-    }, [slug, form, router, toast, deals]);
+    }, [slug, form, router, toast, deals, findImage]);
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         if (!deal) return;
         setIsSubmitting(true);
         
-        const imageId = `product-deal-${deal.id}`;
-        const existingImageIndex = PlaceHolderImages.findIndex(img => img.id === imageId);
-        if (existingImageIndex > -1) {
-            PlaceHolderImages[existingImageIndex].imageUrl = values.imageUrl;
-        } else {
-            PlaceHolderImages.push({
-                id: imageId,
-                description: values.name,
-                imageUrl: values.imageUrl,
-                imageHint: 'custom deal'
+        try {
+          await updateDeal(deal.id, {
+            ...values,
+          });
+          toast({
+              title: "Deal Updated",
+              description: `"${values.name}" has been successfully updated.`,
+          });
+          router.push("/admin/deals");
+        } catch (error) {
+           console.error("Failed to update deal:", error);
+            toast({
+                variant: "destructive",
+                title: "Failed to update deal",
+                description: "There was a problem saving your changes. Please try again.",
             });
+        } finally {
+            setIsSubmitting(false);
         }
-        
-        updateDeal(deal.id, {
-          ...values,
-          images: [imageId],
-        });
-        toast({
-            title: "Deal Updated",
-            description: `"${values.name}" has been successfully updated.`,
-        });
-        setIsSubmitting(false);
-        router.push("/admin/deals");
     };
     
     if (!deal) {

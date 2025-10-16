@@ -24,13 +24,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import type { Product } from "@/lib/types";
 import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useAppState } from "@/components/providers/app-state-provider";
 import { Switch } from "@/components/ui/switch";
-
-const findImage = (id: string) => {
-  return PlaceHolderImages.find(img => img.id === id);
-};
 
 const formSchema = z.object({
   name: z.string().min(3, { message: "Product name must be at least 3 characters." }),
@@ -49,7 +44,7 @@ export default function EditProductPage() {
     const { slug } = params;
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { products, updateProduct } = useAppState();
+    const { products, updateProduct, findImage } = useAppState();
     const [product, setProduct] = useState<Product | undefined>(undefined);
     const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
 
@@ -90,43 +85,38 @@ export default function EditProductPage() {
                 size: productToEdit.size || "",
             });
             setImagePreview(currentImageUrl);
-        } else {
+        } else if (products.length > 0) { // Only show not found if products have loaded
             toast({
                 variant: "destructive",
                 title: "Product not found",
             });
             router.push('/admin/products');
         }
-    }, [slug, form, router, toast, products]);
+    }, [slug, form, router, toast, products, findImage]);
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         if (!product) return;
         setIsSubmitting(true);
         
-        const imageId = `product-image-${product.id}`;
-        const existingImageIndex = PlaceHolderImages.findIndex(img => img.id === imageId);
-        if (existingImageIndex > -1) {
-            PlaceHolderImages[existingImageIndex].imageUrl = values.imageUrl;
-        } else {
-            PlaceHolderImages.push({
-                id: imageId,
-                description: values.name,
-                imageUrl: values.imageUrl,
-                imageHint: 'custom product'
-            })
+        try {
+            await updateProduct(product.id, {
+                ...values,
+            });
+            toast({
+                title: "Product Updated",
+                description: `"${values.name}" has been successfully updated.`,
+            });
+            router.push("/admin/products");
+        } catch (error) {
+            console.error("Failed to update product:", error);
+            toast({
+                variant: "destructive",
+                title: "Failed to update product",
+                description: "There was an error saving your changes. Please try again.",
+            });
+        } finally {
+            setIsSubmitting(false);
         }
-
-        updateProduct(product.id, {
-            ...values,
-            images: [imageId, product.images[1] || ''],
-        });
-        
-        toast({
-            title: "Product Updated",
-            description: `"${values.name}" has been successfully updated.`,
-        });
-        setIsSubmitting(false);
-        router.push("/admin/products");
     };
     
     if (!product) {

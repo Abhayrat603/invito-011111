@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useAppState } from "@/components/providers/app-state-provider";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useToast } from "@/hooks/use-toast";
 import {
   Table,
@@ -30,14 +29,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-const findImage = (id: string) => {
-  return PlaceHolderImages.find(img => img.id === id);
-};
-
 export default function AdminProductsPage() {
     const router = useRouter();
     const { toast } = useToast();
-    const { products, deleteProduct } = useAppState();
+    const { products, deleteProduct, findImage } = useAppState();
 
     const handleDelete = (productId: string, productName: string) => {
         deleteProduct(productId);

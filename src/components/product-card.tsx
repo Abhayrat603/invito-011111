@@ -6,17 +6,12 @@ import Link from "next/link";
 import { Heart, ShoppingCart } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
 import { useAppState } from "./providers/app-state-provider";
 import { useToast } from "@/hooks/use-toast";
 
-const findImage = (id: string) => {
-    return PlaceHolderImages.find(img => img.id === id);
-}
-
 export function ProductCard({ product }: { product: Product }) {
-    const { addToCart, toggleWishlist, isInWishlist } = useAppState();
+    const { addToCart, toggleWishlist, isInWishlist, findImage } = useAppState();
     const { toast } = useToast();
     
     const isLiked = isInWishlist(product.id);
@@ -35,10 +30,6 @@ export function ProductCard({ product }: { product: Product }) {
         e.stopPropagation();
         e.preventDefault();
         toggleWishlist(product.id);
-        toast({
-            title: isLiked ? "Removed from Wishlist" : "Added to Wishlist",
-            description: `${product.name} has been ${isLiked ? 'removed from' : 'added to'} your wishlist.`,
-        });
     };
 
     const productImage = findImage(product.images[0]);

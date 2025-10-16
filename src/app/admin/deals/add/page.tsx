@@ -69,13 +69,23 @@ export default function AddDealPage() {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true);
-        addDeal(values);
-        toast({
-            title: "Deal Added",
-            description: `"${values.name}" has been successfully created.`,
-        });
-        setIsSubmitting(false);
-        router.push("/admin/deals");
+        try {
+            await addDeal(values);
+            toast({
+                title: "Deal Added",
+                description: `"${values.name}" has been successfully created.`,
+            });
+            router.push("/admin/deals");
+        } catch (error) {
+            console.error("Failed to add deal:", error);
+            toast({
+                variant: "destructive",
+                title: "Failed to add deal",
+                description: "There was a problem saving the deal. Please try again.",
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (

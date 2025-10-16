@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { MainLayout } from '@/components/main-layout';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ChevronRight, Heart, Minus, Plus, Download, ShoppingCart } from 'lucide-react';
@@ -16,16 +15,12 @@ import { useToast } from '@/hooks/use-toast';
 import type { Product } from '@/lib/types';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
-const findImage = (id: string) => {
-  return PlaceHolderImages.find(img => img.id === id);
-};
-
 export default function ProductDetailPage() {
   const router = useRouter();
   const params = useParams();
   const { slug } = params;
 
-  const { products, addToCart, toggleWishlist, isInWishlist } = useAppState();
+  const { products, addToCart, toggleWishlist, isInWishlist, findImage } = useAppState();
   const { toast } = useToast();
 
   const product = products.find(p => p.slug === slug);
@@ -183,7 +178,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div>
                     <p className="font-semibold text-foreground">Dimension</p>
-                    <p className="text-muted-foreground">{product.size || "10x4"}</p>
+                    <p className="text-muted-foreground">{product.size || "10x4 inches"}</p>
                 </div>
                 <div className="col-span-2">
                     <p className="font-semibold text-foreground">Required Software</p>

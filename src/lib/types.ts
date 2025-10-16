@@ -102,3 +102,10 @@ export interface AppRating {
 export interface AppSettings {
   shareLink: string;
 }
+
+export interface ImagePlaceholder {
+  id: string;
+  description: string;
+  imageUrl: string;
+  imageHint: string;
+}

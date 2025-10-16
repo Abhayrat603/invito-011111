@@ -8,11 +8,6 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { useAppState } from './providers/app-state-provider';
 import type { DealProduct } from '@/lib/types';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-
-const findImage = (id: string) => {
-    return PlaceHolderImages.find(img => img.id === id);
-}
 
 interface Countdown {
     hours: number;
@@ -67,7 +62,7 @@ const CountdownTimer = ({ expiryDate }: { expiryDate: Date }) => {
 
 
 export function DealOfTheDayCard({ product }: { product: DealProduct }) {
-    const { addToCart } = useAppState();
+    const { addToCart, findImage } = useAppState();
     const { toast } = useToast();
     const [isClient, setIsClient] = useState(false);
 
@@ -75,7 +70,7 @@ export function DealOfTheDayCard({ product }: { product: DealProduct }) {
         setIsClient(true);
     }, []);
 
-    if (!isClient || new Date() > product.offerEndsAt) {
+    if (!isClient || new Date() > new Date(product.offerEndsAt as any)) {
         return null; // Don't render if the offer has expired or on server
     }
 
@@ -119,7 +114,7 @@ export function DealOfTheDayCard({ product }: { product: DealProduct }) {
                 </div>
                 <div className="text-center space-y-2 pt-2">
                     <p className="text-sm font-semibold text-foreground">HURRY UP! OFFER ENDS IN:</p>
-                    <CountdownTimer expiryDate={product.offerEndsAt} />
+                    <CountdownTimer expiryDate={new Date(product.offerEndsAt as any)} />
                 </div>
             </div>
         </div>

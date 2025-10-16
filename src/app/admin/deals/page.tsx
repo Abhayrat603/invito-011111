@@ -7,7 +7,6 @@ import { ArrowLeft, Plus, Edit, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useToast } from "@/hooks/use-toast";
 import { useAppState } from "@/components/providers/app-state-provider";
 import {
@@ -30,14 +29,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-const findImage = (id: string) => {
-  return PlaceHolderImages.find(img => img.id === id);
-};
-
 export default function AdminDealsPage() {
     const router = useRouter();
     const { toast } = useToast();
-    const { deals, deleteDeal } = useAppState();
+    const { deals, deleteDeal, findImage } = useAppState();
 
     const handleDelete = (dealId: string, dealName: string) => {
         deleteDeal(dealId);

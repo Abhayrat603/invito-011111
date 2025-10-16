@@ -2,9 +2,8 @@
 "use client";
 
 import React, { createContext, useContext, ReactNode, useCallback, useMemo } from 'react';
-import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser, AppRating, AppSettings } from '@/lib/types';
+import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser, AppRating, AppSettings, ImagePlaceholder } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useAuth } from './auth-provider';
 import { 
     addDoc,
@@ -17,7 +16,8 @@ import {
     Timestamp,
     where,
     query,
-    getDocs
+    getDocs,
+    setDoc
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useCollection } from '@/hooks/use-collection';
@@ -34,6 +34,7 @@ interface AppStateContextType {
   users: AppUser[];
   appRatings: AppRating[];
   appSettings: AppSettings;
+  images: ImagePlaceholder[];
   
   addToCart: (productId: string, quantity?: number, isDeal?: boolean) => void;
   removeFromCart: (productId: string) => void;
@@ -47,21 +48,22 @@ interface AppStateContextType {
   addOrder: (order: Omit<Order, 'id' | 'createdAt' | 'userId'>) => Promise<string>;
 
   addProduct: (product: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'> & { imageUrl: string }) => void;
-  updateProduct: (productId: string, productData: Partial<Product>) => void;
+  updateProduct: (productId: string, productData: Partial<Product> & { imageUrl?: string }) => void;
   deleteProduct: (productId: string) => void;
 
   addDeal: (deal: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images' | 'isPaid'> & { imageUrl: string }) => void;
-  updateDeal: (dealId: string, dealData: Partial<DealProduct>) => void;
+  updateDeal: (dealId: string, dealData: Partial<DealProduct> & { imageUrl?: string }) => void;
   deleteDeal: (dealId: string) => void;
   updateDealStockOnOrder: (cartProducts: any[]) => void;
 
   addEditRequest: (request: Omit<EditRequest, 'id' | 'status' | 'requestedAt' | 'updatedAt'>) => void;
   updateEditRequestStatus: (requestId: string, status: EditRequest['status']) => void;
 
-  addUser: (user: Omit<AppUser, 'id' | 'createdAt'> & {id: string}) => void;
+  addUser: (user: Omit<AppUser, 'createdAt'> & {id: string}) => void;
   addRating: (rating: Omit<AppRating, 'id' | 'createdAt' | 'userId' | 'userName'>) => void;
 
   updateShareLink: (newLink: string) => void;
+  findImage: (id: string) => ImagePlaceholder | undefined;
 }
 
 const AppStateContext = createContext<AppStateContextType | undefined>(undefined);
@@ -110,12 +112,16 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const { data: appSettingsData } = useDoc(appSettingsDoc);
   const appSettings: AppSettings = appSettingsData ? appSettingsData as AppSettings : initialAppSettings;
 
-  const cartCollection = useMemo(() => user ? collection(db, `users/${user.uid}/cart`) : null, [user]);
-  const { data: cartData } = useCollection(cartCollection);
+  const imagesQuery = useMemo(() => collection(db, 'images'), []);
+  const { data: imagesData } = useCollection(imagesQuery);
+  const images: ImagePlaceholder[] = imagesData as ImagePlaceholder[] || [];
+
+  const cartCollectionRef = useMemo(() => user ? collection(db, `users/${user.uid}/cart`) : null, [user]);
+  const { data: cartData } = useCollection(cartCollectionRef);
   const cart: CartItem[] = cartData as CartItem[] || [];
 
-  const wishlistCollection = useMemo(() => user ? collection(db, `users/${user.uid}/wishlist`) : null, [user]);
-  const { data: wishlistData } = useCollection(wishlistCollection);
+  const wishlistCollectionRef = useMemo(() => user ? collection(db, `users/${user.uid}/wishlist`) : null, [user]);
+  const { data: wishlistData } = useCollection(wishlistCollectionRef);
   const wishlist: WishlistItem[] = wishlistData ? convertTimestamps(wishlistData, ['addedAt']) as WishlistItem[] : [];
 
   const userOrdersQuery = useMemo(() => user ? query(collection(db, 'orders'), where('userId', '==', user.uid)) : null, [user]);
@@ -128,6 +134,9 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   
   const orders = user?.email === 'abhayrat603@gmail.com' ? allOrders : userOrders;
 
+  const findImage = useCallback((id: string) => {
+    return images.find(img => img.id === id);
+  }, [images]);
 
   const addToCart = useCallback(async (productId: string, quantity: number = 1, isDeal: boolean = false) => {
     if (!user) {
@@ -289,82 +298,115 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   const addProduct = useCallback(async (productData: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'> & { imageUrl: string }) => {
     const slug = productData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-    const newProduct = {
-      ...productData,
-      slug: slug,
-      createdAt: serverTimestamp(),
-      images: ['product-placeholder-1', 'product-placeholder-2'],
-    };
-    const docRef = await addDoc(collection(db, 'products'), newProduct);
+    const newProductRef = doc(collection(db, 'products'));
+    const imageId = `product-image-${newProductRef.id}`;
     
-    const imageId = `product-image-${docRef.id}`;
     const newImage = {
         id: imageId,
         description: productData.name,
         imageUrl: productData.imageUrl,
         imageHint: 'custom product'
     };
-    const imageExists = PlaceHolderImages.some(img => img.id === imageId);
-    if (!imageExists) {
-        PlaceHolderImages.push(newImage);
-    }
-    await updateDoc(docRef, { images: [imageId, 'product-placeholder-2'] });
+    await setDoc(doc(db, 'images', imageId), newImage);
 
+    const newProduct = {
+      ...productData,
+      id: newProductRef.id,
+      slug: slug,
+      createdAt: serverTimestamp(),
+      images: [imageId, 'product-placeholder-2'],
+    };
+    await setDoc(newProductRef, newProduct);
   }, []);
 
-  const updateProduct = useCallback(async (productId: string, productData: Partial<Omit<Product, 'id'>>) => {
+  const updateProduct = useCallback(async (productId: string, productData: Partial<Omit<Product, 'id'>> & { imageUrl?: string }) => {
     const productRef = doc(db, 'products', productId);
-    const updatedData: Partial<Product> = { ...productData };
+    const { imageUrl, ...restOfProductData } = productData;
+    const updatedData: Partial<Product> = { ...restOfProductData };
+    
     if (productData.name) {
         updatedData.slug = productData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     }
+
+    if (imageUrl) {
+        const imageId = `product-image-${productId}`;
+        const imageRef = doc(db, 'images', imageId);
+        const imagePayload = {
+            id: imageId,
+            description: productData.name || 'Product Image',
+            imageUrl: imageUrl,
+            imageHint: 'custom product'
+        }
+        await setDoc(imageRef, imagePayload, { merge: true });
+        updatedData.images = [imageId, 'product-placeholder-2'];
+    }
+
     await updateDoc(productRef, updatedData);
   }, []);
   
   const deleteProduct = useCallback(async (productId: string) => {
     await deleteDoc(doc(db, 'products', productId));
+    // Also delete the associated image
+    await deleteDoc(doc(db, 'images', `product-image-${productId}`));
   }, []);
 
   const addDeal = useCallback(async (dealData: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images' | 'isPaid'> & { imageUrl: string }) => {
+    const newDealRef = doc(collection(db, 'deals'));
+    const imageId = `product-deal-${newDealRef.id}`;
+    
+    const newImage = {
+        id: imageId,
+        description: dealData.name,
+        imageUrl: dealData.imageUrl,
+        imageHint: 'custom deal'
+    };
+    await setDoc(doc(db, 'images', imageId), newImage);
+
     const newDeal = {
         ...dealData,
+        id: newDealRef.id,
         slug: dealData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
         createdAt: serverTimestamp(),
         offerEndsAt: Timestamp.fromDate(new Date(dealData.offerEndsAt)),
-        images: [],
+        images: [imageId],
         sold: 0,
         rating: Math.random() * 2 + 3,
         isPaid: true,
     };
-    const docRef = await addDoc(collection(db, 'deals'), newDeal);
-    const imageId = `product-deal-${docRef.id}`;
-    const imageExists = PlaceHolderImages.some(img => img.id === imageId);
-    if (!imageExists) {
-        PlaceHolderImages.push({
-            id: imageId,
-            description: dealData.name,
-            imageUrl: dealData.imageUrl,
-            imageHint: 'custom deal'
-        });
-    }
-    await updateDoc(docRef, { images: [imageId] });
-
+    await setDoc(newDealRef, newDeal);
   }, []);
 
-  const updateDeal = useCallback(async (dealId: string, dealData: Partial<DealProduct>) => {
+  const updateDeal = useCallback(async (dealId: string, dealData: Partial<DealProduct> & { imageUrl?: string }) => {
     const dealRef = doc(db, 'deals', dealId);
-    const updatedData: Partial<DealProduct> = { ...dealData };
+    const { imageUrl, ...restOfDealData } = dealData;
+    const updatedData: Partial<DealProduct> = { ...restOfDealData };
+
      if (dealData.name) {
         updatedData.slug = dealData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     }
     if (dealData.offerEndsAt && !(dealData.offerEndsAt instanceof Timestamp)) {
         updatedData.offerEndsAt = Timestamp.fromDate(new Date(dealData.offerEndsAt));
     }
+
+    if (imageUrl) {
+        const imageId = `product-deal-${dealId}`;
+        const imageRef = doc(db, 'images', imageId);
+        const imagePayload = {
+            id: imageId,
+            description: dealData.name || 'Deal Image',
+            imageUrl: imageUrl,
+            imageHint: 'custom deal'
+        };
+        await setDoc(imageRef, imagePayload, { merge: true });
+        updatedData.images = [imageId];
+    }
+
     await updateDoc(dealRef, updatedData);
   }, []);
 
   const deleteDeal = useCallback(async (dealId: string) => {
     await deleteDoc(doc(db, 'deals', dealId));
+    await deleteDoc(doc(db, 'images', `product-deal-${dealId}`));
   }, []);
 
   const updateDealStockOnOrder = useCallback(async (cartProducts: any[]) => {
@@ -400,7 +442,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   const addUser = useCallback(async (user: Omit<AppUser, 'createdAt'> & {id: string}) => {
     const userRef = doc(db, 'users', user.id);
-    await updateDoc(userRef, {
+    await setDoc(userRef, {
         name: user.name,
         email: user.email,
         phone: user.phone,
@@ -421,7 +463,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   const updateShareLink = useCallback(async (newLink: string) => {
     const settingsRef = doc(db, 'settings', 'app');
-    await updateDoc(settingsRef, { shareLink: newLink }, { merge: true });
+    await setDoc(settingsRef, { shareLink: newLink }, { merge: true });
   }, []);
 
   const value = { 
@@ -429,6 +471,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     orders,
     products, deals, 
     editRequests, users, appRatings, appSettings,
+    images,
     addToCart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, clearCart, 
     toggleWishlist, isInWishlist, addOrder,
     addProduct, updateProduct, deleteProduct,
@@ -437,6 +480,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     addUser,
     addRating,
     updateShareLink,
+    findImage,
   };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;

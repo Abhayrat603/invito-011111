@@ -137,6 +137,17 @@
             "shareLink": { "type": "string" }
         },
         "required": ["shareLink"]
+    },
+    "ImagePlaceholder": {
+        "title": "ImagePlaceholder",
+        "description": "An image with metadata.",
+        "type": "object",
+        "properties": {
+            "description": { "type": "string" },
+            "imageUrl": { "type": "string" },
+            "imageHint": { "type": "string" }
+        },
+        "required": ["description", "imageUrl", "imageHint"]
     }
   },
   "firestore": {
@@ -175,6 +186,10 @@
     "/settings/app": {
         "schema": { "$ref": "#/entities/AppSettings" },
         "description": "General application settings."
+    },
+    "/images": {
+        "schema": { "$ref": "#/entities/ImagePlaceholder" },
+        "description": "Collection of all image placeholders."
     }
   },
   "auth": {
