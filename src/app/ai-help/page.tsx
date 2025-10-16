@@ -108,9 +108,7 @@ export default function AiHelpPage() {
                                     </div>
                                     {message.role === 'user' && (
                                         <Avatar className="h-9 w-9 border-2 border-border">
-                                            <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'User'} key={user?.photoURL}/>
                                             <AvatarFallback><User/></AvatarFallback>
-
                                         </Avatar>
                                     )}
                                 </div>
