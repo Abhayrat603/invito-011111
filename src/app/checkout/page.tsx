@@ -6,7 +6,7 @@ import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppState } from "@/components/providers/app-state-provider";
 import { useAuth } from "@/components/providers/auth-provider";
 import { Product, DealProduct as DealProductType, Order } from "@/lib/types";
@@ -19,6 +19,13 @@ declare global {
     }
 }
 
+const loadRazorpayScript = () => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+};
+
 export default function CheckoutPage() {
     const router = useRouter();
     const { toast } = useToast();
@@ -26,6 +33,10 @@ export default function CheckoutPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { cart, addOrder, clearCart, products, deals, updateDealStockOnOrder } = useAppState();
     
+    useEffect(() => {
+        loadRazorpayScript();
+    }, []);
+
     const allItems: (Product | DealProductType)[] = [...products, ...deals];
 
     const cartProducts = cart.map(cartItem => {
@@ -42,6 +53,18 @@ export default function CheckoutPage() {
     const handlePayment = async () => {
         setIsSubmitting(true);
 
+        const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+
+        if (!razorpayKey || razorpayKey === 'rzp_test_12345678901234') {
+             toast({
+                variant: "destructive",
+                title: "Razorpay Not Configured",
+                description: "Please add a valid Razorpay test key to your .env file."
+            });
+            setIsSubmitting(false);
+            return;
+        }
+
         if (!user) {
             toast({
                 variant: "destructive",
@@ -51,9 +74,19 @@ export default function CheckoutPage() {
             setIsSubmitting(false);
             return;
         }
+        
+        if (typeof window.Razorpay === 'undefined') {
+            toast({
+                variant: "destructive",
+                title: "Payment Gateway Error",
+                description: "Razorpay script did not load. Please check your connection and try again."
+            });
+            setIsSubmitting(false);
+            return;
+        }
 
         const razorpayOptions = {
-            key: "rzp_test_YourKeyId", 
+            key: razorpayKey, 
             amount: total * 100, 
             currency: "INR",
             name: "Invite Designer",
@@ -109,7 +142,6 @@ export default function CheckoutPage() {
             modal: {
                 ondismiss: function() {
                     // This function is called when the user closes the payment window.
-                    // We consider this a failed/cancelled payment.
                     toast({
                         variant: "destructive",
                         title: "Payment Cancelled",
@@ -123,7 +155,6 @@ export default function CheckoutPage() {
         const razorpayInstance = new window.Razorpay(razorpayOptions);
         
         razorpayInstance.on('payment.failed', function (response: any) {
-            // This function is called when the payment fails.
             toast({
                 variant: "destructive",
                 title: "Payment Failed",

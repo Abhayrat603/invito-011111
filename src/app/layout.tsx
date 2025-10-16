@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/components/providers/auth-provider";
@@ -32,10 +31,6 @@ export default function RootLayout({
             </AppStateProvider>
           </AuthProvider>
         </FirebaseClientProvider>
-        <Script
-          id="razorpay-checkout-js"
-          src="https://checkout.razorpay.com/v1/checkout.js"
-        />
       </body>
     </html>
   );
