@@ -154,8 +154,8 @@ export default function EcommerceHomePage() {
                             </CarouselItem>
                           ))}
                         </CarouselContent>
-                        <CarouselPrevious className="h-8 w-8 left-2 bg-background/50 hover:bg-background/80" />
-                        <CarouselNext className="h-8 w-8 right-2 bg-background/50 hover:bg-background/80" />
+                        <CarouselPrevious className="h-8 w-8 left-1 bg-background/50 hover:bg-background/80" />
+                        <CarouselNext className="h-8 w-8 right-1 bg-background/50 hover:bg-background/80" />
                       </Carousel>
                   </section>
                   
@@ -196,35 +196,6 @@ export default function EcommerceHomePage() {
                       </ScrollArea>
                   </section>
                   
-                  <section className="px-4">
-                      <h2 className="text-2xl font-headline text-primary text-left mb-6">New Arrivals</h2>
-                      {displayedProducts.length > 0 ? (
-                          <>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                  {displayedProducts.map((product, index) => (
-                                  <ProductCard key={product.id} product={product} onSale={index % 2 === 0} />
-                                  ))}
-                              </div>
-
-                              {totalPages > 1 && (
-                                <div className="flex justify-center items-center mt-4 gap-4">
-                                    <Button variant="outline" onClick={() => setCurrentPage(p => Math.max(0, p - 1))} disabled={currentPage === 0}>
-                                        <ChevronLeft className="mr-2 h-4 w-4" /> Previous
-                                    </Button>
-                                    <Button variant="outline" onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))} disabled={currentPage === totalPages - 1}>
-                                        Next <ChevronRight className="ml-2 h-4 w-4" />
-                                    </Button>
-                                </div>
-                              )}
-                          </>
-                      ) : (
-                          <div className="text-center py-10">
-                              <p className="text-lg text-muted-foreground">{selectedCategory ? `No results found in ${selectedCategory}` : 'No results found.'}</p>
-                              <Button variant="link" onClick={() => { setSearchQuery(''); setSelectedCategory(null); }}>Clear filters</Button>
-                          </div>
-                      )}
-                  </section>
-
                   <section className="px-4 mt-8 space-y-6">
                     <h2 className="text-2xl font-headline text-primary text-left mb-6">Testimonial</h2>
                     <TestimonialCard />
