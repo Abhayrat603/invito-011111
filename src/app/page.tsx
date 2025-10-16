@@ -62,7 +62,7 @@ export default function EcommerceHomePage() {
   const [filteredProducts, setFilteredProducts] = useState(products);
 
   const [currentPage, setCurrentPage] = useState(0);
-  const productsPerPage = 4;
+  const productsPerPage = 10;
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const scrollViewportRef = useRef<HTMLDivElement>(null);

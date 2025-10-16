@@ -1,3 +1,4 @@
+
 "use client";
 
 import { AuthRedirect } from "@/components/auth-redirect";
@@ -5,7 +6,7 @@ import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/providers/auth-provider";
 import Image from "next/image";
-import { HelpCircle, LogOut, ChevronRight, Camera, Pencil, Shield, FileText, Info, Mail, UserCog, Sparkles, History, Edit, Download } from "lucide-react";
+import { HelpCircle, LogOut, ChevronRight, Camera, Pencil, Shield, FileText, Info, Mail, UserCog, Sparkles, History, Edit, Download, Share2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import React, { useRef, useState, useCallback } from "react";
@@ -87,6 +88,35 @@ export default function ProfilePage() {
         }
     }, [imageToCrop, updateUserProfilePicture, toast]);
 
+    const handleShare = async () => {
+      const shareData = {
+        title: "Invite Designer",
+        text: "Create and customize beautiful invitation cards for every occasion!",
+        url: window.location.origin,
+      };
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+          toast({
+            title: "Shared successfully!",
+          });
+        } else {
+          // Fallback for browsers that don't support Web Share API
+          await navigator.clipboard.writeText(shareData.url);
+          toast({
+            title: "Link Copied!",
+            description: "The website link has been copied to your clipboard.",
+          });
+        }
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Could not share",
+          description: "An error occurred while trying to share.",
+        });
+      }
+    };
+
     const isAdmin = user?.email === 'abhayrat603@gmail.com';
 
 
@@ -150,6 +180,9 @@ export default function ProfilePage() {
                     </div>
                     <div className="mb-2">
                         <ProfileMenuItem icon={HelpCircle} text="Help Center" href="/help-center" />
+                    </div>
+                    <div className="mb-2">
+                        <ProfileMenuItem icon={Share2} text="Share App" onClick={handleShare} />
                     </div>
                     
                     <div className="pt-3">

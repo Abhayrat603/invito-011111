@@ -121,6 +121,126 @@
       "imageHint": "wood background"
     },
     {
+      "id": "product-golden-anniv-1",
+      "description": "Luxurious golden jubilee anniversary invitation",
+      "imageUrl": "https://picsum.photos/seed/ganniv1/500/500",
+      "imageHint": "gold anniversary"
+    },
+    {
+      "id": "product-golden-anniv-2",
+      "description": "Detail of golden jubilee anniversary invitation",
+      "imageUrl": "https://picsum.photos/seed/ganniv2/500/500",
+      "imageHint": "luxury pattern"
+    },
+    {
+      "id": "product-sweet-16-1",
+      "description": "Glamorous sweet sixteen party invitation",
+      "imageUrl": "https://picsum.photos/seed/sweet16-1/500/500",
+      "imageHint": "sweet sixteen"
+    },
+    {
+      "id": "product-sweet-16-2",
+      "description": "Sparkly details of sweet sixteen invitation",
+      "imageUrl": "https://picsum.photos/seed/sweet16-2/500/500",
+      "imageHint": "pink glitter"
+    },
+    {
+      "id": "product-garden-party-1",
+      "description": "Elegant floral garden party invitation",
+      "imageUrl": "https://picsum.photos/seed/garden1/500/500",
+      "imageHint": "garden party"
+    },
+    {
+      "id": "product-garden-party-2",
+      "description": "Close up of floral illustration for garden party",
+      "imageUrl": "https://picsum.photos/seed/garden2/500/500",
+      "imageHint": "floral illustration"
+    },
+    {
+      "id": "product-vintage-eng-1",
+      "description": "Vintage style engagement announcement card",
+      "imageUrl": "https://picsum.photos/seed/vinteng1/500/500",
+      "imageHint": "vintage engagement"
+    },
+    {
+      "id": "product-vintage-eng-2",
+      "description": "Lace and script detail of vintage engagement card",
+      "imageUrl": "https://picsum.photos/seed/vinteng2/500/500",
+      "imageHint": "lace script"
+    },
+    {
+      "id": "product-housewarming-1",
+      "description": "Minimalist housewarming party invitation",
+      "imageUrl": "https://picsum.photos/seed/housew1/500/500",
+      "imageHint": "minimalist house"
+    },
+    {
+      "id": "product-housewarming-2",
+      "description": "Geometric pattern on back of housewarming invite",
+      "imageUrl": "https://picsum.photos/seed/housew2/500/500",
+      "imageHint": "geometric pattern"
+    },
+    {
+      "id": "product-baby-shower-1",
+      "description": "Soft watercolor baby shower invitation",
+      "imageUrl": "https://picsum.photos/seed/baby1/500/500",
+      "imageHint": "watercolor animals"
+    },
+    {
+      "id": "product-baby-shower-2",
+      "description": "Pastel watercolor background for baby shower invite",
+      "imageUrl": "https://picsum.photos/seed/baby2/500/500",
+      "imageHint": "pastel watercolor"
+    },
+    {
+      "id": "product-grad-1",
+      "description": "Formal PhD graduation announcement",
+      "imageUrl": "https://picsum.photos/seed/grad1/500/500",
+      "imageHint": "university crest"
+    },
+    {
+      "id": "product-grad-2",
+      "description": "Linen texture detail of graduation announcement",
+      "imageUrl": "https://picsum.photos/seed/grad2/500/500",
+      "imageHint": "linen texture"
+    },
+    {
+      "id": "product-save-date-1",
+      "description": "Modern digital save-the-date card",
+      "imageUrl": "https://picsum.photos/seed/savedate1/500/500",
+      "imageHint": "modern typography"
+    },
+    {
+      "id": "product-save-date-2",
+      "description": "Abstract background for digital save-the-date",
+      "imageUrl": "https://picsum.photos/seed/savedate2/500/500",
+      "imageHint": "abstract background"
+    },
+    {
+      "id": "product-holiday-1",
+      "description": "Festive holiday party invitation",
+      "imageUrl": "https://picsum.photos/seed/holiday1/500/500",
+      "imageHint": "holiday party"
+    },
+    {
+      "id": "product-holiday-2",
+      "description": "Snowflake pattern for holiday party invite",
+      "imageUrl": "https://picsum.photos/seed/holiday2/500/500",
+      "imageHint": "snowflake pattern"
+    },
+    {
+      "id": "product-launch-1",
+      "description": "Sleek e-invite for a product launch event",
+      "imageUrl": "https://picsum.photos/seed/launch1/500/500",
+      "imageHint": "product launch"
+    },
+    {
+      "id": "product-launch-2",
+      "description": "Tech-themed background for product launch e-invite",
+      "imageUrl": "https://picsum.photos/seed/launch2/500/500",
+      "imageHint": "tech background"
+    },
+    {
       "id": "hero",
       "description": "Artist designing an invitation card on a tablet",
       "imageUrl": "https://picsum.photos/seed/hero-invite/1800/1200",
