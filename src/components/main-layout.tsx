@@ -140,33 +140,26 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         </nav>
       </Sheet>
         {pathname === '/' && (
-            <div className="fixed bottom-24 right-5 z-30 flex flex-col items-center gap-3">
+            <div className="fixed bottom-24 right-5 z-30 flex flex-col items-end gap-3">
                 {isFabMenuOpen && (
-                    <div className="flex flex-col items-center gap-3 transition-all duration-300">
-                        <Link
-                            href="/ai-help"
-                            className="rounded-full shadow-lg flex items-center justify-center w-10 h-10"
-                            aria-label="Help with AI"
-                        >
-                            <Image src="https://i.ibb.co/VYXGRgSc/IMG-20251016-080138.png" alt="AI Help" width={40} height={40} />
+                    <div className="flex flex-col items-end gap-4 transition-all duration-300">
+                        <Link href="/ai-help" className="flex items-center gap-3" aria-label="Help with AI">
+                            <span className="bg-background text-foreground text-sm font-medium px-3 py-1 rounded-full shadow-lg">Help with AI</span>
+                            <div className="rounded-full shadow-lg flex items-center justify-center w-10 h-10">
+                                <Image src="https://i.ibb.co/VYXGRgSc/IMG-20251016-080138.png" alt="AI Help" width={40} height={40} />
+                            </div>
                         </Link>
-                        <Link
-                            href="mailto:abhayrat603@gmail.com"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-full shadow-lg flex items-center justify-center w-10 h-10"
-                            aria-label="Send an email"
-                        >
-                            <Image src="https://i.ibb.co/WNxMRJ2v/vecteezy-gmail-png-icon-16716465.png" alt="Email" width={40} height={40} />
+                        <Link href="mailto:abhayrat603@gmail.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3" aria-label="Send an email">
+                           <span className="bg-background text-foreground text-sm font-medium px-3 py-1 rounded-full shadow-lg">Email</span>
+                            <div className="rounded-full shadow-lg flex items-center justify-center w-10 h-10">
+                                <Image src="https://i.ibb.co/WNxMRJ2v/vecteezy-gmail-png-icon-16716465.png" alt="Email" width={40} height={40} />
+                            </div>
                         </Link>
-                        <Link
-                            href="https://wa.me/918463062603"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-full shadow-lg flex items-center justify-center w-10 h-10"
-                            aria-label="Chat on WhatsApp"
-                        >
-                            <Image src="https://i.ibb.co/CshBY6P/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" width={40} height={40} />
+                        <Link href="https://wa.me/918463062603" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3" aria-label="Chat on WhatsApp">
+                            <span className="bg-background text-foreground text-sm font-medium px-3 py-1 rounded-full shadow-lg">WhatsApp</span>
+                            <div className="rounded-full shadow-lg flex items-center justify-center w-10 h-10">
+                                <Image src="https://i.ibb.co/CshBY6P/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" width={40} height={40} />
+                            </div>
                         </Link>
                     </div>
                 )}
