@@ -5,10 +5,9 @@ import * as React from 'react';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendEmailVerification, sendPasswordResetEmail, updateProfile, type User, updateEmail, updatePassword, reload } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { app, storage } from '@/lib/firebase';
+import { app } from '@/lib/firebase';
 import { createSessionCookie, clearSessionCookie } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 interface AuthContextType {
   user: User | null;
@@ -22,7 +21,6 @@ interface AuthContextType {
   updateUserEmail: (email: string) => Promise<void>;
   updateUserPassword: (password: string) => Promise<void>;
   updateUserPhoneNumber: (phoneNumber: string) => Promise<void>;
-  updateUserProfilePicture: (image: Blob) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -121,23 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await new Promise(resolve => setTimeout(resolve, 1000));
   };
 
-  const updateUserProfilePicture = async (image: Blob) => {
-    const currentUser = auth.currentUser;
-    if (!currentUser) {
-      throw new Error("No user is signed in to upload a profile picture.");
-    }
-
-    const filePath = `profile-pictures/${currentUser.uid}/${new Date().getTime()}`;
-    const storageRef = ref(storage, filePath);
-
-    const snapshot = await uploadBytes(storageRef, image);
-    const downloadURL = await getDownloadURL(snapshot.ref);
-
-    await updateUserProfile({ photoURL: downloadURL });
-  };
-
-
-  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset, updateUserProfile, updateUserEmail, updateUserPassword, updateUserPhoneNumber, updateUserProfilePicture };
+  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset, updateUserProfile, updateUserEmail, updateUserPassword, updateUserPhoneNumber };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
