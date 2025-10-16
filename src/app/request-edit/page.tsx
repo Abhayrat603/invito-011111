@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -26,6 +27,9 @@ import { useAuth } from "@/components/providers/auth-provider";
 import { AuthRedirect } from "@/components/auth-redirect";
 
 const formSchema = z.object({
+  name: z.string().min(2, { message: "Name is required." }),
+  email: z.string().email({ message: "A valid email is required." }),
+  phone: z.string().length(10, { message: "Please enter a valid 10-digit phone number." }),
   productId: z.string({ required_error: "Please select a product to edit." }),
   requestDetails: z.string().min(10, { message: "Details must be at least 10 characters." }).max(500, { message: "Details cannot exceed 500 characters." }),
   turnaroundTime: z.enum(['Urgent', '1 Day', '2 Days'], { required_error: "Please select a turnaround time." }),
@@ -35,21 +39,34 @@ export default function RequestEditPage() {
     const router = useRouter();
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { orders, products, addEditRequest } = useAppState();
+    const { products, addEditRequest } = useAppState();
     const { user } = useAuth();
     
-    const purchasedProductIds = new Set(orders.flatMap(order => order.items.map(item => item.productId)));
-    const purchasedProducts = products.filter(product => purchasedProductIds.has(product.id));
-
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            name: user?.displayName || "",
+            email: user?.email || "",
+            phone: user?.phoneNumber?.slice(-10) || "",
             requestDetails: "",
         },
     });
 
+     useEffect(() => {
+        if (user) {
+            form.reset({
+                name: user.displayName || "",
+                email: user.email || "",
+                phone: user.phoneNumber?.slice(-10) || "",
+                productId: form.getValues('productId'),
+                requestDetails: form.getValues('requestDetails'),
+                turnaroundTime: form.getValues('turnaroundTime'),
+            });
+        }
+    }, [user, form]);
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        if (!user || !user.email || !user.displayName) {
+        if (!user) {
             toast({
                 variant: "destructive",
                 title: "Authentication Error",
@@ -69,8 +86,8 @@ export default function RequestEditPage() {
 
         addEditRequest({
             userId: user.uid,
-            userName: user.displayName,
-            userEmail: user.email,
+            userName: values.name,
+            userEmail: values.email,
             productId: values.productId,
             productName: product.name,
             requestDetails: values.requestDetails,
@@ -94,24 +111,57 @@ export default function RequestEditPage() {
                     <main className="flex-grow p-4">
                         <div className="text-center mb-6">
                             <h1 className="text-2xl font-bold">Request a Custom Edit</h1>
-                            <p className="text-muted-foreground">Select a purchased product and tell us what you'd like to change.</p>
+                            <p className="text-muted-foreground">Select a product and tell us what you'd like to change.</p>
                         </div>
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                                 <FormField
+                                    control={form.control}
+                                    name="name"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Full Name</FormLabel>
+                                            <FormControl><Input placeholder="Enter your full name" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Email Address</FormLabel>
+                                            <FormControl><Input type="email" placeholder="Enter your email" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                 <FormField
+                                    control={form.control}
+                                    name="phone"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Phone Number</FormLabel>
+                                            <FormControl><Input type="tel" placeholder="Enter your 10-digit phone number" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                                 <FormField
                                     control={form.control}
                                     name="productId"
                                     render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Product to Edit</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={purchasedProducts.length === 0}>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={products.length === 0}>
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder={purchasedProducts.length > 0 ? "Select a purchased product" : "You have no purchased products"} />
+                                                    <SelectValue placeholder={products.length > 0 ? "Select a product" : "No products available"} />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {purchasedProducts.map(product => (
+                                                {products.map(product => (
                                                     <SelectItem key={product.id} value={product.id}>
                                                         {product.name}
                                                     </SelectItem>
