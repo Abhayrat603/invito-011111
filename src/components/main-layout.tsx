@@ -141,7 +141,7 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
             </div>
         </div>
       )}
-      <main ref={mainContentRef} className="flex-grow pb-16 overflow-y-auto">
+      <main ref={mainContentRef} className="flex-grow pb-16 overflow-y-auto" data-main-layout-scroll>
         {children}
       </main>
 

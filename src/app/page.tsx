@@ -108,7 +108,16 @@ export default function EcommerceHomePage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const scrollViewportRef = useRef<HTMLDivElement>(null);
+  const mainContentRef = useRef<HTMLElement | null>(null);
   
+  useEffect(() => {
+    // Assign the ref from the MainLayout to our local ref
+    const mainElement = document.querySelector('main[data-main-layout-scroll]');
+    if (mainElement) {
+        mainContentRef.current = mainElement as HTMLElement;
+    }
+  }, []);
+
   useEffect(() => {
     if (!loading && user && !user.emailVerified) {
       router.replace('/verify-email');
@@ -134,6 +143,13 @@ export default function EcommerceHomePage() {
     setFilteredProducts(results);
     setCurrentPage(0);
   }, [searchQuery, selectedCategory, products]);
+  
+  useEffect(() => {
+      if (mainContentRef.current) {
+          mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+  }, [currentPage]);
+
 
   const handleCategorySelect = (categoryName: string | null) => {
     setSelectedCategory(prev => prev === categoryName ? null : categoryName);
@@ -154,7 +170,7 @@ export default function EcommerceHomePage() {
     <MainLayout onSearch={handleSearch}>
       <AuthRedirect to="/login" condition="is-not-auth">
         <div className="bg-background text-foreground">
-             <main className="pb-4">
+             <div className="pb-4">
                   <section className="px-4 my-6">
                     <h2 className="text-2xl font-headline font-bold text-primary text-left mb-2">Deal of the Day</h2>
                      <Carousel
@@ -250,7 +266,7 @@ export default function EcommerceHomePage() {
                     <TestimonialCard />
                   </section>
                   
-              </main>
+              </div>
               <PageFooter />
           </div>
       </AuthRedirect>
