@@ -92,15 +92,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 </div>
 
                 <div className="border-t border-amber-900/20 pt-6">
-                     <div className="flex justify-center items-center gap-4 mb-4">
-                        <h3 className="font-bold">FOLLOW US</h3>
-                        <div className="flex space-x-4">
-                            <a href="#" className="text-amber-950/70 hover:text-amber-950"><Facebook /></a>
-                            <a href="#" className="text-amber-950/70 hover:text-amber-950"><Instagram /></a>
-                            <a href="#" className="text-amber-950/70 hover:text-amber-950"><Twitter /></a>
-                            <a href="#" className="text-amber-950/70 hover:text-amber-950"><Linkedin /></a>
-                        </div>
-                    </div>
                     <p className="text-center text-xs text-amber-950/60">Copyright &copy; Invite Designer All Rights Reserved.</p>
                 </div>
             </footer>
