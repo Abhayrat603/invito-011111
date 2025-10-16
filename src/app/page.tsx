@@ -45,28 +45,6 @@ const TestimonialCard = () => {
     );
 };
 
-const SummerCollectionCard = () => {
-    const collectionImage = findImage('summer-collection-banner');
-    return (
-        <div className="relative bg-secondary/30 rounded-2xl overflow-hidden p-6 shadow-lg border border-border/50">
-             <div 
-                className="absolute inset-0 bg-cover bg-center opacity-20"
-                style={{ backgroundImage: `url(${collectionImage?.imageUrl})`}}
-                data-ai-hint="summer dress"
-             ></div>
-             <div className="absolute top-10 left-10 w-40 h-40 bg-primary/10 rounded-full filter blur-xl opacity-50"></div>
-             <div className="absolute bottom-10 right-10 w-40 h-40 bg-accent/10 rounded-full filter blur-xl opacity-50"></div>
-
-            <div className="relative z-10 text-center flex flex-col items-center justify-center h-full">
-                <h3 className="text-4xl font-headline text-foreground mb-2">Summer Collection</h3>
-                <p className="text-muted-foreground mb-4">Starting @ ₹800</p>
-                <Button variant="default" size="lg" className="rounded-full shadow-lg">SHOP NOW</Button>
-            </div>
-        </div>
-    );
-};
-
-
 export default function EcommerceHomePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -236,7 +214,7 @@ export default function EcommerceHomePage() {
                   </section>
                   
                   <section className="px-4">
-                      <h2 className="text-2xl font-headline text-primary text-center mb-6">New Arrivals</h2>
+                      <h2 className="text-2xl font-headline text-primary mb-6">New Arrivals</h2>
                       {displayedProducts.length > 0 ? (
                           <>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -298,9 +276,6 @@ export default function EcommerceHomePage() {
                     <TestimonialCard />
                   </section>
                   
-                  <section className="px-4 mt-8">
-                    <SummerCollectionCard />
-                  </section>
               </main>
           </div>
       </AuthRedirect>
