@@ -191,7 +191,7 @@ export default function EcommerceHomePage() {
                         <ScrollBar orientation="horizontal" />
                      </ScrollArea>
                   </section>
-                  <h2 className="text-2xl font-headline text-primary text-left mt-6 mb-6 px-4">Trending Invitation Card</h2>
+                  <h2 className="text-2xl font-headline text-primary text-left mt-6 mb-2 px-4">Trending Invitation Card</h2>
                   <section className="mb-4">
                       <ScrollArea className="w-full whitespace-nowrap" viewportRef={scrollViewportRef}>
                         <div className="flex w-max space-x-2 p-4">
