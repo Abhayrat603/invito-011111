@@ -141,11 +141,11 @@ export default function EcommerceHomePage() {
                           align: "start",
                           loop: true,
                         }}
-                        className="w-full max-w-[300px] mx-auto"
+                        className="w-full max-w-xs mx-auto"
                       >
                         <CarouselContent>
                           {dealProducts.map((product, index) => (
-                            <CarouselItem key={index} className="basis-full">
+                            <CarouselItem key={index}>
                               <div className="p-1">
                                 <DealOfTheDayCard product={product} />
                               </div>
@@ -194,6 +194,36 @@ export default function EcommerceHomePage() {
                       </ScrollArea>
                   </section>
                   
+                   <section className="px-4 grid grid-cols-1 gap-4">
+                        {displayedProducts.map(product => (
+                            <ProductCard key={product.id} product={product} onSale={true} />
+                        ))}
+                    </section>
+
+                    {totalPages > 1 && (
+                        <div className="flex justify-center items-center gap-2 mt-6 px-4">
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
+                                disabled={currentPage === 0}
+                            >
+                                <ChevronLeft />
+                            </Button>
+                            <span className="text-sm text-muted-foreground">
+                                Page {currentPage + 1} of {totalPages}
+                            </span>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
+                                disabled={currentPage === totalPages - 1}
+                            >
+                                <ChevronRight />
+                            </Button>
+                        </div>
+                    )}
+
                   <section className="px-4 mt-8 space-y-6">
                     <h2 className="text-2xl font-headline text-primary text-left mb-6">Testimonial</h2>
                     <TestimonialCard />
