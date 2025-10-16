@@ -108,7 +108,11 @@ export default function ProfilePage() {
             description: "The website link has been copied to your clipboard.",
           });
         }
-      } catch (error) {
+      } catch (error: any) {
+        // Silently fail if the user cancels the share dialog (AbortError)
+        if (error.name === 'AbortError') {
+            return;
+        }
         toast({
           variant: "destructive",
           title: "Could not share",
