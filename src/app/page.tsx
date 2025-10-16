@@ -29,7 +29,6 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import Fade from "embla-carousel-fade";
 
 const findImage = (id: string) => {
     return PlaceHolderImages.find(img => img.id === id);
@@ -137,7 +136,6 @@ export default function EcommerceHomePage() {
                      <Carousel
                         plugins={[
                             Autoplay({ delay: 2000, stopOnInteraction: true }),
-                            Fade()
                         ]}
                         opts={{
                           align: "start",
