@@ -121,12 +121,20 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       }
 
       if (existingItem) {
+        toast({
+            title: "Added to Cart",
+            description: `${quantity} x ${productId} has been added to your cart.`
+        });
         return prevCart.map(item =>
           item.productId === productId
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
+      toast({
+          title: "Added to Cart",
+          description: `${quantity} x ${productId} has been added to your cart.`
+      });
       return [...prevCart, { productId, quantity }];
     });
   };
