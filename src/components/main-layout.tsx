@@ -115,11 +115,6 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
             </Link>
 
             <div className="flex items-center gap-2">
-               <Link href="/image-cropper">
-                <Button variant="ghost" size="icon">
-                  <Crop className="h-5 w-5" />
-                </Button>
-              </Link>
               <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(prev => !prev)}>
                   <Search className="h-5 w-5" />
               </Button>
