@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ShoppingBag, Heart, User, Menu as MenuIcon, Mail } from "lucide-react";
+import { Home, ShoppingBag, Heart, User, Menu as MenuIcon, Mail, Sparkles } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -136,6 +136,13 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         </nav>
       </Sheet>
         <div className="fixed bottom-24 right-5 z-30 flex flex-col gap-3">
+             <Link
+                href="/ai-help"
+                className="bg-purple-600 text-white rounded-full p-3 shadow-lg hover:bg-purple-700 transition-colors"
+                aria-label="Help with AI"
+            >
+                <Sparkles className="h-8 w-8" strokeWidth={1.5} />
+            </Link>
              <Link 
                 href="mailto:abhayrat603@gmail.com"
                 target="_blank"
