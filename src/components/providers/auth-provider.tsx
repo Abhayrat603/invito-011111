@@ -98,12 +98,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error("No user is signed in.");
     }
     await updateProfile(currentUser, profileData);
-    // After updating, reload the user to get the latest data from Firebase.
-    await reload(currentUser);
-    // This is important to get a fresh user object with the updated info.
-    const refreshedUser = getAuth(app).currentUser;
-    // Set the new user object to trigger a re-render in React components.
-    setUser(refreshedUser ? { ...refreshedUser } : null);
+    // After updating, we need a fresh user object with the updated info.
+    // We create a new object to ensure React detects the state change.
+    setUser(auth.currentUser ? { ...auth.currentUser } : null);
   };
   
   const updateUserEmail = async (email: string) => {
