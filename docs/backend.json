@@ -1,0 +1,182 @@
+
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "An invitation card template.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "category": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "zipFileUrl": { "type": "string" },
+        "isPaid": { "type": "boolean" }
+      },
+      "required": ["name", "slug", "description", "price", "images", "category", "createdAt", "isPaid"]
+    },
+    "DealProduct": {
+      "title": "DealProduct",
+      "description": "A special deal on an invitation card template.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "discountPrice": { "type": "number" },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "category": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "offerEndsAt": { "type": "string", "format": "date-time" },
+        "stock": { "type": "number" },
+        "sold": { "type": "number" },
+        "rating": { "type": "number" },
+        "zipFileUrl": { "type": "string" },
+        "isPaid": { "type": "boolean" }
+      },
+      "required": ["name", "slug", "description", "price", "discountPrice", "images", "category", "createdAt", "offerEndsAt", "stock", "sold", "rating", "isPaid"]
+    },
+    "AppUser": {
+      "title": "AppUser",
+      "description": "A registered user of the application.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "createdAt"]
+    },
+    "CartItem": {
+      "title": "CartItem",
+      "description": "An item in a user's shopping cart.",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string" },
+        "quantity": { "type": "number" }
+      },
+      "required": ["productId", "quantity"]
+    },
+    "WishlistItem": {
+      "title": "WishlistItem",
+      "description": "An item in a user's wishlist.",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string" },
+        "addedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "addedAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "A user's purchase order.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "items": { 
+          "type": "array", 
+          "items": {
+            "type": "object",
+            "properties": {
+              "productId": { "type": "string" },
+              "productName": { "type": "string" },
+              "quantity": { "type": "number" },
+              "price": { "type": "number" }
+            },
+            "required": ["productId", "productName", "quantity", "price"]
+          }
+        },
+        "total": { "type": "number" },
+        "status": { "type": "string", "enum": ["Placed", "Shipped", "Delivered", "Cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "items", "total", "status", "createdAt"]
+    },
+    "EditRequest": {
+      "title": "EditRequest",
+      "description": "A user's request for a custom edit.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "productName": { "type": "string" },
+        "productId": { "type": "string" },
+        "requestDetails": { "type": "string" },
+        "turnaroundTime": { "type": "string", "enum": ["Urgent", "1 Day", "2 Days"] },
+        "status": { "type": "string", "enum": ["Pending", "Approved", "Rejected", "Successful"] },
+        "requestedAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "userName", "userEmail", "productName", "productId", "requestDetails", "turnaroundTime", "status", "requestedAt", "updatedAt"]
+    },
+    "AppRating": {
+      "title": "AppRating",
+      "description": "A user's rating of the app.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "userName", "rating", "comment", "createdAt"]
+    },
+    "AppSettings": {
+        "title": "AppSettings",
+        "description": "Application-wide settings.",
+        "type": "object",
+        "properties": {
+            "shareLink": { "type": "string" }
+        },
+        "required": ["shareLink"]
+    }
+  },
+  "firestore": {
+    "/products": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Collection of all available products."
+    },
+    "/deals": {
+      "schema": { "$ref": "#/entities/DealProduct" },
+      "description": "Collection of all special deal products."
+    },
+    "/users": {
+        "schema": { "$ref": "#/entities/AppUser" },
+        "description": "Collection of all app users."
+    },
+    "/users/{userId}/cart": {
+        "schema": { "$ref": "#/entities/CartItem" },
+        "description": "A user's shopping cart items."
+    },
+    "/users/{userId}/wishlist": {
+        "schema": { "$ref": "#/entities/WishlistItem" },
+        "description": "A user's wishlist items."
+    },
+    "/orders": {
+        "schema": { "$ref": "#/entities/Order" },
+        "description": "Collection of all user orders."
+    },
+    "/editRequests": {
+        "schema": { "$ref": "#/entities/EditRequest" },
+        "description": "Collection of all user edit requests."
+    },
+    "/appRatings": {
+        "schema": { "$ref": "#/entities/AppRating" },
+        "description": "Collection of all app ratings."
+    },
+    "/settings/app": {
+        "schema": { "$ref": "#/entities/AppSettings" },
+        "description": "General application settings."
+    }
+  },
+  "auth": {
+    "providers": ["password", "google.com"]
+  }
+}

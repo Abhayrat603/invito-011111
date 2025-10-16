@@ -1,26 +1,28 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, ReactNode, useCallback } from 'react';
 import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser, AppRating, AppSettings } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
-import { 
-    products as initialProducts, 
-    dealProduct as initialDealProduct, 
-    dealProduct2 as initialDealProduct2, 
-    dealProduct3 as initialDealProduct3,
-    editRequests as initialEditRequests,
-    orders as initialOrders,
-    initialUsers,
-    initialAppRatings,
-} from '@/lib/mock-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useAuth } from './auth-provider';
+import { 
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    serverTimestamp,
+    updateDoc,
+    writeBatch,
+    Timestamp,
+    where,
+    query,
+    getDocs
+} from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { useCollection } from '@/hooks/use-collection';
+import { useDoc } from '@/hooks/use-doc';
 
-const allInitialDeals = [initialDealProduct, initialDealProduct2, initialDealProduct3];
-
-const initialAppSettings: AppSettings = {
-    shareLink: 'https://invitedesigner.com'
-};
 
 interface AppStateContextType {
   cart: CartItem[];
@@ -42,7 +44,7 @@ interface AppStateContextType {
   toggleWishlist: (productId: string) => void;
   isInWishlist: (productId: string) => boolean;
   
-  addOrder: (order: Order) => void;
+  addOrder: (order: Omit<Order, 'id' | 'createdAt' | 'userId'>) => void;
 
   addProduct: (product: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'> & { imageUrl: string }) => void;
   updateProduct: (productId: string, productData: Partial<Product>) => void;
@@ -53,213 +55,117 @@ interface AppStateContextType {
   deleteDeal: (dealId: string) => void;
   updateDealStockOnOrder: (cartProducts: any[]) => void;
 
-  addEditRequest: (request: Omit<EditRequest, 'id' | 'status' | 'requestedAt' | 'updatedAt'>) => void;
+  addEditRequest: (request: Omit<EditRequest, 'id' | 'status' | 'requestedAt' | 'updatedAt' | 'userId'>) => void;
   updateEditRequestStatus: (requestId: string, status: EditRequest['status']) => void;
 
-  addUser: (user: AppUser) => void;
-  addRating: (rating: Omit<AppRating, 'id' | 'createdAt'>) => void;
+  addUser: (user: Omit<AppUser, 'id' | 'createdAt'> & {id: string}) => void;
+  addRating: (rating: Omit<AppRating, 'id' | 'createdAt' | 'userId' | 'userName'>) => void;
 
   updateShareLink: (newLink: string) => void;
 }
 
 const AppStateContext = createContext<AppStateContextType | undefined>(undefined);
 
-// Custom hook to check if window is available
-const useIsClient = () => {
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-  return isClient;
+const initialAppSettings: AppSettings = {
+    shareLink: 'https://invitedesigner.com'
 };
 
+const convertTimestamps = (data: any[], fields: string[]) => {
+    return data.map(item => {
+        const newItem = {...item};
+        fields.forEach(field => {
+            if (newItem[field] instanceof Timestamp) {
+                newItem[field] = newItem[field].toDate();
+            }
+        });
+        return newItem;
+    });
+}
+
 export function AppStateProvider({ children }: { children: ReactNode }) {
-  const isClient = useIsClient();
   const { toast } = useToast();
+  const { user } = useAuth();
 
-  const [products, setProducts] = useState<Product[]>(() => {
-    if (!isClient) return initialProducts;
-    try {
-      const item = window.localStorage.getItem('products');
-      return item ? JSON.parse(item) : initialProducts;
-    } catch (error) {
-      console.error(error);
-      return initialProducts;
-    }
-  });
+  const { data: productsData } = useCollection(collection(db, 'products'));
+  const products: Product[] = productsData ? convertTimestamps(productsData, ['createdAt']) as Product[] : [];
 
-  const [deals, setDeals] = useState<DealProduct[]>(() => {
-    if (!isClient) return allInitialDeals;
-    try {
-      const item = window.localStorage.getItem('deals');
-      const dealsData = item ? JSON.parse(item) : allInitialDeals;
-      return dealsData.map((deal: any) => ({
-            ...deal,
-            createdAt: new Date(deal.createdAt),
-            offerEndsAt: new Date(deal.offerEndsAt),
-        }));
-    } catch (error) {
-      console.error(error);
-      return allInitialDeals;
-    }
-  });
+  const { data: dealsData } = useCollection(collection(db, 'deals'));
+  const deals: DealProduct[] = dealsData ? convertTimestamps(dealsData, ['createdAt', 'offerEndsAt']) as DealProduct[] : [];
 
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    if (!isClient) return [];
-    try {
-      const item = window.localStorage.getItem('cart');
-      return item ? JSON.parse(item) : [];
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
-  });
+  const { data: usersData } = useCollection(collection(db, 'users'));
+  const users: AppUser[] = usersData ? convertTimestamps(usersData, ['createdAt']) as AppUser[] : [];
 
-  const [wishlist, setWishlist] = useState<WishlistItem[]>(() => {
-    if (!isClient) return [];
-    try {
-      const item = window.localStorage.getItem('wishlist');
-      return item ? JSON.parse(item) : [];
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
-  });
+  const { data: appRatingsData } = useCollection(collection(db, 'appRatings'));
+  const appRatings: AppRating[] = appRatingsData ? convertTimestamps(appRatingsData, ['createdAt']) as AppRating[] : [];
 
-  const [orders, setOrders] = useState<Order[]>(() => {
-    if (!isClient) return initialOrders;
-    try {
-        const item = window.localStorage.getItem('orders');
-        const ordersData = item ? JSON.parse(item) : initialOrders;
-        return ordersData.map((order: any) => ({
-            ...order,
-            createdAt: new Date(order.createdAt),
-        }));
-    } catch (error) {
-        console.error(error);
-        return initialOrders;
-    }
-  });
-
-  const [editRequests, setEditRequests] = useState<EditRequest[]>(() => {
-    if (!isClient) return initialEditRequests;
-    try {
-        const item = window.localStorage.getItem('editRequests');
-        const requestsData = item ? JSON.parse(item) : initialEditRequests;
-        return requestsData.map((req: any) => ({
-            ...req,
-            requestedAt: new Date(req.requestedAt),
-            updatedAt: new Date(req.updatedAt),
-        }));
-    } catch (error) {
-        console.error(error);
-        return initialEditRequests;
-    }
-  });
+  const { data: editRequestsData } = useCollection(collection(db, 'editRequests'));
+  const editRequests: EditRequest[] = editRequestsData ? convertTimestamps(editRequestsData, ['requestedAt', 'updatedAt']) as EditRequest[] : [];
   
-  const [users, setUsers] = useState<AppUser[]>(() => {
-    if (!isClient) return initialUsers;
-    try {
-        const item = window.localStorage.getItem('users');
-        const usersData = item ? JSON.parse(item) : initialUsers;
-        return usersData.map((user: any) => ({
-            ...user,
-            createdAt: new Date(user.createdAt),
-        }));
-    } catch (error) {
-        console.error(error);
-        return initialUsers;
-    }
-  });
+  const { data: appSettingsData } = useDoc(doc(db, 'settings', 'app'));
+  const appSettings: AppSettings = appSettingsData ? appSettingsData as AppSettings : initialAppSettings;
+
+  const { data: cartData } = useCollection(user ? collection(db, `users/${user.uid}/cart`) : null);
+  const cart: CartItem[] = cartData as CartItem[] || [];
+
+  const { data: wishlistData } = useCollection(user ? collection(db, `users/${user.uid}/wishlist`) : null);
+  const wishlist: WishlistItem[] = wishlistData ? convertTimestamps(wishlistData, ['addedAt']) as WishlistItem[] : [];
+
+  const { data: ordersData } = useCollection(user ? query(collection(db, 'orders'), where('userId', '==', user.uid)) : null);
+  const orders: Order[] = ordersData ? convertTimestamps(ordersData, ['createdAt']) as Order[] : [];
   
-  const [appRatings, setAppRatings] = useState<AppRating[]>(() => {
-    if (!isClient) return initialAppRatings;
-    try {
-      const item = window.localStorage.getItem('appRatings');
-      const ratingsData = item ? JSON.parse(item) : initialAppRatings;
-      return ratingsData.map((rating: any) => ({
-        ...rating,
-        createdAt: new Date(rating.createdAt),
-      }));
-    } catch (error) {
-      console.error(error);
-      return initialAppRatings;
-    }
-  });
-  
-  const [appSettings, setAppSettings] = useState<AppSettings>(() => {
-    if (!isClient) return initialAppSettings;
-    try {
-      const item = window.localStorage.getItem('appSettings');
-      return item ? JSON.parse(item) : initialAppSettings;
-    } catch (error) {
-      console.error(error);
-      return initialAppSettings;
-    }
-  });
+  const { data: adminOrdersData } = useCollection(collection(db, 'orders'));
+  const allOrders: Order[] = adminOrdersData ? convertTimestamps(adminOrdersData, ['createdAt']) as Order[] : [];
 
 
-  useEffect(() => { if (isClient) { window.localStorage.setItem('products', JSON.stringify(products)); }}, [products, isClient]);
-  useEffect(() => { if (isClient) { window.localStorage.setItem('deals', JSON.stringify(deals)); }}, [deals, isClient]);
-  useEffect(() => { if (isClient) { window.localStorage.setItem('cart', JSON.stringify(cart)); }}, [cart, isClient]);
-  useEffect(() => { if (isClient) { window.localStorage.setItem('wishlist', JSON.stringify(wishlist)); }}, [wishlist, isClient]);
-  useEffect(() => { if (isClient) { window.localStorage.setItem('orders', JSON.stringify(orders)); }}, [orders, isClient]);
-  useEffect(() => { if (isClient) { window.localStorage.setItem('editRequests', JSON.stringify(editRequests)); }}, [editRequests, isClient]);
-  useEffect(() => { if (isClient) { window.localStorage.setItem('users', JSON.stringify(users)); }}, [users, isClient]);
-  useEffect(() => { if (isClient) { window.localStorage.setItem('appRatings', JSON.stringify(appRatings)); }}, [appRatings, isClient]);
-  useEffect(() => { if (isClient) { window.localStorage.setItem('appSettings', JSON.stringify(appSettings)); }}, [appSettings, isClient]);
-
-  const addToCart = useCallback((productId: string, quantity: number = 1, isDeal: boolean = false) => {
-    let itemAdded = false;
+  const addToCart = useCallback(async (productId: string, quantity: number = 1, isDeal: boolean = false) => {
+    if (!user) return;
     let toastTitle = '';
     let toastDescription = '';
-    
-    setCart(prevCart => {
-      const allItems = [...products, ...deals];
-      const product = allItems.find(p => p.id === productId);
+    let itemAdded = false;
 
-      if (isDeal) {
+    const userCartRef = collection(db, `users/${user.uid}/cart`);
+    const q = query(userCartRef, where("productId", "==", productId));
+    const querySnapshot = await getDocs(q);
+    const existingItemDoc = querySnapshot.docs[0];
+
+    const allItems = [...products, ...deals];
+    const product = allItems.find(p => p.id === productId);
+
+    if (isDeal) {
         const alreadyPurchased = orders.some(order => order.items.some(item => item.productId === productId));
         if (alreadyPurchased) {
           toastTitle = "Already Purchased";
           toastDescription = "You can only buy a deal item once.";
-          return prevCart;
+          toast({ variant: "destructive", title: toastTitle, description: toastDescription });
+          return;
         }
-      }
-
-      const existingItem = prevCart.find(item => item.productId === productId);
-      
-      if (isDeal && existingItem) {
-        toastTitle = "Already in Cart";
-        toastDescription = "Deal items can only be added to the cart once.";
-        return prevCart;
-      }
-      
-      toastTitle = "Added to Cart";
-      toastDescription = `${quantity} x ${product?.name || 'item'} has been added to your cart.`;
-      itemAdded = true;
-
-      if (existingItem) {
-        return prevCart.map(item =>
-          item.productId === productId
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
-      }
-      return [...prevCart, { productId, quantity }];
-    });
+        if (!querySnapshot.empty) {
+            toastTitle = "Already in Cart";
+            toastDescription = "Deal items can only be added to the cart once.";
+            toast({ variant: "destructive", title: toastTitle, description: toastDescription });
+            return;
+        }
+    }
+    
+    itemAdded = true;
+    toastTitle = "Added to Cart";
+    toastDescription = `${quantity} x ${product?.name || 'item'} has been added to your cart.`;
+    
+    if (existingItemDoc) {
+        const existingItem = existingItemDoc.data() as CartItem;
+        const docRef = doc(db, `users/${user.uid}/cart`, existingItemDoc.id);
+        await updateDoc(docRef, { quantity: existingItem.quantity + quantity });
+    } else {
+        await addDoc(userCartRef, { productId, quantity });
+    }
 
     if (toastTitle) {
-        toast({
-            variant: itemAdded ? "default" : "destructive",
-            title: toastTitle,
-            description: toastDescription
-        });
+      toast({ title: toastTitle, description: toastDescription });
     }
-  }, [orders, products, deals, toast]);
+  }, [user, orders, products, deals, toast]);
 
-
-  const increaseCartQuantity = useCallback((productId: string) => {
+  const increaseCartQuantity = useCallback(async (productId: string) => {
+    if (!user) return;
     const isDeal = deals.some(p => p.id === productId);
     if(isDeal) {
         toast({
@@ -269,221 +175,238 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         });
         return;
     }
-    setCart(prevCart => {
-        return prevCart.map(item =>
-          item.productId === productId
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-    });
-  }, [deals, toast]);
 
-  const decreaseCartQuantity = useCallback((productId: string) => {
-    setCart(prevCart => {
-        const existingItem = prevCart.find(item => item.productId === productId);
-        if (existingItem && existingItem.quantity > 1) {
-            return prevCart.map(item =>
-                item.productId === productId
-                ? { ...item, quantity: item.quantity - 1 }
-                : item
-            );
+    const userCartRef = collection(db, `users/${user.uid}/cart`);
+    const q = query(userCartRef, where("productId", "==", productId));
+    const querySnapshot = await getDocs(q);
+    const existingItemDoc = querySnapshot.docs[0];
+
+    if(existingItemDoc) {
+        const existingItem = existingItemDoc.data() as CartItem;
+        const docRef = doc(db, `users/${user.uid}/cart`, existingItemDoc.id);
+        await updateDoc(docRef, { quantity: existingItem.quantity + 1 });
+    }
+  }, [user, deals, toast]);
+
+  const decreaseCartQuantity = useCallback(async (productId: string) => {
+    if (!user) return;
+    const userCartRef = collection(db, `users/${user.uid}/cart`);
+    const q = query(userCartRef, where("productId", "==", productId));
+    const querySnapshot = await getDocs(q);
+    const existingItemDoc = querySnapshot.docs[0];
+
+    if(existingItemDoc) {
+        const existingItem = existingItemDoc.data() as CartItem;
+        const docRef = doc(db, `users/${user.uid}/cart`, existingItemDoc.id);
+        if (existingItem.quantity > 1) {
+            await updateDoc(docRef, { quantity: existingItem.quantity - 1 });
         } else {
-            return prevCart.filter(item => item.productId !== productId);
+            await deleteDoc(docRef);
         }
+    }
+  }, [user]);
+
+  const removeFromCart = useCallback(async (productId: string) => {
+    if (!user) return;
+    const userCartRef = collection(db, `users/${user.uid}/cart`);
+    const q = query(userCartRef, where("productId", "==", productId));
+    const querySnapshot = await getDocs(q);
+    const existingItemDoc = querySnapshot.docs[0];
+
+    if(existingItemDoc) {
+        await deleteDoc(doc(db, `users/${user.uid}/cart`, existingItemDoc.id));
+        toast({
+            title: "Item Removed",
+            description: "The item has been removed from your cart."
+        });
+    }
+  }, [user, toast]);
+
+  const clearCart = useCallback(async () => {
+    if (!user) return;
+    const userCartRef = collection(db, `users/${user.uid}/cart`);
+    const querySnapshot = await getDocs(userCartRef);
+    const batch = writeBatch(db);
+    querySnapshot.forEach(doc => {
+        batch.delete(doc.ref);
     });
-  }, []);
+    await batch.commit();
+  }, [user]);
 
-  const removeFromCart = useCallback((productId: string) => {
-    setCart(prevCart => prevCart.filter(item => item.productId !== productId));
-    toast({
-        title: "Item Removed",
-        description: "The item has been removed from your cart."
-    });
-  }, [toast]);
+  const addOrder = useCallback(async (order: Omit<Order, 'id' | 'createdAt' | 'userId'>) => {
+    if (!user) return;
+    const newOrder = {
+        ...order,
+        userId: user.uid,
+        createdAt: serverTimestamp()
+    };
+    await addDoc(collection(db, 'orders'), newOrder);
+  }, [user]);
 
-  const clearCart = useCallback(() => {
-    setCart([]);
-  }, []);
+  const toggleWishlist = useCallback(async (productId: string) => {
+    if (!user) return;
+    const userWishlistRef = collection(db, `users/${user.uid}/wishlist`);
+    const q = query(userWishlistRef, where("productId", "==", productId));
+    const querySnapshot = await getDocs(q);
+    const existingItemDoc = querySnapshot.docs[0];
 
-  const addOrder = useCallback((order: Order) => {
-    setOrders(prevOrders => [order, ...prevOrders]);
-  }, []);
-
-  const toggleWishlist = useCallback((productId: string) => {
+    const product = products.find(p => p.id === productId);
     let toastTitle = '';
     let toastDescription = '';
-    let isLiked = false;
-
-    setWishlist(prevWishlist => {
-      const product = products.find(p => p.id === productId);
-      const existingItem = prevWishlist.find(item => item.productId === productId);
-      isLiked = !!existingItem;
-
-      if (existingItem) {
+    
+    if(existingItemDoc) {
+        await deleteDoc(doc(db, `users/${user.uid}/wishlist`, existingItemDoc.id));
         toastTitle = "Removed from Wishlist";
         toastDescription = `${product?.name} has been removed from your wishlist.`;
-        return prevWishlist.filter(item => item.productId !== productId);
-      } else {
+    } else {
+        await addDoc(userWishlistRef, { productId, addedAt: serverTimestamp() });
         toastTitle = "Added to Wishlist";
         toastDescription = `${product?.name} has been added to your wishlist.`;
-        return [...prevWishlist, { productId, addedAt: new Date() }];
-      }
-    });
-    
-    if (toastTitle) {
-      toast({ title: toastTitle, description: toastDescription });
     }
-  }, [products, toast]);
+    toast({ title: toastTitle, description: toastDescription });
+  }, [user, products, toast]);
 
 
   const isInWishlist = useCallback((productId: string) => {
     return wishlist.some(item => item.productId === productId);
   }, [wishlist]);
 
-  const addProduct = useCallback((productData: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'> & { imageUrl: string }) => {
-    setProducts(prev => {
-      const newId = `prod${Date.now()}`;
-      const imageId = `product-image-${newId}`;
-      
-      const newImage = {
-          id: imageId,
-          description: productData.name,
-          imageUrl: productData.imageUrl,
-          imageHint: 'custom product'
-      };
-      PlaceHolderImages.push(newImage);
-      
-      const newProduct: Product = {
-        ...productData,
-        id: newId,
-        slug: productData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
-        createdAt: new Date(),
-        images: [imageId, 'product-placeholder-2'],
-      };
-      return [newProduct, ...prev];
-    });
+  const addProduct = useCallback(async (productData: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'> & { imageUrl: string }) => {
+    const newProduct = {
+      ...productData,
+      slug: productData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+      createdAt: serverTimestamp(),
+      images: ['product-placeholder-1', 'product-placeholder-2'], // Placeholder, manage images separately
+    };
+    const docRef = await addDoc(collection(db, 'products'), newProduct);
+
+    // This part is tricky as we don't have real image upload.
+    // We'll add to placeholder mock, but this is not ideal for a real app.
+    const imageId = `product-image-${docRef.id}`;
+    const newImage = {
+        id: imageId,
+        description: productData.name,
+        imageUrl: productData.imageUrl,
+        imageHint: 'custom product'
+    };
+    PlaceHolderImages.push(newImage);
+    await updateDoc(docRef, { images: [imageId, 'product-placeholder-2'] });
+
   }, []);
 
-  const updateProduct = useCallback((productId: string, productData: Partial<Product>) => {
-    setProducts(prev => prev.map(p => {
-        if (p.id === productId) {
-            const updatedProduct = { ...p, ...productData };
-            if (productData.name) {
-                updatedProduct.slug = productData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-            }
-            return updatedProduct;
-        }
-        return p;
-    }));
+  const updateProduct = useCallback(async (productId: string, productData: Partial<Product>) => {
+    const productRef = doc(db, 'products', productId);
+    const updatedData = { ...productData };
+    if (productData.name) {
+        updatedData.slug = productData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    }
+    await updateDoc(productRef, updatedData);
   }, []);
   
-  const deleteProduct = useCallback((productId: string) => {
-    setProducts(prev => prev.filter(p => p.id !== productId));
+  const deleteProduct = useCallback(async (productId: string) => {
+    await deleteDoc(doc(db, 'products', productId));
   }, []);
 
-  const addDeal = useCallback((dealData: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images' | 'isPaid'> & { imageUrl: string }) => {
-    setDeals(prev => {
-      const newId = `deal${Date.now()}`;
-      const imageId = `product-deal-${newId}`;
-
-      const newImage = {
-          id: imageId,
-          description: dealData.name,
-          imageUrl: dealData.imageUrl,
-          imageHint: 'custom deal'
-      };
-      PlaceHolderImages.push(newImage);
-
-      const newDeal: DealProduct = {
+  const addDeal = useCallback(async (dealData: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images' | 'isPaid'> & { imageUrl: string }) => {
+    const newDeal = {
         ...dealData,
-        id: newId,
         slug: dealData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
-        createdAt: new Date(),
-        images: [imageId],
+        createdAt: serverTimestamp(),
+        images: [],
         sold: 0,
         rating: Math.random() * 2 + 3, // 3 to 5 stars
-        isPaid: true, // Deals are always paid
-      };
-      return [newDeal, ...prev];
+        isPaid: true,
+    };
+    const docRef = await addDoc(collection(db, 'deals'), newDeal);
+    const imageId = `product-deal-${docRef.id}`;
+    PlaceHolderImages.push({
+        id: imageId,
+        description: dealData.name,
+        imageUrl: dealData.imageUrl,
+        imageHint: 'custom deal'
     });
+    await updateDoc(docRef, { images: [imageId] });
+
   }, []);
 
-  const updateDeal = useCallback((dealId: string, dealData: Partial<DealProduct>) => {
-    setDeals(prev => prev.map(d => {
-        if (d.id === dealId) {
-            const updatedDeal = { ...d, ...dealData };
-            if (dealData.name) {
-                updatedDeal.slug = dealData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  const updateDeal = useCallback(async (dealId: string, dealData: Partial<DealProduct>) => {
+    const dealRef = doc(db, 'deals', dealId);
+    const updatedData: Partial<DealProduct> = { ...dealData };
+     if (dealData.name) {
+        updatedData.slug = dealData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    }
+    if (dealData.offerEndsAt) {
+        updatedData.offerEndsAt = Timestamp.fromDate(new Date(dealData.offerEndsAt));
+    }
+    await updateDoc(dealRef, updatedData);
+  }, []);
+
+  const deleteDeal = useCallback(async (dealId: string) => {
+    await deleteDoc(doc(db, 'deals', dealId));
+  }, []);
+
+  const updateDealStockOnOrder = useCallback(async (cartProducts: any[]) => {
+     const batch = writeBatch(db);
+     cartProducts.forEach(p => {
+        if (p && 'discountPrice' in p) { // It's a deal product
+            const deal = deals.find(dp => dp.id === p.id);
+            if (deal) {
+                const dealRef = doc(db, 'deals', deal.id);
+                batch.update(dealRef, { sold: deal.sold + p.quantity });
             }
-            return updatedDeal;
         }
-        return d;
-    }));
-  }, []);
-
-  const deleteDeal = useCallback((dealId: string) => {
-    setDeals(prev => prev.filter(d => d.id !== dealId));
-  }, []);
-
-  const updateDealStockOnOrder = useCallback((cartProducts: any[]) => {
-     setDeals(prevDeals => {
-        const newDeals = [...prevDeals];
-        cartProducts.forEach(p => {
-            if (p && 'discountPrice' in p) { // It's a deal product
-                const dealIndex = newDeals.findIndex(dp => dp.id === p.id);
-                if (dealIndex !== -1) {
-                    newDeals[dealIndex].sold += p.quantity;
-                }
-            }
-        });
-        return newDeals;
      });
-  }, []);
+     await batch.commit();
+  }, [deals]);
 
-  const addEditRequest = useCallback((request: Omit<EditRequest, 'id' | 'status' | 'requestedAt' | 'updatedAt'>) => {
-    setEditRequests(prev => {
-      const newRequest: EditRequest = {
-        ...request,
-        id: `req${Date.now()}`,
-        status: 'Pending',
-        requestedAt: new Date(),
-        updatedAt: new Date(),
-      };
-      return [newRequest, ...prev];
-    });
-  }, []);
+  const addEditRequest = useCallback(async (request: Omit<EditRequest, 'id' | 'status' | 'requestedAt' | 'updatedAt' | 'userId'>) => {
+    if (!user) return;
+    const newRequest = {
+      ...request,
+      userId: user.uid,
+      status: 'Pending' as const,
+      requestedAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    };
+    await addDoc(collection(db, 'editRequests'), newRequest);
+  }, [user]);
   
-  const updateEditRequestStatus = useCallback((requestId: string, status: EditRequest['status']) => {
-    setEditRequests(prev => prev.map(req => req.id === requestId ? { ...req, status, updatedAt: new Date() } : req));
+  const updateEditRequestStatus = useCallback(async (requestId: string, status: EditRequest['status']) => {
+    const reqRef = doc(db, 'editRequests', requestId);
+    await updateDoc(reqRef, { status, updatedAt: serverTimestamp() });
   }, []);
 
-  const addUser = useCallback((user: AppUser) => {
-    setUsers(prev => {
-        // Avoid adding duplicate users
-        if (prev.some(u => u.email === user.email)) {
-            return prev;
-        }
-        return [...prev, user];
-    });
+  const addUser = useCallback(async (user: Omit<AppUser, 'id' | 'createdAt'> & {id: string}) => {
+    const userRef = doc(db, 'users', user.id);
+    await updateDoc(userRef, {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        createdAt: serverTimestamp()
+    }, { merge: true });
   }, []);
 
-  const addRating = useCallback((rating: Omit<AppRating, 'id' | 'createdAt'>) => {
-    setAppRatings(prev => {
-        const newRating: AppRating = {
-            ...rating,
-            id: `rating${Date.now()}`,
-            createdAt: new Date(),
-        };
-        return [newRating, ...prev];
-    });
-  }, []);
+  const addRating = useCallback(async (rating: Omit<AppRating, 'id' | 'createdAt' | 'userId' | 'userName'>) => {
+    if (!user) return;
+    const newRating = {
+        ...rating,
+        userId: user.uid,
+        userName: user.displayName || 'Anonymous',
+        createdAt: serverTimestamp(),
+    };
+    await addDoc(collection(db, 'appRatings'), newRating);
+  }, [user]);
 
-  const updateShareLink = useCallback((newLink: string) => {
-    setAppSettings(prev => ({ ...prev, shareLink: newLink }));
+  const updateShareLink = useCallback(async (newLink: string) => {
+    const settingsRef = doc(db, 'settings', 'app');
+    await updateDoc(settingsRef, { shareLink: newLink }, { merge: true });
   }, []);
 
   const value = { 
-    cart, wishlist, orders, products, deals, editRequests, users, appRatings, appSettings,
+    cart, wishlist, 
+    orders: user?.email === 'abhayrat603@gmail.com' ? allOrders : orders,
+    products, deals, 
+    editRequests, users, appRatings, appSettings,
     addToCart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, clearCart, 
     toggleWishlist, isInWishlist, addOrder,
     addProduct, updateProduct, deleteProduct,
@@ -504,3 +427,5 @@ export function useAppState() {
   }
   return context;
 }
+
+    

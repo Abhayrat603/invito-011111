@@ -3,6 +3,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { AppStateProvider } from "@/components/providers/app-state-provider";
+import { FirebaseClientProvider } from "@/firebase/client-provider";
 
 export const metadata: Metadata = {
   title: "Invite Designer",
@@ -22,12 +23,14 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased bg-background">
-        <AuthProvider>
-          <AppStateProvider>
-            {children}
-            <Toaster />
-          </AppStateProvider>
-        </AuthProvider>
+        <FirebaseClientProvider>
+          <AuthProvider>
+            <AppStateProvider>
+              {children}
+              <Toaster />
+            </AppStateProvider>
+          </AuthProvider>
+        </FirebaseClientProvider>
       </body>
     </html>
   );

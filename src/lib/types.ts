@@ -1,9 +1,12 @@
 
+
+import { Timestamp } from 'firebase/firestore';
+
 export interface UserProfile {
   uid: string;
   email: string | null;
   name: string | null;
-  createdAt: Date;
+  createdAt: Date | Timestamp;
 }
 
 export interface AppUser {
@@ -11,7 +14,7 @@ export interface AppUser {
   name: string;
   email: string;
   phone: string;
-  createdAt: Date;
+  createdAt: Date | Timestamp;
 }
 
 export interface Category {
@@ -28,33 +31,34 @@ export interface Product {
   price: number;
   images: string[];
   category: string;
-  createdAt: Date;
+  createdAt: Date | Timestamp;
   zipFileUrl?: string;
   isPaid: boolean;
 }
 
 export interface DealProduct extends Product {
   discountPrice: number;
-  offerEndsAt: Date;
+  offerEndsAt: Date | Timestamp;
   stock: number;
   sold: number;
   rating: number;
 }
 
 export interface CartItem {
+  id?: string; // doc id from firestore
   productId: string;
   quantity: number;
 }
 
 export interface WishlistItem {
+  id?: string; // doc id from firestore
   productId: string;
-
-  addedAt: Date;
+  addedAt: Date | Timestamp;
 }
 
 export interface Cart {
   items: CartItem[];
-  updatedAt: Date;
+  updatedAt: Date | Timestamp;
 }
 
 export interface OrderItem {
@@ -66,10 +70,11 @@ export interface OrderItem {
 
 export interface Order {
     id: string;
+    userId: string;
     items: OrderItem[];
     total: number;
     status: 'Placed' | 'Shipped' | 'Delivered' | 'Cancelled';
-    createdAt: Date;
+    createdAt: Date | Timestamp;
 }
 
 export interface EditRequest {
@@ -82,8 +87,8 @@ export interface EditRequest {
   requestDetails: string;
   turnaroundTime: 'Urgent' | '1 Day' | '2 Days';
   status: 'Pending' | 'Approved' | 'Rejected' | 'Successful';
-  requestedAt: Date;
-  updatedAt: Date;
+  requestedAt: Date | Timestamp;
+  updatedAt: Date | Timestamp;
 }
 
 export interface AppRating {
@@ -92,7 +97,7 @@ export interface AppRating {
   userName: string;
   rating: number;
   comment: string;
-  createdAt: Date;
+  createdAt: Date | Timestamp;
 }
 
 export interface AppSettings {
