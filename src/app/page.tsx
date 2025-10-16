@@ -125,26 +125,11 @@ export default function EcommerceHomePage() {
   const displayedProducts = filteredProducts.slice(currentPage * productsPerPage, (currentPage + 1) * productsPerPage);
 
   return (
-    <MainLayout>
+    <MainLayout onSearch={handleSearch}>
       <AuthRedirect to="/login" condition="is-not-auth">
         <div className="bg-background text-foreground">
              <main className="pb-4">
                   <section className="px-4 my-6">
-                    <div className="relative mb-4">
-                      <Input
-                        placeholder="Search products..."
-                        className="bg-card border-border rounded-full h-11 pl-5 pr-12 text-base"
-                        value={searchQuery}
-                        onChange={(e) => handleSearch(e.target.value)}
-                      />
-                       {searchQuery ? (
-                        <Button variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full" onClick={() => handleSearch('')}>
-                          <X className="h-5 w-5 text-muted-foreground" />
-                        </Button>
-                      ) : (
-                        <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                      )}
-                    </div>
                     <h2 className="text-2xl font-headline font-bold text-primary text-left mb-2">Deal of the Day</h2>
                      <Carousel
                         plugins={[

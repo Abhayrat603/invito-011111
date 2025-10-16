@@ -12,14 +12,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MenuPageContent } from "@/app/menu/page";
 import { cn } from "@/lib/utils";
@@ -67,6 +59,8 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
   const { cart, wishlist } = useAppState();
   const [isFabMenuOpen, setIsFabMenuOpen] = useState(false);
   const mainContentRef = useRef<HTMLDivElement>(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   
   const getUserInitials = (name: string | null | undefined) => {
     if (!name) return "U";
@@ -82,6 +76,21 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
         mainContentRef.current.scrollTop = 0;
     }
   }, [pathname]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    if (onSearch) {
+      onSearch(query);
+    }
+  }
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    if (onSearch) {
+      onSearch("");
+    }
+  }
 
   const navItems = [
     { href: "/menu", icon: MenuIcon, label: "Menu" },
@@ -103,9 +112,28 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
                 </div>
                 <h1 className="text-xl font-bold">Invitedit</h1>
             </Link>
-            <Button variant="ghost" size="icon">
-                <Search className="h-5 w-5" />
-            </Button>
+
+            <div className="flex items-center gap-2">
+              {isSearchOpen && (
+                <div className="relative flex-grow">
+                  <Input
+                    placeholder="Search products..."
+                    className="bg-card border-border rounded-full h-9 pl-4 pr-10 text-sm"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    autoFocus
+                  />
+                  {searchQuery && (
+                    <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full" onClick={handleClearSearch}>
+                      <X className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                  )}
+                </div>
+              )}
+              <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(!isSearchOpen)}>
+                  <Search className="h-5 w-5" />
+              </Button>
+            </div>
          </header>
       )}
       <main ref={mainContentRef} className="flex-grow pb-16 overflow-y-auto">
@@ -214,5 +242,3 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
     </div>
   );
 }
-
-    
