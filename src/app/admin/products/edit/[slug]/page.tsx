@@ -23,12 +23,19 @@ import { categories, products } from "@/lib/mock-data";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import type { Product } from "@/lib/types";
+import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
+
+const findImage = (id: string) => {
+  return PlaceHolderImages.find(img => img.id === id);
+};
 
 const formSchema = z.object({
   name: z.string().min(3, { message: "Product name must be at least 3 characters." }),
   description: z.string().min(10, { message: "Description must be at least 10 characters." }),
   price: z.coerce.number().min(0, { message: "Price cannot be negative." }),
   category: z.string({ required_error: "Please select a category." }),
+  imageUrl: z.string().url({ message: "Please enter a valid URL." }),
 });
 
 export default function EditProductPage() {
@@ -38,21 +45,35 @@ export default function EditProductPage() {
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [product, setProduct] = useState<Product | undefined>(undefined);
+    const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
+    
+    const imageUrl = form.watch("imageUrl");
+
+    useEffect(() => {
+        if(imageUrl) {
+            setImagePreview(imageUrl);
+        }
+    }, [imageUrl]);
 
     useEffect(() => {
         const productToEdit = products.find(p => p.slug === slug);
         if (productToEdit) {
             setProduct(productToEdit);
+            const image = findImage(productToEdit.images[0]);
+            const currentImageUrl = image?.imageUrl || `https://picsum.photos/seed/${productToEdit.id}/500`;
+            
             form.reset({
                 name: productToEdit.name,
                 description: productToEdit.description,
                 price: productToEdit.price,
                 category: productToEdit.category,
+                imageUrl: currentImageUrl,
             });
+            setImagePreview(currentImageUrl);
         } else {
             toast({
                 variant: "destructive",
@@ -65,8 +86,8 @@ export default function EditProductPage() {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true);
         console.log("Updating product:", product?.id, values);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // In a real app, you would update the image URL in your backend.
+        // For this mock, we'll just log it.
         toast({
             title: "Product Updated",
             description: `"${values.name}" has been successfully updated.`,
@@ -98,6 +119,25 @@ export default function EditProductPage() {
                 <main className="flex-grow p-4">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            
+                            {imagePreview && (
+                                <div className="relative w-full aspect-square rounded-md overflow-hidden border bg-muted">
+                                    <Image src={imagePreview} alt="Product image preview" layout="fill" objectFit="cover" />
+                                </div>
+                            )}
+
+                             <FormField
+                                control={form.control}
+                                name="imageUrl"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Image URL</FormLabel>
+                                    <FormControl><Input placeholder="https://example.com/image.png" {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+
                              <FormField
                                 control={form.control}
                                 name="name"

@@ -9,7 +9,7 @@ import { products } from '@/lib/mock-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { MainLayout } from '@/components/main-layout';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ChevronRight, Heart, Minus, Plus, Download, ChevronLeft } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Heart, Minus, Plus, Download, ChevronLeft, ShoppingCart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useAppState } from '@/components/providers/app-state-provider';
@@ -42,12 +42,24 @@ export default function ProductDetailPage() {
     );
   }
 
-  const handleAddToCart = () => {
+  const handleBuyNow = () => {
     addToCart(product.id, quantity);
     toast({
         title: "Added to Cart",
         description: `${quantity} x ${product.name} has been added to your cart.`
     });
+
+    // Simulate downloading a zip file
+    toast({
+      title: "Downloading...",
+      description: "Your ZIP file will begin downloading shortly. (This is a simulation)",
+    });
+    const link = document.createElement("a");
+    link.href = '/placeholder.zip'; // A placeholder zip file in the public folder
+    link.download = `${product.slug}.zip`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   const handleDownload = () => {
@@ -55,8 +67,6 @@ export default function ProductDetailPage() {
       title: "Downloading...",
       description: "Your file download will begin shortly. (This is a simulation)",
     });
-    // In a real app, you would trigger a file download here.
-    // For example, by creating a link and clicking it programmatically.
     const link = document.createElement("a");
     link.href = findImage(product.images[0])?.imageUrl || '';
     link.download = `${product.slug}.jpg`;
@@ -76,7 +86,7 @@ export default function ProductDetailPage() {
   const isLiked = isInWishlist(product.id);
   const mainImage = findImage(product.images[0]);
   const thumbnailImage = findImage(product.images[1] || product.images[0]);
-  const onSale = true; // Based on the user image
+  const onSale = true;
 
   return (
     <MainLayout>
@@ -140,7 +150,9 @@ export default function ProductDetailPage() {
                 <Button size="sm" className="flex-1 bg-amber-800 hover:bg-amber-900 h-11 min-w-[100px] text-xs px-2" onClick={handleDownload}>
                     <Download className="mr-1.5 h-4 w-4" /> Download
                 </Button>
-                <Button size="sm" variant="outline" className="flex-1 h-11 min-w-[100px] text-xs px-2" onClick={handleAddToCart}>Buy now</Button>
+                <Button size="sm" variant="outline" className="flex-1 h-11 min-w-[100px] text-xs px-2" onClick={handleBuyNow}>
+                    <ShoppingCart className="mr-1.5 h-4 w-4" /> Buy now
+                </Button>
                 <Button variant="outline" size="icon" className="h-11 w-11 shrink-0" onClick={handleToggleWishlist}>
                     <Heart className={`h-5 w-5 ${isLiked ? 'text-red-500 fill-current' : ''}`} />
                 </Button>
@@ -182,3 +194,9 @@ export default function ProductDetailPage() {
                  <li>High-quality, print-ready files with included fonts</li>
                  <li>Ideal for supermarkets, kirana shops, jewellery showrooms, and more</li>
              </ul>
+          </div>
+        </main>
+      </div>
+    </MainLayout>
+  );
+}
