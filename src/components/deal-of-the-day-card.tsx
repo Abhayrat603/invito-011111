@@ -3,11 +3,13 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { useAppState } from './providers/app-state-provider';
 import type { DealProduct } from '@/lib/types';
+import { ShoppingCart } from 'lucide-react';
 
 interface Countdown {
     hours: number;
@@ -74,7 +76,9 @@ export function DealOfTheDayCard({ product }: { product: DealProduct }) {
         return null; // Don't render if the offer has expired or on server
     }
 
-    const handleAddToCart = () => {
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
         addToCart(product.id, 1, true);
     };
 
@@ -102,9 +106,17 @@ export function DealOfTheDayCard({ product }: { product: DealProduct }) {
                     <span className="text-xl font-bold text-destructive">₹{product.discountPrice.toFixed(2)}</span>
                     <span className="text-sm text-muted-foreground line-through">₹{product.price.toFixed(2)}</span>
                 </div>
-                <Button className="w-full bg-red-600 hover:bg-red-700 text-white" onClick={handleAddToCart}>
-                    Add to Cart
-                </Button>
+                 <div className="flex items-center gap-2">
+                    <Button className="w-full bg-red-600 hover:bg-red-700 text-white" onClick={handleAddToCart}>
+                        <ShoppingCart className="mr-2 h-4 w-4" />
+                        Add to Cart
+                    </Button>
+                     <Link href={`/deals/${product.slug}`} passHref className="w-full">
+                         <Button variant="outline" className="w-full">
+                            View
+                        </Button>
+                    </Link>
+                </div>
                 <div className="space-y-2">
                     <div className="flex justify-between text-xs font-medium text-muted-foreground">
                         <span>Already Sold: <span className="text-foreground font-bold">{product.sold}</span></span>
