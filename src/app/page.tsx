@@ -13,7 +13,7 @@ import { ProductCard } from "@/components/product-card";
 import { DealOfTheDayCard } from "@/components/deal-of-the-day-card";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Loader2 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -21,6 +21,13 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { dealProduct, dealProduct2, dealProduct3 } from "@/lib/mock-data";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const findImage = (id: string) => {
     return PlaceHolderImages.find(img => img.id === id);
@@ -58,62 +65,8 @@ export default function EcommerceHomePage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const scrollViewportRef = useRef<HTMLDivElement>(null);
-  const isHoveringRef = useRef(false);
-  const animationFrameIdRef = useRef<number>();
-  let frameCount = 0; // To slow down the animation
-
+  
   const dealProducts = [dealProduct, dealProduct2, dealProduct3];
-  const [currentDealIndex, setCurrentDealIndex] = useState(0);
-
-  const handleNextDeal = () => {
-    setCurrentDealIndex((prev) => (prev + 1) % dealProducts.length);
-  };
-
-  const handlePrevDeal = () => {
-    setCurrentDealIndex((prev) => (prev - 1 + dealProducts.length) % dealProducts.length);
-  };
-
-  useEffect(() => {
-    const scrollEl = scrollViewportRef.current;
-    if (!scrollEl) return;
-
-    const scroll = () => {
-      frameCount++;
-      if (frameCount % 2 === 0) { // Only scroll every 2nd frame
-          if (!isHoveringRef.current) {
-            if (scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth) {
-              scrollEl.scrollLeft = 0;
-            } else {
-              scrollEl.scrollLeft += 1; // Slow scroll amount
-            }
-          }
-      }
-      animationFrameIdRef.current = requestAnimationFrame(scroll);
-    };
-
-    animationFrameIdRef.current = requestAnimationFrame(scroll);
-
-    const handleMouseEnter = () => { isHoveringRef.current = true; };
-    const handleMouseLeave = () => { isHoveringRef.current = false; };
-
-    scrollEl.addEventListener('mouseenter', handleMouseEnter);
-    scrollEl.addEventListener('mouseleave', handleMouseLeave);
-    scrollEl.addEventListener('touchstart', handleMouseEnter, { passive: true });
-    scrollEl.addEventListener('touchend', handleMouseLeave);
-
-
-    return () => {
-      if (animationFrameIdRef.current) {
-        cancelAnimationFrame(animationFrameIdRef.current);
-      }
-      if (scrollEl) {
-        scrollEl.removeEventListener('mouseenter', handleMouseEnter);
-        scrollEl.removeEventListener('mouseleave', handleMouseLeave);
-        scrollEl.removeEventListener('touchstart', handleMouseEnter);
-        scrollEl.removeEventListener('touchend', handleMouseLeave);
-      }
-    };
-  }, []);
 
   useEffect(() => {
     if (!loading && user && !user.emailVerified) {
@@ -187,21 +140,25 @@ export default function EcommerceHomePage() {
               <main className="pb-4">
                   <section className="px-4 mb-6">
                     <h2 className="text-2xl font-headline text-primary text-left mb-6">Deal of the Day</h2>
-                     <div className="relative">
-                        <div className="w-[300px] shrink-0 mx-auto">
-                           <DealOfTheDayCard product={dealProducts[currentDealIndex]} />
-                        </div>
-                        {dealProducts.length > 1 && (
-                            <div className="absolute top-1/2 left-0 right-0 flex justify-between items-center transform -translate-y-1/2">
-                                <Button variant="outline" size="icon" onClick={handlePrevDeal} className="rounded-full">
-                                    <ChevronLeft className="h-4 w-4" />
-                                </Button>
-                                <Button variant="outline" size="icon" onClick={handleNextDeal} className="rounded-full">
-                                    <ChevronRight className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        )}
-                     </div>
+                     <Carousel
+                        opts={{
+                          align: "start",
+                          loop: true,
+                        }}
+                        className="w-full max-w-[300px] mx-auto"
+                      >
+                        <CarouselContent>
+                          {dealProducts.map((product, index) => (
+                            <CarouselItem key={index}>
+                              <div className="p-1">
+                                <DealOfTheDayCard product={product} />
+                              </div>
+                            </CarouselItem>
+                          ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="h-8 w-8 -left-10" />
+                        <CarouselNext className="h-8 w-8 -right-10" />
+                      </Carousel>
                   </section>
                   <h2 className="text-2xl font-headline text-primary text-left mt-6 mb-2 px-4">Trending Invitation Card</h2>
                   <section className="mb-4">
@@ -280,3 +237,5 @@ export default function EcommerceHomePage() {
     </MainLayout>
   );
 }
+
+    
