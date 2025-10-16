@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -12,6 +12,7 @@ import {
     editRequests as initialEditRequests,
     orders as initialOrders
 } from '@/lib/mock-data';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const allInitialDeals = [initialDealProduct, initialDealProduct2, initialDealProduct3];
 
@@ -34,11 +35,11 @@ interface AppStateContextType {
   
   addOrder: (order: Order) => void;
 
-  addProduct: (product: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'>) => void;
+  addProduct: (product: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'> & { imageUrl: string }) => void;
   updateProduct: (productId: string, productData: Partial<Product>) => void;
   deleteProduct: (productId: string) => void;
 
-  addDeal: (deal: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images'>) => void;
+  addDeal: (deal: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images'> & { imageUrl: string }) => void;
   updateDeal: (dealId: string, dealData: Partial<DealProduct>) => void;
   deleteDeal: (dealId: string) => void;
   updateDealStockOnOrder: (cartProducts: any[]) => void;
@@ -149,8 +150,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   useEffect(() => { if (isClient) { window.localStorage.setItem('orders', JSON.stringify(orders)); }}, [orders, isClient]);
   useEffect(() => { if (isClient) { window.localStorage.setItem('editRequests', JSON.stringify(editRequests)); }}, [editRequests, isClient]);
 
-  const addToCart = (productId: string, quantity: number = 1, isDeal: boolean = false) => {
-    
+  const addToCart = useCallback((productId: string, quantity: number = 1, isDeal: boolean = false) => {
     if (isDeal) {
       const alreadyPurchased = orders.some(order => order.items.some(item => item.productId === productId));
       if (alreadyPurchased) {
@@ -192,9 +192,10 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         title: "Added to Cart",
         description: `${quantity} x ${product?.name || 'item'} has been added to your cart.`
     });
-  };
+  }, [orders, products, deals, toast]);
 
-  const increaseCartQuantity = (productId: string) => {
+
+  const increaseCartQuantity = useCallback((productId: string) => {
     const isDeal = deals.some(p => p.id === productId);
     if(isDeal) {
         toast({
@@ -211,9 +212,9 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             : item
         );
     });
-  };
+  }, [deals, toast]);
 
-  const decreaseCartQuantity = (productId: string) => {
+  const decreaseCartQuantity = useCallback((productId: string) => {
     setCart(prevCart => {
         const existingItem = prevCart.find(item => item.productId === productId);
         if (existingItem && existingItem.quantity > 1) {
@@ -223,55 +224,73 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
                 : item
             );
         } else {
-            // Remove the item if quantity is 1 or less
             return prevCart.filter(item => item.productId !== productId);
         }
     });
-  };
+  }, []);
 
-  const removeFromCart = (productId: string) => {
+  const removeFromCart = useCallback((productId: string) => {
     setCart(prevCart => prevCart.filter(item => item.productId !== productId));
     toast({
         title: "Item Removed",
         description: "The item has been removed from your cart."
     });
-  };
+  }, [toast]);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCart([]);
-  };
+  }, []);
 
-  const addOrder = (order: Order) => {
+  const addOrder = useCallback((order: Order) => {
     setOrders(prevOrders => [order, ...prevOrders]);
-  };
+  }, []);
 
-  const toggleWishlist = (productId: string) => {
+  const toggleWishlist = useCallback((productId: string) => {
+    let inWishlist = false;
     setWishlist(prevWishlist => {
       const existingItem = prevWishlist.find(item => item.productId === productId);
       if (existingItem) {
+        inWishlist = true;
         return prevWishlist.filter(item => item.productId !== productId);
       } else {
+        inWishlist = false;
         return [...prevWishlist, { productId, addedAt: new Date() }];
       }
     });
-  };
+    const product = products.find(p => p.id === productId);
+    toast({
+        title: inWishlist ? "Removed from Wishlist" : "Added to Wishlist",
+        description: `${product?.name} has been ${inWishlist ? 'removed from' : 'added to'} your wishlist.`
+    });
+  }, [products, toast]);
 
-  const isInWishlist = (productId: string) => {
+
+  const isInWishlist = useCallback((productId: string) => {
     return wishlist.some(item => item.productId === productId);
-  };
+  }, [wishlist]);
 
-  const addProduct = (productData: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'>) => {
+  const addProduct = useCallback((productData: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'> & { imageUrl: string }) => {
+    const newId = `prod${Date.now()}`;
+    const imageId = `product-image-${newId}`;
+    
+    PlaceHolderImages.push({
+        id: imageId,
+        description: productData.name,
+        imageUrl: productData.imageUrl,
+        imageHint: 'custom product'
+    });
+    
     const newProduct: Product = {
       ...productData,
-      id: `prod${Date.now()}`,
+      id: newId,
       slug: productData.name.toLowerCase().replace(/\s+/g, '-'),
       createdAt: new Date(),
-      images: ['product-placeholder-1', 'product-placeholder-2'], // default placeholder
+      images: [imageId, 'product-placeholder-2'],
     };
     setProducts(prev => [...prev, newProduct]);
-  };
+  }, []);
 
-  const updateProduct = (productId: string, productData: Partial<Product>) => {
+  const updateProduct = useCallback((productId: string, productData: Partial<Product>) => {
     setProducts(prev => prev.map(p => {
         if (p.id === productId) {
             const updatedProduct = { ...p, ...productData };
@@ -282,26 +301,36 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         }
         return p;
     }));
-  };
+  }, []);
   
-  const deleteProduct = (productId: string) => {
+  const deleteProduct = useCallback((productId: string) => {
     setProducts(prev => prev.filter(p => p.id !== productId));
-  };
+  }, []);
 
-  const addDeal = (dealData: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images'>) => {
+  const addDeal = useCallback((dealData: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images'> & { imageUrl: string }) => {
+    const newId = `deal${Date.now()}`;
+    const imageId = `product-deal-${newId}`;
+
+    PlaceHolderImages.push({
+        id: imageId,
+        description: dealData.name,
+        imageUrl: dealData.imageUrl,
+        imageHint: 'custom deal'
+    });
+    
     const newDeal: DealProduct = {
       ...dealData,
-      id: `deal${Date.now()}`,
+      id: newId,
       slug: dealData.name.toLowerCase().replace(/\s+/g, '-'),
       createdAt: new Date(),
-      images: [`product-deal-${Math.floor(Math.random() * 3) + 1}`],
+      images: [imageId],
       sold: 0,
       rating: Math.random() * 2 + 3, // 3 to 5 stars
     };
     setDeals(prev => [...prev, newDeal]);
-  };
+  }, []);
 
-  const updateDeal = (dealId: string, dealData: Partial<DealProduct>) => {
+  const updateDeal = useCallback((dealId: string, dealData: Partial<DealProduct>) => {
     setDeals(prev => prev.map(d => {
         if (d.id === dealId) {
             const updatedDeal = { ...d, ...dealData };
@@ -312,13 +341,13 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         }
         return d;
     }));
-  };
+  }, []);
 
-  const deleteDeal = (dealId: string) => {
+  const deleteDeal = useCallback((dealId: string) => {
     setDeals(prev => prev.filter(d => d.id !== dealId));
-  };
+  }, []);
 
-  const updateDealStockOnOrder = (cartProducts: any[]) => {
+  const updateDealStockOnOrder = useCallback((cartProducts: any[]) => {
      setDeals(prevDeals => {
         const newDeals = [...prevDeals];
         cartProducts.forEach(p => {
@@ -331,11 +360,11 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         });
         return newDeals;
      });
-  };
+  }, []);
 
-  const updateEditRequestStatus = (requestId: string, status: 'Pending' | 'Approved' | 'Rejected') => {
+  const updateEditRequestStatus = useCallback((requestId: string, status: 'Pending' | 'Approved' | 'Rejected') => {
     setEditRequests(prev => prev.map(req => req.id === requestId ? { ...req, status, updatedAt: new Date() } : req));
-  };
+  }, []);
 
   const value = { 
     cart, wishlist, orders, products, deals, editRequests,

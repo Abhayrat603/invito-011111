@@ -19,12 +19,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useAppState } from "@/components/providers/app-state-provider";
+import Image from "next/image";
 
 const formSchema = z.object({
   name: z.string().min(3, { message: "Deal name must be at least 3 characters." }),
@@ -34,6 +35,8 @@ const formSchema = z.object({
   stock: z.coerce.number().int().min(0, { message: "Stock cannot be negative." }),
   offerEndsAt: z.date({ required_error: "Offer end date is required." }),
   category: z.string().default("Deals"),
+  imageUrl: z.string().url({ message: "Please enter a valid URL." }),
+  zipFileUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
 });
 
 export default function AddDealPage() {
@@ -41,6 +44,7 @@ export default function AddDealPage() {
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { addDeal } = useAppState();
+    const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -50,8 +54,18 @@ export default function AddDealPage() {
             price: 0,
             discountPrice: 0,
             stock: 0,
+            imageUrl: "",
+            zipFileUrl: "",
         },
     });
+
+    const imageUrl = form.watch("imageUrl");
+
+    useEffect(() => {
+        if (imageUrl) {
+            setImagePreview(imageUrl);
+        }
+    }, [imageUrl]);
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true);
@@ -77,6 +91,22 @@ export default function AddDealPage() {
                 <main className="flex-grow p-4">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            {imagePreview && (
+                                <div className="relative w-full aspect-square rounded-md overflow-hidden border bg-muted">
+                                    <Image src={imagePreview} alt="Deal image preview" layout="fill" objectFit="cover" />
+                                </div>
+                            )}
+                             <FormField
+                                control={form.control}
+                                name="imageUrl"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Image URL</FormLabel>
+                                    <FormControl><Input placeholder="https://example.com/image.png" {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
                              <FormField
                                 control={form.control}
                                 name="name"
@@ -169,6 +199,17 @@ export default function AddDealPage() {
                                         />
                                         </PopoverContent>
                                     </Popover>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="zipFileUrl"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Zip File URL</FormLabel>
+                                    <FormControl><Input placeholder="https://example.com/download.zip" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                                 )}

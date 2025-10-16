@@ -26,6 +26,12 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useAppState } from "@/components/providers/app-state-provider";
+import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
+
+const findImage = (id: string) => {
+  return PlaceHolderImages.find(img => img.id === id);
+};
 
 const formSchema = z.object({
   name: z.string().min(3, { message: "Deal name must be at least 3 characters." }),
@@ -36,6 +42,8 @@ const formSchema = z.object({
   sold: z.coerce.number().int().min(0, { message: "Sold count cannot be negative." }),
   rating: z.coerce.number().min(0).max(5),
   offerEndsAt: z.date({ required_error: "Offer end date is required." }),
+  imageUrl: z.string().url({ message: "Please enter a valid URL." }),
+  zipFileUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
 });
 
 export default function EditDealPage() {
@@ -46,15 +54,26 @@ export default function EditDealPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { deals, updateDeal } = useAppState();
     const [deal, setDeal] = useState<DealProduct | undefined>(undefined);
+    const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
 
+    const imageUrl = form.watch("imageUrl");
+
+    useEffect(() => {
+        if(imageUrl) {
+            setImagePreview(imageUrl);
+        }
+    }, [imageUrl]);
+
     useEffect(() => {
         const dealToEdit = deals.find(d => d.slug === slug);
         if (dealToEdit) {
             setDeal(dealToEdit);
+            const image = findImage(dealToEdit.images[0]);
+            const currentImageUrl = image?.imageUrl || `https://picsum.photos/seed/${dealToEdit.id}/500`;
             form.reset({
                 name: dealToEdit.name,
                 description: dealToEdit.description,
@@ -64,7 +83,10 @@ export default function EditDealPage() {
                 sold: dealToEdit.sold,
                 rating: dealToEdit.rating,
                 offerEndsAt: new Date(dealToEdit.offerEndsAt),
+                imageUrl: currentImageUrl,
+                zipFileUrl: dealToEdit.zipFileUrl || '',
             });
+            setImagePreview(currentImageUrl);
         } else {
             toast({
                 variant: "destructive",
@@ -77,7 +99,24 @@ export default function EditDealPage() {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         if (!deal) return;
         setIsSubmitting(true);
-        updateDeal(deal.id, values);
+        
+        const imageId = `product-deal-${deal.id}`;
+        const existingImageIndex = PlaceHolderImages.findIndex(img => img.id === imageId);
+        if (existingImageIndex > -1) {
+            PlaceHolderImages[existingImageIndex].imageUrl = values.imageUrl;
+        } else {
+            PlaceHolderImages.push({
+                id: imageId,
+                description: values.name,
+                imageUrl: values.imageUrl,
+                imageHint: 'custom deal'
+            });
+        }
+        
+        updateDeal(deal.id, {
+          ...values,
+          images: [imageId],
+        });
         toast({
             title: "Deal Updated",
             description: `"${values.name}" has been successfully updated.`,
@@ -109,6 +148,22 @@ export default function EditDealPage() {
                 <main className="flex-grow p-4">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            {imagePreview && (
+                                <div className="relative w-full aspect-square rounded-md overflow-hidden border bg-muted">
+                                    <Image src={imagePreview} alt="Deal image preview" layout="fill" objectFit="cover" />
+                                </div>
+                            )}
+                             <FormField
+                                control={form.control}
+                                name="imageUrl"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Image URL</FormLabel>
+                                    <FormControl><Input placeholder="https://example.com/image.png" {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
                             <FormField
                                 control={form.control}
                                 name="name"
@@ -223,6 +278,17 @@ export default function EditDealPage() {
                                         />
                                         </PopoverContent>
                                     </Popover>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="zipFileUrl"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Zip File URL</FormLabel>
+                                    <FormControl><Input placeholder="https://example.com/download.zip" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                                 )}
