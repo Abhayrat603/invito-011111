@@ -50,7 +50,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       </main>
 
       {pathname === '/' && (
-           <footer className="bg-[#FCF9EA] text-amber-950 p-6">
+           <footer style={{ backgroundColor: '#FCF9EA' }} className="text-amber-950 p-6">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-6">
                     <div>
                         <h3 className="font-bold mb-2">POPULAR CATEGORIES</h3>
@@ -92,9 +92,9 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 </div>
 
                 <div className="border-t border-amber-900/20 pt-6">
-                     <div className="mb-4">
-                        <h3 className="font-bold text-center mb-2">FOLLOW US</h3>
-                        <div className="flex justify-center space-x-4">
+                     <div className="flex justify-center items-center gap-4 mb-4">
+                        <h3 className="font-bold">FOLLOW US</h3>
+                        <div className="flex space-x-4">
                             <a href="#" className="text-amber-950/70 hover:text-amber-950"><Facebook /></a>
                             <a href="#" className="text-amber-950/70 hover:text-amber-950"><Instagram /></a>
                             <a href="#" className="text-amber-950/70 hover:text-amber-950"><Twitter /></a>
