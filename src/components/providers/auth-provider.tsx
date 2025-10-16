@@ -99,8 +99,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     await updateProfile(currentUser, profileData);
     // After updating, we need a fresh user object with the updated info.
-    // We create a new object to ensure React detects the state change.
-    setUser(auth.currentUser ? { ...auth.currentUser } : null);
+    // We reload the user to get the latest profile data from Firebase Auth.
+    if (auth.currentUser) {
+      await reload(auth.currentUser);
+      setUser(auth.currentUser ? { ...auth.currentUser } : null);
+    }
   };
   
   const updateUserEmail = async (email: string) => {
@@ -140,6 +143,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const uploadTask = await uploadString(storageRef, photoDataUrl, 'data_url');
     const downloadURL = await getDownloadURL(uploadTask.ref);
 
+    // Call the corrected updateUserProfile function
     await updateUserProfile({ photoURL: downloadURL });
   };
 
