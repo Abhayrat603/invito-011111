@@ -94,17 +94,13 @@ export default function ProfilePage() {
         text: "Create and customize beautiful invitation cards for every occasion!",
         url: window.location.origin,
       };
-      // Web Share API is only available in secure contexts (HTTPS)
-      const isSecureContext = window.isSecureContext;
 
       try {
-        if (navigator.share && isSecureContext) {
+        if (navigator.share) {
           await navigator.share(shareData);
-          toast({
-            title: "Shared successfully!",
-          });
+          // Don't show a toast on successful share, as the native UI provides feedback.
         } else {
-          // Fallback for non-secure contexts or browsers that don't support Web Share API
+          // Fallback for browsers that don't support Web Share API
           await navigator.clipboard.writeText(shareData.url);
           toast({
             title: "Link Copied!",
