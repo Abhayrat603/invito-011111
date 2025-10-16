@@ -158,7 +158,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                         <Link href="https://wa.me/918463062603" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3" aria-label="Chat on WhatsApp">
                             <span className="bg-background text-foreground text-xs font-medium px-3 py-1 rounded-full shadow-lg">WhatsApp</span>
                             <div className="rounded-full shadow-lg flex items-center justify-center w-10 h-10">
-                                <Image src="https://i.ibb.co/CshBY6P/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" width={40} height={40} />
+                                <Image src="https://i.ibb.co/Z1WdFS28/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" width={40} height={40} />
                             </div>
                         </Link>
                     </div>
@@ -178,5 +178,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+
+    
 
     
