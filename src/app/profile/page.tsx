@@ -129,6 +129,7 @@ export default function ProfilePage() {
                 </div>
                 
                 {user?.displayName && <h2 className="text-2xl font-bold">{user.displayName}</h2>}
+                {user?.email && <p className="text-sm text-muted-foreground">{user.email}</p>}
 
 
                 <div className="w-full space-y-2 mt-6">

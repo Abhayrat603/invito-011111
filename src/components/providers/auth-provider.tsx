@@ -100,10 +100,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await updateProfile(currentUser, profileData);
     // After updating, we need a fresh user object with the updated info.
     // We reload the user to get the latest profile data from Firebase Auth.
-    if (auth.currentUser) {
-      await reload(auth.currentUser);
-      setUser(auth.currentUser ? { ...auth.currentUser } : null);
-    }
+    await reload(currentUser);
+    // Create a new object to force a state update in React
+    setUser(auth.currentUser ? { ...auth.currentUser } : null);
   };
   
   const updateUserEmail = async (email: string) => {
