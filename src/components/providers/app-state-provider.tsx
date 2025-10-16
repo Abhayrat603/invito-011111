@@ -2,7 +2,7 @@
 "use client";
 
 import React, { createContext, useContext, ReactNode, useCallback, useMemo } from 'react';
-import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser, AppRating, AppSettings, ImagePlaceholder } from '@/lib/types';
+import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser, AppRating, AppSettings, Testimonial, ImagePlaceholder } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from './auth-provider';
 import { 
@@ -34,6 +34,7 @@ interface AppStateContextType {
   users: AppUser[];
   appRatings: AppRating[];
   appSettings: AppSettings;
+  testimonial: Testimonial;
   images: ImagePlaceholder[];
   
   addToCart: (productId: string, quantity?: number, isDeal?: boolean) => void;
@@ -63,6 +64,7 @@ interface AppStateContextType {
   addRating: (rating: Omit<AppRating, 'id' | 'createdAt' | 'userId' | 'userName'>) => void;
 
   updateShareLink: (newLink: string) => void;
+  updateTestimonial: (testimonial: Testimonial) => void;
   findImage: (id: string) => ImagePlaceholder | undefined;
 }
 
@@ -70,6 +72,13 @@ const AppStateContext = createContext<AppStateContextType | undefined>(undefined
 
 const initialAppSettings: AppSettings = {
     shareLink: 'https://invitedesigner.com'
+};
+
+const initialTestimonial: Testimonial = {
+    name: "ALAN DOE",
+    title: "CEO & Founder Invision",
+    quote: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor dolor sit amet.",
+    imageUrl: "https://i.ibb.co/L9LcfJ3/testimonial-alan.jpg"
 };
 
 const convertTimestamps = (data: any[], fields: string[]) => {
@@ -111,6 +120,10 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const appSettingsDoc = useMemo(() => doc(db, 'settings', 'app'), []);
   const { data: appSettingsData } = useDoc(appSettingsDoc);
   const appSettings: AppSettings = appSettingsData ? appSettingsData as AppSettings : initialAppSettings;
+
+  const testimonialDoc = useMemo(() => doc(db, 'settings', 'testimonial'), []);
+  const { data: testimonialData } = useDoc(testimonialDoc);
+  const testimonial: Testimonial = testimonialData ? testimonialData as Testimonial : initialTestimonial;
 
   const imagesQuery = useMemo(() => collection(db, 'images'), []);
   const { data: imagesData } = useCollection(imagesQuery);
@@ -476,11 +489,17 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     await setDoc(settingsRef, { shareLink: newLink }, { merge: true });
   }, []);
 
+  const updateTestimonial = useCallback(async (testimonialData: Testimonial) => {
+    const testimonialRef = doc(db, 'settings', 'testimonial');
+    await setDoc(testimonialRef, testimonialData, { merge: true });
+  }, []);
+
+
   const value = { 
     cart, wishlist, 
     orders,
     products, deals, 
-    editRequests, users, appRatings, appSettings,
+    editRequests, users, appRatings, appSettings, testimonial,
     images,
     addToCart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, clearCart, 
     toggleWishlist, isInWishlist, addOrder,
@@ -490,6 +509,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     addUser,
     addRating,
     updateShareLink,
+    updateTestimonial,
     findImage,
   };
 

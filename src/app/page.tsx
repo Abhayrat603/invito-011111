@@ -30,20 +30,19 @@ import {
 import type { Product } from "@/lib/types";
 
 const TestimonialCard = () => {
-    const { findImage } = useAppState();
-    const testimonialImage = findImage('testimonial-alan');
+    const { testimonial } = useAppState();
     return (
         <Card className="bg-card shadow-lg border-border/50 rounded-2xl">
             <CardContent className="p-8 flex flex-col items-center text-center">
                 <Avatar className="w-24 h-24 mb-4 border-4 border-background shadow-md">
-                    <AvatarImage src={testimonialImage?.imageUrl} alt="Alan Doe" data-ai-hint="woman portrait" />
-                    <AvatarFallback>AD</AvatarFallback>
+                    <AvatarImage src={testimonial.imageUrl} alt={testimonial.name} />
+                    <AvatarFallback>{testimonial.name.substring(0, 2).toUpperCase()}</AvatarFallback>
                 </Avatar>
-                <h3 className="text-xl font-bold text-foreground">ALAN DOE</h3>
-                <p className="text-sm text-muted-foreground mb-4">CEO & Founder Invision</p>
+                <h3 className="text-xl font-bold text-foreground">{testimonial.name}</h3>
+                <p className="text-sm text-muted-foreground mb-4">{testimonial.title}</p>
                 <Quote className="w-10 h-10 text-primary/50 my-2" />
                 <p className="text-foreground/80 italic">
-                    "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor dolor sit amet."
+                    "{testimonial.quote}"
                 </p>
             </CardContent>
         </Card>

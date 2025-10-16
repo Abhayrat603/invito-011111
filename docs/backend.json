@@ -140,6 +140,18 @@
         },
         "required": ["shareLink"]
     },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "A testimonial from a user.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "title": { "type": "string" },
+        "quote": { "type": "string" },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["name", "title", "quote", "imageUrl"]
+    },
     "ImagePlaceholder": {
         "title": "ImagePlaceholder",
         "description": "An image with metadata.",
@@ -188,6 +200,10 @@
     "/settings/app": {
         "schema": { "$ref": "#/entities/AppSettings" },
         "description": "General application settings."
+    },
+    "/settings/testimonial": {
+        "schema": { "$ref": "#/entities/Testimonial" },
+        "description": "Homepage testimonial settings."
     },
     "/images": {
         "schema": { "$ref": "#/entities/ImagePlaceholder" },

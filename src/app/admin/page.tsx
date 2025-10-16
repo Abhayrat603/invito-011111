@@ -1,10 +1,11 @@
+
 "use client";
 
 import { MainLayout } from "@/components/main-layout";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Loader2, Shield, Users, ShoppingCart, CreditCard, Edit, Tags, Star, History, Settings } from "lucide-react";
+import { Loader2, Shield, Users, ShoppingCart, CreditCard, Edit, Tags, Star, History, Settings, MessageSquare } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
 
@@ -96,6 +97,12 @@ export default function AdminPage() {
                 icon={Settings}
                 title="App Settings"
                 description="Configure application settings"
+            />
+            <AdminCard 
+                href="/admin/testimonial"
+                icon={MessageSquare}
+                title="Manage Testimonial"
+                description="Edit the homepage testimonial"
             />
         </main>
       </div>
