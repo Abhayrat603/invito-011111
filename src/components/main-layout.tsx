@@ -144,7 +144,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 <div className="flex flex-col items-center gap-3 transition-all duration-300">
                     <Link
                         href="/ai-help"
-                        className="bg-purple-600 text-white rounded-full p-2.5 shadow-lg hover:bg-purple-700 flex items-center justify-center w-10 h-10"
+                        className="bg-transparent text-white rounded-full p-2.5 shadow-lg flex items-center justify-center w-10 h-10"
                         aria-label="Help with AI"
                     >
                         <Image src="https://i.ibb.co/VYXGRgSc/IMG-20251016-080138.png" alt="AI Help" width={30} height={30} />
