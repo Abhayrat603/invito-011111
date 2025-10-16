@@ -48,20 +48,24 @@ export default function ProductDetailPage() {
   }
 
   const handleDownload = () => {
-    toast({
-      title: "Downloading...",
-      description: "Your file download will begin shortly. (This is a simulation)",
-    });
-    // In a real app, you would have a secure download link from your backend
-    const link = document.createElement("a");
-    // Find the image URL from placeholder data; default to a placeholder
-    const imageUrl = findImage(product.images[0])?.imageUrl || `https://picsum.photos/seed/${product.id}/800/1200`;
-    link.href = imageUrl;
-    // Suggest a filename for the download
-    link.download = `${product.slug}.jpg`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    if (product.zipFileUrl) {
+        toast({
+            title: "Downloading...",
+            description: `Your download for ${product.name} will begin shortly.`,
+        });
+        const link = document.createElement("a");
+        link.href = product.zipFileUrl;
+        link.download = `${product.slug}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Download Not Available",
+            description: "No download file has been configured for this product.",
+        });
+    }
   }
 
   const handleToggleWishlist = () => {

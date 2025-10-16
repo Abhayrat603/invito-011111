@@ -20,6 +20,7 @@ export interface Product {
   images: string[];
   category: string;
   createdAt: Date;
+  zipFileUrl?: string;
 }
 
 export interface DealProduct extends Product {

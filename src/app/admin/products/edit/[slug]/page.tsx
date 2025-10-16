@@ -37,6 +37,7 @@ const formSchema = z.object({
   price: z.coerce.number().min(0, { message: "Price cannot be negative." }),
   category: z.string({ required_error: "Please select a category." }),
   imageUrl: z.string().url({ message: "Please enter a valid URL." }),
+  zipFileUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
 });
 
 export default function EditProductPage() {
@@ -74,6 +75,7 @@ export default function EditProductPage() {
                 price: productToEdit.price,
                 category: productToEdit.category,
                 imageUrl: currentImageUrl,
+                zipFileUrl: productToEdit.zipFileUrl || '',
             });
             setImagePreview(currentImageUrl);
         } else {
@@ -110,6 +112,7 @@ export default function EditProductPage() {
             price: values.price,
             category: values.category,
             images: [imageId, product.images[1] || ''],
+            zipFileUrl: values.zipFileUrl,
         });
         
         toast({
@@ -213,6 +216,17 @@ export default function EditProductPage() {
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="zipFileUrl"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Zip File URL</FormLabel>
+                                    <FormControl><Input placeholder="https://example.com/download.zip" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                                 )}

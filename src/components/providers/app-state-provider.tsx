@@ -246,23 +246,13 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   };
 
   const toggleWishlist = (productId: string) => {
-    let wasAdded = false;
     setWishlist(prevWishlist => {
       const existingItem = prevWishlist.find(item => item.productId === productId);
       if (existingItem) {
         return prevWishlist.filter(item => item.productId !== productId);
       } else {
-        wasAdded = true;
         return [...prevWishlist, { productId, addedAt: new Date() }];
       }
-    });
-    
-    const allProducts = [...products, ...deals];
-    const product = allProducts.find(p => p.id === productId);
-    
-    toast({
-      title: wasAdded ? "Added to Wishlist" : "Removed from Wishlist",
-      description: `${product?.name} has been ${wasAdded ? 'added to' : 'removed from'} your wishlist.`,
     });
   };
 

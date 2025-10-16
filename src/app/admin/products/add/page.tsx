@@ -29,6 +29,7 @@ const formSchema = z.object({
   description: z.string().min(10, { message: "Description must be at least 10 characters." }),
   price: z.coerce.number().min(0, { message: "Price cannot be negative." }),
   category: z.string({ required_error: "Please select a category." }),
+  zipFileUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
 });
 
 export default function AddProductPage() {
@@ -43,6 +44,7 @@ export default function AddProductPage() {
             name: "",
             description: "",
             price: 0,
+            zipFileUrl: "",
         },
     });
 
@@ -121,6 +123,17 @@ export default function AddProductPage() {
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="zipFileUrl"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Zip File URL</FormLabel>
+                                    <FormControl><Input placeholder="https://example.com/download.zip" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                                 )}
