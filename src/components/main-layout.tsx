@@ -172,10 +172,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 )}
                 <Button
                     onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
-                    className="bg-blue-600 text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-700 transition-transform duration-300 flex items-center justify-center"
+                    className="bg-transparent text-white rounded-full w-14 h-14 shadow-lg hover:bg-transparent transition-transform duration-300 flex items-center justify-center p-0"
                     aria-label="Toggle contact menu"
                 >
-                    {isFabMenuOpen ? <X className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
+                    {isFabMenuOpen ? <X className="h-8 w-8 text-slate-700" /> : <Image src="https://i.ibb.co/8ZyBd6d/contact-us.png" alt="Contact Us" width={56} height={56} />}
                 </Button>
             </div>
         )}
