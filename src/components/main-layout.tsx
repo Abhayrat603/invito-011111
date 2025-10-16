@@ -103,26 +103,9 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
                 </div>
                 <h1 className="text-xl font-bold">Invitedit</h1>
             </Link>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                 <Avatar className="cursor-pointer">
-                    <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'User'} />
-                    <AvatarFallback>{getUserInitials(user?.displayName)}</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link href="/profile">Profile</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/history">History</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/wishlist">Wishlist</Link></DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={signOut} className="text-destructive">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button variant="ghost" size="icon">
+                <Search className="h-5 w-5" />
+            </Button>
          </header>
       )}
       <main ref={mainContentRef} className="flex-grow pb-16 overflow-y-auto">
@@ -231,3 +214,5 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
     </div>
   );
 }
+
+    
