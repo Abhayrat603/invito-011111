@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ShoppingBag, Heart, User, Menu as MenuIcon } from "lucide-react";
+import { Home, ShoppingBag, Heart, User, Menu as MenuIcon, MapPin, Phone, Mail, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -14,6 +14,7 @@ import {
 import { MenuPageContent } from "@/app/menu/page";
 import { cn } from "@/lib/utils";
 import { useAppState } from "./providers/app-state-provider";
+import Image from "next/image";
 
 const NavItem = ({ href, icon: Icon, label, pathname, count }: { href: string, icon: React.ElementType, label: string, pathname: string, count?: number }) => (
     <Link href={href}>
@@ -48,6 +49,64 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
+      {pathname === '/' && (
+           <footer className="bg-gray-800 text-white p-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-6">
+                    <div>
+                        <h3 className="font-bold mb-2">POPULAR CATEGORIES</h3>
+                        <ul className="space-y-2 text-sm text-gray-400">
+                            <li><a href="#" className="hover:underline">Wedding Invitation</a></li>
+                            <li><a href="#" className="hover:underline">Birthday Invitation</a></li>
+                            <li><a href="#" className="hover:underline">Corporate</a></li>
+                            <li><a href="#" className="hover:underline">Party</a></li>
+                            <li><a href="#" className="hover:underline">E-Invites</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="font-bold mb-2">PRODUCTS</h3>
+                        <ul className="space-y-2 text-sm text-gray-400">
+                            <li><a href="#" className="hover:underline">New Designs</a></li>
+                            <li><a href="#" className="hover:underline">Special Offers</a></li>
+                            <li><a href="/request-edit" className="hover:underline">Request For Edit</a></li>
+                            <li><a href="/help-center" className="hover:underline">Help Center</a></li>
+                            <li><a href="#" className="hover:underline">Sitemap</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="font-bold mb-2">OUR COMPANY</h3>
+                        <ul className="space-y-2 text-sm text-gray-400">
+                            <li><a href="/about-us" className="hover:underline">About Us</a></li>
+                            <li><a href="/contact-us" className="hover:underline">Contact Us</a></li>
+                            <li><a href="/terms-and-conditions" className="hover:underline">Terms & Conditions</a></li>
+                            <li><a href="/privacy-policy" className="hover:underline">Privacy Policy</a></li>
+                            <li><a href="#" className="hover:underline">Careers</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="font-bold mb-2">CONTACT</h3>
+                        <ul className="space-y-2 text-sm text-gray-400">
+                           <li className="flex items-start"><Phone className="h-4 w-4 mr-2 mt-1 shrink-0"/>+91 8463062603</li>
+                            <li className="flex items-start"><Mail className="h-4 w-4 mr-2 mt-1 shrink-0"/>abhayrat603@gmail.com</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div className="border-t border-gray-700 pt-6">
+                     <div className="mb-4">
+                        <h3 className="font-bold text-center mb-2">FOLLOW US</h3>
+                        <div className="flex justify-center space-x-4">
+                            <a href="#" className="text-gray-400 hover:text-white"><Facebook /></a>
+                            <a href="#" className="text-gray-400 hover:text-white"><Instagram /></a>
+                            <a href="#" className="text-gray-400 hover:text-white"><Twitter /></a>
+                            <a href="#" className="text-gray-400 hover:text-white"><Linkedin /></a>
+                        </div>
+                    </div>
+                    <p className="text-center text-xs text-gray-500">Copyright &copy; Invite Designer All Rights Reserved.</p>
+                </div>
+            </footer>
+        )}
+
+
        <Sheet>
         <SheetContent side="left" className="p-0 w-[90vw]">
           <SheetTitle className="sr-only">Menu</SheetTitle>
@@ -55,7 +114,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           <MenuPageContent />
         </SheetContent>
 
-        <footer className="fixed bottom-0 left-0 right-0 bg-card border-t max-w-md mx-auto z-20">
+        <nav className="fixed bottom-0 left-0 right-0 bg-card border-t max-w-md mx-auto z-20">
             <div className="flex justify-around items-center h-16">
               <SheetTrigger asChild>
                 <div className="flex flex-col items-center justify-center gap-1 text-muted-foreground cursor-pointer text-amber-900/60 dark:text-amber-200/70">
@@ -67,7 +126,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 <NavItem key={item.href} {...item} pathname={pathname} />
               ))}
             </div>
-        </footer>
+        </nav>
       </Sheet>
     </div>
   );
