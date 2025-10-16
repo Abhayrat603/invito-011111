@@ -37,12 +37,14 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'razorpay.com',
+        hostname: 'ibb.co',
         port: '',
         pathname: '/**',
       },
-    ],
-  },
-};
-
+      {
+        protocol: 'https'
+      }
+    ]
+  }
+}
 export default nextConfig;
