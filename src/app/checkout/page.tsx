@@ -4,13 +4,14 @@
 import { useRouter } from "next/navigation";
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useAppState } from "@/components/providers/app-state-provider";
 import { useAuth } from "@/components/providers/auth-provider";
 import { Product, DealProduct as DealProductType, Order } from "@/lib/types";
 import Image from "next/image";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function CheckoutPage() {
     const router = useRouter();
@@ -33,71 +34,13 @@ export default function CheckoutPage() {
     const total = cartProducts.reduce((acc, p) => acc + (p?.displayPrice || 0) * (p?.quantity || 0), 0);
 
     const handlePayment = async () => {
-        if (!user) {
-            toast({
-                variant: "destructive",
-                title: "Not Logged In",
-                description: "You must be logged in to complete a purchase.",
-            });
-            return;
-        }
-
-        setIsSubmitting(true);
-        console.log("Simulating Razorpay payment for:", `₹${total.toFixed(2)}`);
-
-        // Check if a deal product in the cart has already been purchased by the current user.
-        for (const cartItem of cartProducts) {
-            if (cartItem && 'discountPrice' in cartItem) { 
-                const alreadyPurchased = orders.some(order => 
-                    order.userId === user.uid && order.items.some(item => item.productId === cartItem.id)
-                );
-                if (alreadyPurchased) {
-                    toast({
-                        variant: "destructive",
-                        title: "Purchase limit reached",
-                        description: `You have already purchased the deal "${cartItem.name}".`,
-                    });
-                    setIsSubmitting(false);
-                    return;
-                }
-            }
-        }
-        
-        // Simulate API call to Razorpay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        const orderPayload: Omit<Order, 'id' | 'createdAt' | 'userId'> = {
-            items: cartProducts.map(p => ({
-                productId: p!.id,
-                productName: p!.name,
-                quantity: p!.quantity,
-                price: p!.displayPrice,
-            })),
-            total: total,
-            status: 'Delivered', 
-        };
-
-        try {
-            const newOrderId = await addOrder(orderPayload);
-            updateDealStockOnOrder(cartProducts);
-            await clearCart();
-            
-            toast({
-                title: "Payment Successful",
-                description: `Your payment of ₹${total.toFixed(2)} has been processed.`,
-            });
-            
-            setIsSubmitting(false);
-            router.push(`/order-confirmation/${newOrderId}`);
-        } catch(error) {
-            console.error("Failed to create order: ", error);
-            toast({
-                variant: "destructive",
-                title: "Order Failed",
-                description: "There was a problem creating your order. Please try again.",
-            });
-            setIsSubmitting(false);
-        }
+        // This function is now a placeholder.
+        // A real payment integration would be required here.
+        toast({
+            variant: "destructive",
+            title: "Payment Gateway Not Configured",
+            description: "This is a placeholder. A real payment gateway like Razorpay or Stripe must be integrated to process payments."
+        });
     };
 
     return (
@@ -125,23 +68,13 @@ export default function CheckoutPage() {
 
                         <div>
                             <h2 className="text-lg font-semibold mb-2">Payment Details</h2>
-                            <div className="bg-card p-4 rounded-lg border text-center">
-                                <p className="text-muted-foreground mb-4">Click the button below to complete your payment securely with Razorpay.</p>
-                                <Button 
-                                    onClick={handlePayment} 
-                                    className="w-full h-12 bg-[#02042b] hover:bg-[#02042b]/90 text-white" 
-                                    disabled={isSubmitting || total === 0}
-                                >
-                                    {isSubmitting ? (
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" /> 
-                                    ) : (
-                                        <div className="flex items-center justify-center">
-                                            <Image src="https://razorpay.com/favicon.ico" alt="Razorpay" width={24} height={24} className="mr-2"/>
-                                            <span>Pay ₹{total.toFixed(2)} with Razorpay</span>
-                                        </div>
-                                    )}
-                                </Button>
-                            </div>
+                             <Alert variant="destructive">
+                                <AlertTriangle className="h-4 w-4" />
+                                <AlertTitle>Action Required: Payment Gateway</AlertTitle>
+                                <AlertDescription>
+                                    This checkout is for demonstration purposes only. To accept real payments, you must integrate a payment provider like Razorpay or Stripe. This involves creating an account with the provider, getting API keys, and implementing both client-side and server-side code.
+                                </AlertDescription>
+                            </Alert>
                         </div>
                     </div>
                 </main>
@@ -149,5 +82,3 @@ export default function CheckoutPage() {
         </MainLayout>
     );
 }
-
-    
