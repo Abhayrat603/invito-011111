@@ -38,4 +38,7 @@ export default function WishlistPage() {
             )}
           </main>
         </div>
-      </MainLayout
+      </MainLayout>
+    </AuthRedirect>
+  );
+}
