@@ -28,7 +28,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 
 const findImage = (id: string) => {
     return PlaceHolderImages.find(img => img.id === id);
@@ -132,9 +131,6 @@ export default function EcommerceHomePage() {
                   <section className="px-4 my-6">
                     <h2 className="text-2xl font-headline font-bold text-primary text-left mb-2">Deal of the Day</h2>
                      <Carousel
-                        plugins={[
-                            Autoplay({ delay: 4000, stopOnInteraction: true }),
-                        ]}
                         opts={{
                           align: "start",
                           loop: true,
