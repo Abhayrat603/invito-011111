@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useParams, useRouter } from 'next/navigation';
@@ -10,6 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 export default function OrderConfirmationPage() {
     const router = useRouter();
@@ -17,6 +19,11 @@ export default function OrderConfirmationPage() {
     const { orderId } = params;
     const { orders } = useAppState();
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const order = orders.find(o => o.id === orderId);
 
@@ -60,7 +67,7 @@ export default function OrderConfirmationPage() {
                         <CardContent>
                              <div className="text-sm text-muted-foreground">
                                 <p>Order ID: <strong>{order.id}</strong></p>
-                                <p>Date: {format(order.createdAt, "MMM d, yyyy 'at' h:mm a")}</p>
+                                <p>Date: {isClient ? format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a") : '...'}</p>
                             </div>
                         </CardContent>
                     </Card>

@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
+import { useState, useEffect } from "react";
 
 const editStatusConfig = {
   Pending: {
@@ -61,6 +62,11 @@ const orderStatusConfig = {
 export default function HistoryPage() {
     const router = useRouter();
     const { orders, editRequests } = useAppState();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     
     // Only delivered orders are shown in purchase history.
     const deliveredOrders = orders.filter(order => order.status === 'Delivered');
@@ -89,7 +95,7 @@ export default function HistoryPage() {
                                                 <div>
                                                     <CardTitle className="text-base font-semibold">Order #{order.id}</CardTitle>
                                                     <CardDescription className="text-xs">
-                                                        {format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a")}
+                                                        {isClient ? format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a") : '...'}
                                                     </CardDescription>
                                                 </div>
                                                 <Badge className={cn("text-xs font-bold", color, text)}>
@@ -145,7 +151,7 @@ export default function HistoryPage() {
                                             <div className="flex-grow">
                                                 <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
                                                 <CardDescription className="text-xs">
-                                                    Requested: {format(new Date(request.requestedAt), "MMM d, yyyy 'at' h:mm a")}
+                                                    Requested: {isClient ? format(new Date(request.requestedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
                                                 </CardDescription>
                                             </div>
                                             <Badge className={cn("text-xs font-bold", color, text)}>

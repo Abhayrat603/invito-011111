@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Download, User, ShoppingCart, FileText, Clock, CheckCircle, XCircle } from "lucide-react";
@@ -41,6 +41,11 @@ export default function ReportPage() {
     const { user } = useAuth();
     const { toast } = useToast();
     const printRef = useRef<HTMLDivElement>(null);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleDownload = async () => {
         const input = printRef.current;
@@ -153,7 +158,7 @@ export default function ReportPage() {
                                                     <div>
                                                         <CardTitle className="text-base font-semibold">Order #{order.id}</CardTitle>
                                                         <CardDescription className="text-xs">
-                                                            {format(order.createdAt, "MMM d, yyyy 'at' h:mm a")}
+                                                            {isClient ? format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a") : '...'}
                                                         </CardDescription>
                                                     </div>
                                                     <Badge className={cn("text-xs font-bold", orderStatusConfig[order.status].color, orderStatusConfig[order.status].text)}>
@@ -198,7 +203,7 @@ export default function ReportPage() {
                                                     <div className="flex-grow">
                                                         <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
                                                         <CardDescription className="text-xs">
-                                                            Requested: {format(request.requestedAt, "MMM d, yyyy 'at' h:mm a")}
+                                                            Requested: {isClient ? format(new Date(request.requestedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
                                                         </CardDescription>
                                                     </div>
                                                     <Badge className={cn("text-xs font-bold", color, text)}>

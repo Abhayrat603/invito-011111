@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
 
 const orderStatusConfig = {
     Placed: {
@@ -40,6 +41,12 @@ const orderStatusConfig = {
 export default function AdminPaymentsPage() {
     const router = useRouter();
     const { orders } = useAppState();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
 
     return (
         <MainLayout>
@@ -61,7 +68,7 @@ export default function AdminPaymentsPage() {
                                         <div>
                                             <CardTitle className="text-base font-semibold">Order #{order.id}</CardTitle>
                                             <CardDescription className="text-xs">
-                                                {format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a")}
+                                                {isClient ? format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a") : '...'}
                                             </CardDescription>
                                         </div>
                                         <Badge className={cn("text-xs font-bold", color, text)}>

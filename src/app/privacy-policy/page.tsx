@@ -1,9 +1,11 @@
+
 "use client";
 
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Shield, CheckCircle, FileText, User, Mail, Database, Cookie, Globe, Edit, Share2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 const InfoCard = ({ icon: Icon, title, children }: { icon: React.ElementType, title: string, children: React.ReactNode }) => (
     <div className="bg-card p-6 rounded-2xl shadow-sm border border-border/50">
@@ -23,6 +25,11 @@ const InfoCard = ({ icon: Icon, title, children }: { icon: React.ElementType, ti
 
 export default function PrivacyPolicyPage() {
     const router = useRouter();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     return (
         <MainLayout>
@@ -30,7 +37,7 @@ export default function PrivacyPolicyPage() {
                 
                 <main className="flex-grow p-4 md:p-6 space-y-8">
                     <div className="text-center mb-4">
-                        <p className="text-muted-foreground">Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                        <p className="text-muted-foreground">Last updated: {isClient ? new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '...'}</p>
                     </div>
 
                     <InfoCard icon={FileText} title="Introduction">

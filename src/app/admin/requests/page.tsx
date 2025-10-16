@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect } from "react";
 
 
 const editStatusConfig = {
@@ -49,6 +50,11 @@ export default function AdminRequestsPage() {
     const router = useRouter();
     const { toast } = useToast();
     const { editRequests, updateEditRequestStatus } = useAppState();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleStatusChange = (requestId: string, newStatus: 'Pending' | 'Approved' | 'Rejected') => {
         updateEditRequestStatus(requestId, newStatus);
@@ -78,7 +84,7 @@ export default function AdminRequestsPage() {
                                         <div className="flex-grow overflow-hidden">
                                             <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
                                             <CardDescription className="text-xs">
-                                                Requested: {format(new Date(request.requestedAt), "MMM d, yyyy 'at' h:mm a")}
+                                                Requested: {isClient ? format(new Date(request.requestedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
                                             </CardDescription>
                                         </div>
                                         <Badge className={cn("text-xs font-bold", color, text)}>

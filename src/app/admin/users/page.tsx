@@ -8,10 +8,16 @@ import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { useAppState } from "@/components/providers/app-state-provider";
 import { format } from "date-fns";
+import { useState, useEffect } from "react";
 
 export default function AdminUsersPage() {
     const router = useRouter();
     const { users } = useAppState();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     return (
         <MainLayout>
@@ -40,7 +46,7 @@ export default function AdminUsersPage() {
                                     {user.phone ? `+91 ${user.phone}` : 'No phone number'}
                                 </p>
                                 <p className="text-xs text-muted-foreground">
-                                    Registered on: {format(new Date(user.createdAt), "PPP")}
+                                    Registered on: {isClient ? format(new Date(user.createdAt), "PPP") : '...'}
                                 </p>
                             </CardContent>
                         </Card>
