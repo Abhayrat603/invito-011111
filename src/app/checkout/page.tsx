@@ -8,12 +8,14 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useAppState } from "@/components/providers/app-state-provider";
+import { useAuth } from "@/components/providers/auth-provider";
 import { Product, DealProduct as DealProductType, Order } from "@/lib/types";
 import Image from "next/image";
 
 export default function CheckoutPage() {
     const router = useRouter();
     const { toast } = useToast();
+    const { user } = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { cart, addOrder, clearCart, orders, products, deals, updateDealStockOnOrder } = useAppState();
     
@@ -31,14 +33,23 @@ export default function CheckoutPage() {
     const total = cartProducts.reduce((acc, p) => acc + (p?.displayPrice || 0) * (p?.quantity || 0), 0);
 
     const handlePayment = async () => {
+        if (!user) {
+            toast({
+                variant: "destructive",
+                title: "Not Logged In",
+                description: "You must be logged in to complete a purchase.",
+            });
+            return;
+        }
+
         setIsSubmitting(true);
         console.log("Simulating Razorpay payment for:", `₹${total.toFixed(2)}`);
 
-        // Check if a deal product in the cart has already been purchased.
+        // Check if a deal product in the cart has already been purchased by the current user.
         for (const cartItem of cartProducts) {
-            if (cartItem && 'discountPrice' in cartItem) { // It's a deal product
+            if (cartItem && 'discountPrice' in cartItem) { 
                 const alreadyPurchased = orders.some(order => 
-                    order.items.some(item => item.productId === cartItem.id)
+                    order.userId === user.uid && order.items.some(item => item.productId === cartItem.id)
                 );
                 if (alreadyPurchased) {
                     toast({
@@ -55,9 +66,7 @@ export default function CheckoutPage() {
         // Simulate API call to Razorpay
         await new Promise(resolve => setTimeout(resolve, 2000));
         
-        // Create a new order object
-        const newOrder: Order = {
-            id: `ord${Date.now()}`,
+        const orderPayload: Omit<Order, 'id' | 'createdAt' | 'userId'> = {
             items: cartProducts.map(p => ({
                 productId: p!.id,
                 productName: p!.name,
@@ -65,24 +74,30 @@ export default function CheckoutPage() {
                 price: p!.displayPrice,
             })),
             total: total,
-            status: 'Delivered', // Simulating instant delivery for digital goods
-            createdAt: new Date(),
+            status: 'Delivered', 
         };
 
-        // Decrease stock for deal products
-        updateDealStockOnOrder(cartProducts);
-
-        // Add order to state and clear cart
-        addOrder(newOrder);
-        clearCart();
-        
-        toast({
-            title: "Payment Successful",
-            description: `Your payment of ₹${total.toFixed(2)} has been processed.`,
-        });
-        
-        setIsSubmitting(false);
-        router.push(`/order-confirmation/${newOrder.id}`);
+        try {
+            const newOrderId = await addOrder(orderPayload);
+            updateDealStockOnOrder(cartProducts);
+            await clearCart();
+            
+            toast({
+                title: "Payment Successful",
+                description: `Your payment of ₹${total.toFixed(2)} has been processed.`,
+            });
+            
+            setIsSubmitting(false);
+            router.push(`/order-confirmation/${newOrderId}`);
+        } catch(error) {
+            console.error("Failed to create order: ", error);
+            toast({
+                variant: "destructive",
+                title: "Order Failed",
+                description: "There was a problem creating your order. Please try again.",
+            });
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -134,3 +149,5 @@ export default function CheckoutPage() {
         </MainLayout>
     );
 }
+
+    

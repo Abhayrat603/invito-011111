@@ -7,7 +7,7 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2, Send } from "lucide-react";
+import { Loader2, Send } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -42,6 +42,8 @@ export default function RequestEditPage() {
     const { products, addEditRequest } = useAppState();
     const { user } = useAuth();
     
+    const allProducts = [...products]; // Can be extended with deals if needed
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -77,7 +79,7 @@ export default function RequestEditPage() {
 
         setIsSubmitting(true);
         
-        const product = products.find(p => p.id === values.productId);
+        const product = allProducts.find(p => p.id === values.productId);
         if (!product) {
             toast({ variant: "destructive", title: "Product not found" });
             setIsSubmitting(false);
@@ -111,7 +113,7 @@ export default function RequestEditPage() {
                     <main className="flex-grow p-4">
                         <div className="text-center mb-6">
                             <h1 className="text-2xl font-bold">Request a Custom Edit</h1>
-                            <p className="text-muted-foreground">Select a product and tell us what you'd like to change.</p>
+                            <p className="text-muted-foreground">Select any product and tell us what you'd like to change.</p>
                         </div>
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -154,14 +156,14 @@ export default function RequestEditPage() {
                                     render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Product to Edit</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={products.length === 0}>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={allProducts.length === 0}>
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder={products.length > 0 ? "Select a product" : "No products available"} />
+                                                    <SelectValue placeholder={allProducts.length > 0 ? "Select a product" : "No products available"} />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {products.map(product => (
+                                                {allProducts.map(product => (
                                                     <SelectItem key={product.id} value={product.id}>
                                                         {product.name}
                                                     </SelectItem>
@@ -245,3 +247,5 @@ export default function RequestEditPage() {
         </AuthRedirect>
     );
 }
+
+    

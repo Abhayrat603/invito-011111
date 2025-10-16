@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Download, User, ShoppingCart, FileText, Clock, CheckCircle, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/providers/auth-provider";
-import { orders, editRequests } from "@/lib/mock-data";
+import { useAppState } from "@/components/providers/app-state-provider";
 import {
   Card,
   CardContent,
@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import type { Order, EditRequest } from "@/lib/types";
 
 const orderStatusConfig = {
     Placed: { color: "bg-blue-500", text: "text-blue-800" },
@@ -34,11 +35,13 @@ const editStatusConfig = {
   Pending: { icon: Clock, color: "bg-yellow-500", text: "text-yellow-800" },
   Approved: { icon: CheckCircle, color: "bg-green-500", text: "text-green-800" },
   Rejected: { icon: XCircle, color: "bg-red-500", text: "text-red-800" },
+  Successful: { icon: CheckCircle, color: "bg-blue-500", text: "text-blue-800" },
 };
 
 export default function ReportPage() {
     const router = useRouter();
     const { user } = useAuth();
+    const { orders, editRequests } = useAppState();
     const { toast } = useToast();
     const printRef = useRef<HTMLDivElement>(null);
     const [isClient, setIsClient] = useState(false);
@@ -53,12 +56,11 @@ export default function ReportPage() {
 
         try {
             const canvas = await html2canvas(input, {
-                scale: 2, // Use a good scale for quality
+                scale: 2,
                 useCORS: true,
                 logging: false,
             });
 
-            // Use 'image/jpeg' and a quality setting (e.g., 0.9) for better compression
             const imgData = canvas.toDataURL('image/jpeg', 0.9);
 
             const pdf = new jsPDF({
@@ -78,7 +80,6 @@ export default function ReportPage() {
             let finalHeight;
             let finalWidth;
 
-            // Fit to page logic
             if (imgWidth / pdfWidth > imgHeight / pdfHeight) {
                 finalWidth = pdfWidth;
                 finalHeight = finalWidth / ratio;
@@ -106,10 +107,7 @@ export default function ReportPage() {
         }
     };
 
-
-    // Filter for delivered orders only
     const deliveredOrders = orders.filter(order => order.status === 'Delivered');
-    // Filter for approved edit requests only
     const approvedRequests = editRequests.filter(request => request.status === 'Approved');
 
     return (
@@ -130,7 +128,6 @@ export default function ReportPage() {
                 
                 <div id="print-area" ref={printRef}> 
                     <main className="p-4 md:p-6 space-y-8 bg-background">
-                        {/* User Details Section */}
                         <section>
                              <h2 className="text-lg font-semibold flex items-center mb-4"><User className="h-5 w-5 mr-2 text-primary"/> User Details</h2>
                              <Card>
@@ -144,21 +141,20 @@ export default function ReportPage() {
                              </Card>
                         </section>
 
-                        {/* Order History Section */}
                         <section>
                              <h2 className="text-lg font-semibold flex items-center mb-4"><ShoppingCart className="h-5 w-5 mr-2 text-primary"/> Completed Purchase History</h2>
                              {deliveredOrders.length === 0 ? (
                                 <p className="text-muted-foreground text-sm">No completed orders found.</p>
                              ) : (
                                 <div className="space-y-4">
-                                    {deliveredOrders.map(order => (
+                                    {deliveredOrders.map((order: Order) => (
                                         <Card key={order.id} className="overflow-hidden">
                                             <CardHeader className="p-4 bg-card">
                                                 <div className="flex justify-between items-center">
                                                     <div>
                                                         <CardTitle className="text-base font-semibold">Order #{order.id}</CardTitle>
                                                         <CardDescription className="text-xs">
-                                                            {isClient ? format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a") : '...'}
+                                                            {isClient && order.createdAt ? format(new Date(order.createdAt.toString()), "MMM d, yyyy 'at' h:mm a") : '...'}
                                                         </CardDescription>
                                                     </div>
                                                     <Badge className={cn("text-xs font-bold", orderStatusConfig[order.status].color, orderStatusConfig[order.status].text)}>
@@ -188,22 +184,23 @@ export default function ReportPage() {
                              )}
                         </section>
                         
-                        {/* Edit Request History Section */}
                         <section>
                             <h2 className="text-lg font-semibold flex items-center mb-4"><FileText className="h-5 w-5 mr-2 text-primary"/> Approved Edit Request History</h2>
                             {approvedRequests.length === 0 ? (
                                  <p className="text-muted-foreground text-sm">No approved edit requests found.</p>
                             ) : (
                                 <div className="space-y-4">
-                                    {approvedRequests.map(request => {
-                                        const { icon: Icon, color, text } = editStatusConfig[request.status];
+                                    {approvedRequests.map((request: EditRequest) => {
+                                        const config = editStatusConfig[request.status];
+                                        if (!config) return null;
+                                        const { icon: Icon, color, text } = config;
                                         return (
                                             <Card key={request.id} className="overflow-hidden">
                                                 <CardHeader className="flex flex-row items-center justify-between p-4 bg-card">
                                                     <div className="flex-grow">
                                                         <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
                                                         <CardDescription className="text-xs">
-                                                            Requested: {isClient ? format(new Date(request.requestedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
+                                                            Requested: {isClient && request.requestedAt ? format(new Date(request.requestedAt.toString()), "MMM d, yyyy 'at' h:mm a") : '...'}
                                                         </CardDescription>
                                                     </div>
                                                     <Badge className={cn("text-xs font-bold", color, text)}>
@@ -227,3 +224,5 @@ export default function ReportPage() {
         </MainLayout>
     );
 }
+
+    

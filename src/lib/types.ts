@@ -1,5 +1,3 @@
-
-
 import { Timestamp } from 'firebase/firestore';
 
 export interface UserProfile {
@@ -103,3 +101,5 @@ export interface AppRating {
 export interface AppSettings {
   shareLink: string;
 }
+
+    

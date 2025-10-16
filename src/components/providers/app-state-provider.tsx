@@ -44,7 +44,7 @@ interface AppStateContextType {
   toggleWishlist: (productId: string) => void;
   isInWishlist: (productId: string) => boolean;
   
-  addOrder: (order: Omit<Order, 'id' | 'createdAt' | 'userId'>) => void;
+  addOrder: (order: Omit<Order, 'id' | 'createdAt' | 'userId'>) => Promise<string>;
 
   addProduct: (product: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'> & { imageUrl: string }) => void;
   updateProduct: (productId: string, productData: Partial<Product>) => void;
@@ -55,7 +55,7 @@ interface AppStateContextType {
   deleteDeal: (dealId: string) => void;
   updateDealStockOnOrder: (cartProducts: any[]) => void;
 
-  addEditRequest: (request: Omit<EditRequest, 'id' | 'status' | 'requestedAt' | 'updatedAt' | 'userId'>) => void;
+  addEditRequest: (request: Omit<EditRequest, 'id' | 'status' | 'requestedAt' | 'updatedAt'>) => void;
   updateEditRequestStatus: (requestId: string, status: EditRequest['status']) => void;
 
   addUser: (user: Omit<AppUser, 'id' | 'createdAt'> & {id: string}) => void;
@@ -110,46 +110,44 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const { data: wishlistData } = useCollection(user ? collection(db, `users/${user.uid}/wishlist`) : null);
   const wishlist: WishlistItem[] = wishlistData ? convertTimestamps(wishlistData, ['addedAt']) as WishlistItem[] : [];
 
-  const { data: ordersData } = useCollection(user ? query(collection(db, 'orders'), where('userId', '==', user.uid)) : null);
-  const orders: Order[] = ordersData ? convertTimestamps(ordersData, ['createdAt']) as Order[] : [];
+  const { data: userOrdersData } = useCollection(user ? query(collection(db, 'orders'), where('userId', '==', user.uid)) : null);
+  const userOrders: Order[] = userOrdersData ? convertTimestamps(userOrdersData, ['createdAt']) as Order[] : [];
   
-  const { data: adminOrdersData } = useCollection(collection(db, 'orders'));
+  const { data: adminOrdersData } = useCollection(user && user.email === 'abhayrat603@gmail.com' ? collection(db, 'orders') : null);
   const allOrders: Order[] = adminOrdersData ? convertTimestamps(adminOrdersData, ['createdAt']) as Order[] : [];
+  
+  const orders = user?.email === 'abhayrat603@gmail.com' ? allOrders : userOrders;
 
 
   const addToCart = useCallback(async (productId: string, quantity: number = 1, isDeal: boolean = false) => {
-    if (!user) return;
-    let toastTitle = '';
-    let toastDescription = '';
-    let itemAdded = false;
+    if (!user) {
+        toast({
+            variant: "destructive",
+            title: "Not Logged In",
+            description: "You must be logged in to add items to your cart.",
+        });
+        return;
+    }
 
     const userCartRef = collection(db, `users/${user.uid}/cart`);
     const q = query(userCartRef, where("productId", "==", productId));
     const querySnapshot = await getDocs(q);
     const existingItemDoc = querySnapshot.docs[0];
 
-    const allItems = [...products, ...deals];
-    const product = allItems.find(p => p.id === productId);
+    const allProductItems = [...products, ...deals];
+    const product = allProductItems.find(p => p.id === productId);
 
     if (isDeal) {
-        const alreadyPurchased = orders.some(order => order.items.some(item => item.productId === productId));
-        if (alreadyPurchased) {
-          toastTitle = "Already Purchased";
-          toastDescription = "You can only buy a deal item once.";
-          toast({ variant: "destructive", title: toastTitle, description: toastDescription });
+        const userHasPurchasedDeal = orders.some(order => order.items.some(item => item.productId === productId));
+        if (userHasPurchasedDeal) {
+          toast({ variant: "destructive", title: "Already Purchased", description: "You can only buy a deal item once." });
           return;
         }
         if (!querySnapshot.empty) {
-            toastTitle = "Already in Cart";
-            toastDescription = "Deal items can only be added to the cart once.";
-            toast({ variant: "destructive", title: toastTitle, description: toastDescription });
+            toast({ variant: "destructive", title: "Already in Cart", description: "Deal items can only be added to the cart once." });
             return;
         }
     }
-    
-    itemAdded = true;
-    toastTitle = "Added to Cart";
-    toastDescription = `${quantity} x ${product?.name || 'item'} has been added to your cart.`;
     
     if (existingItemDoc) {
         const existingItem = existingItemDoc.data() as CartItem;
@@ -159,9 +157,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         await addDoc(userCartRef, { productId, quantity });
     }
 
-    if (toastTitle) {
-      toast({ title: toastTitle, description: toastDescription });
-    }
+    toast({ title: "Added to Cart", description: `${quantity} x ${product?.name || 'item'} has been added.` });
   }, [user, orders, products, deals, toast]);
 
   const increaseCartQuantity = useCallback(async (productId: string) => {
@@ -234,23 +230,33 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const addOrder = useCallback(async (order: Omit<Order, 'id' | 'createdAt' | 'userId'>) => {
-    if (!user) return;
+    if (!user) throw new Error("User not authenticated");
     const newOrder = {
         ...order,
         userId: user.uid,
         createdAt: serverTimestamp()
     };
-    await addDoc(collection(db, 'orders'), newOrder);
+    const docRef = await addDoc(collection(db, 'orders'), newOrder);
+    return docRef.id;
   }, [user]);
 
   const toggleWishlist = useCallback(async (productId: string) => {
-    if (!user) return;
+    if (!user) {
+        toast({
+            variant: "destructive",
+            title: "Not Logged In",
+            description: "You must be logged in to manage your wishlist.",
+        });
+        return;
+    }
+
     const userWishlistRef = collection(db, `users/${user.uid}/wishlist`);
     const q = query(userWishlistRef, where("productId", "==", productId));
     const querySnapshot = await getDocs(q);
     const existingItemDoc = querySnapshot.docs[0];
 
-    const product = products.find(p => p.id === productId);
+    const allProductItems = [...products, ...deals];
+    const product = allProductItems.find(p => p.id === productId);
     let toastTitle = '';
     let toastDescription = '';
     
@@ -264,7 +270,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         toastDescription = `${product?.name} has been added to your wishlist.`;
     }
     toast({ title: toastTitle, description: toastDescription });
-  }, [user, products, toast]);
+  }, [user, products, deals, toast]);
 
 
   const isInWishlist = useCallback((productId: string) => {
@@ -272,16 +278,15 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   }, [wishlist]);
 
   const addProduct = useCallback(async (productData: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'> & { imageUrl: string }) => {
+    const slug = productData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     const newProduct = {
       ...productData,
-      slug: productData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+      slug: slug,
       createdAt: serverTimestamp(),
-      images: ['product-placeholder-1', 'product-placeholder-2'], // Placeholder, manage images separately
+      images: ['product-placeholder-1', 'product-placeholder-2'],
     };
     const docRef = await addDoc(collection(db, 'products'), newProduct);
-
-    // This part is tricky as we don't have real image upload.
-    // We'll add to placeholder mock, but this is not ideal for a real app.
+    
     const imageId = `product-image-${docRef.id}`;
     const newImage = {
         id: imageId,
@@ -289,14 +294,17 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         imageUrl: productData.imageUrl,
         imageHint: 'custom product'
     };
-    PlaceHolderImages.push(newImage);
+    const imageExists = PlaceHolderImages.some(img => img.id === imageId);
+    if (!imageExists) {
+        PlaceHolderImages.push(newImage);
+    }
     await updateDoc(docRef, { images: [imageId, 'product-placeholder-2'] });
 
   }, []);
 
-  const updateProduct = useCallback(async (productId: string, productData: Partial<Product>) => {
+  const updateProduct = useCallback(async (productId: string, productData: Partial<Omit<Product, 'id'>>) => {
     const productRef = doc(db, 'products', productId);
-    const updatedData = { ...productData };
+    const updatedData: Partial<Product> = { ...productData };
     if (productData.name) {
         updatedData.slug = productData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     }
@@ -312,19 +320,23 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         ...dealData,
         slug: dealData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
         createdAt: serverTimestamp(),
+        offerEndsAt: Timestamp.fromDate(new Date(dealData.offerEndsAt)),
         images: [],
         sold: 0,
-        rating: Math.random() * 2 + 3, // 3 to 5 stars
+        rating: Math.random() * 2 + 3,
         isPaid: true,
     };
     const docRef = await addDoc(collection(db, 'deals'), newDeal);
     const imageId = `product-deal-${docRef.id}`;
-    PlaceHolderImages.push({
-        id: imageId,
-        description: dealData.name,
-        imageUrl: dealData.imageUrl,
-        imageHint: 'custom deal'
-    });
+    const imageExists = PlaceHolderImages.some(img => img.id === imageId);
+    if (!imageExists) {
+        PlaceHolderImages.push({
+            id: imageId,
+            description: dealData.name,
+            imageUrl: dealData.imageUrl,
+            imageHint: 'custom deal'
+        });
+    }
     await updateDoc(docRef, { images: [imageId] });
 
   }, []);
@@ -335,7 +347,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
      if (dealData.name) {
         updatedData.slug = dealData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     }
-    if (dealData.offerEndsAt) {
+    if (dealData.offerEndsAt && !(dealData.offerEndsAt instanceof Timestamp)) {
         updatedData.offerEndsAt = Timestamp.fromDate(new Date(dealData.offerEndsAt));
     }
     await updateDoc(dealRef, updatedData);
@@ -348,7 +360,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const updateDealStockOnOrder = useCallback(async (cartProducts: any[]) => {
      const batch = writeBatch(db);
      cartProducts.forEach(p => {
-        if (p && 'discountPrice' in p) { // It's a deal product
+        if (p && 'discountPrice' in p) {
             const deal = deals.find(dp => dp.id === p.id);
             if (deal) {
                 const dealRef = doc(db, 'deals', deal.id);
@@ -359,7 +371,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
      await batch.commit();
   }, [deals]);
 
-  const addEditRequest = useCallback(async (request: Omit<EditRequest, 'id' | 'status' | 'requestedAt' | 'updatedAt' | 'userId'>) => {
+  const addEditRequest = useCallback(async (request: Omit<EditRequest, 'id' | 'status' | 'requestedAt' | 'updatedAt'>) => {
     if (!user) return;
     const newRequest = {
       ...request,
@@ -376,7 +388,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     await updateDoc(reqRef, { status, updatedAt: serverTimestamp() });
   }, []);
 
-  const addUser = useCallback(async (user: Omit<AppUser, 'id' | 'createdAt'> & {id: string}) => {
+  const addUser = useCallback(async (user: Omit<AppUser, 'createdAt'> & {id: string}) => {
     const userRef = doc(db, 'users', user.id);
     await updateDoc(userRef, {
         name: user.name,
@@ -404,7 +416,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   const value = { 
     cart, wishlist, 
-    orders: user?.email === 'abhayrat603@gmail.com' ? allOrders : orders,
+    orders,
     products, deals, 
     editRequests, users, appRatings, appSettings,
     addToCart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, clearCart, 
