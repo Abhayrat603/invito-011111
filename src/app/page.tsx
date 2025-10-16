@@ -28,6 +28,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import Fade from "embla-carousel-fade";
 
 const findImage = (id: string) => {
     return PlaceHolderImages.find(img => img.id === id);
@@ -106,14 +108,6 @@ export default function EcommerceHomePage() {
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const displayedProducts = filteredProducts.slice(currentPage * productsPerPage, (currentPage + 1) * productsPerPage);
 
-  const handleNext = () => {
-    setCurrentPage((prev) => (prev + 1) % totalPages);
-  };
-
-  const handlePrev = () => {
-    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
-  };
-
   return (
     <MainLayout>
       <AuthRedirect to="/login" condition="is-not-auth">
@@ -139,8 +133,12 @@ export default function EcommerceHomePage() {
 
               <main className="pb-4">
                   <section className="px-4 mb-6">
-                    <h2 className="text-2xl font-headline text-primary text-left mb-6">Deal of the Day</h2>
+                    <h2 className="text-2xl font-headline text-primary text-left mt-8 mb-2">Deal of the Day</h2>
                      <Carousel
+                        plugins={[
+                            Autoplay({ delay: 2000, stopOnInteraction: true }),
+                            Fade()
+                        ]}
                         opts={{
                           align: "start",
                           loop: true,
@@ -149,17 +147,18 @@ export default function EcommerceHomePage() {
                       >
                         <CarouselContent>
                           {dealProducts.map((product, index) => (
-                            <CarouselItem key={index}>
+                            <CarouselItem key={index} className="basis-full">
                               <div className="p-1">
                                 <DealOfTheDayCard product={product} />
                               </div>
                             </CarouselItem>
                           ))}
                         </CarouselContent>
-                        <CarouselPrevious className="h-8 w-8 left-2" />
-                        <CarouselNext className="h-8 w-8 right-2" />
+                        <CarouselPrevious className="h-8 w-8 left-2 bg-background/50 hover:bg-background/80" />
+                        <CarouselNext className="h-8 w-8 right-2 bg-background/50 hover:bg-background/80" />
                       </Carousel>
                   </section>
+                  
                   <h2 className="text-2xl font-headline text-primary text-left mt-8 mb-2 px-4">Trending Invitation Card</h2>
                   <section className="mb-4">
                       <ScrollArea className="w-full whitespace-nowrap" viewportRef={scrollViewportRef}>
@@ -208,14 +207,14 @@ export default function EcommerceHomePage() {
                               </div>
 
                               {totalPages > 1 && (
-                                  <div className="flex justify-center items-center p-4 mt-4 gap-4">
-                                      <Button variant="outline" onClick={handlePrev} disabled={currentPage === 0}>
-                                          <ChevronLeft className="mr-2 h-4 w-4" /> Previous
-                                      </Button>
-                                      <Button variant="outline" onClick={handleNext} disabled={currentPage === totalPages - 1}>
-                                          Next <ChevronRight className="ml-2 h-4 w-4" />
-                                      </Button>
-                                  </div>
+                                <div className="flex justify-center items-center mt-4 gap-4">
+                                    <Button variant="outline" onClick={() => setCurrentPage(p => Math.max(0, p - 1))} disabled={currentPage === 0}>
+                                        <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+                                    </Button>
+                                    <Button variant="outline" onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))} disabled={currentPage === totalPages - 1}>
+                                        Next <ChevronRight className="ml-2 h-4 w-4" />
+                                    </Button>
+                                </div>
                               )}
                           </>
                       ) : (
@@ -237,5 +236,3 @@ export default function EcommerceHomePage() {
     </MainLayout>
   );
 }
-
-    
