@@ -44,8 +44,21 @@ export default function ProductDetailPage() {
   }
 
   const handleBuyNow = () => {
-    addToCart(product.id, quantity);
-    router.push('/cart');
+    if (product.zipFileUrl) {
+        toast({
+            title: "Downloading...",
+            description: `Your download for ${product.name} will begin shortly.`,
+        });
+        const link = document.createElement("a");
+        link.href = product.zipFileUrl;
+        link.download = `${product.slug}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } else {
+        addToCart(product.id, quantity);
+        router.push('/cart');
+    }
   }
 
   const handleDownload = () => {
