@@ -2,24 +2,48 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import type { CartItem, WishlistItem, Order } from '@/lib/types';
+import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
-import { dealProduct, dealProduct2, dealProduct3 } from '@/lib/mock-data';
+import { 
+    products as initialProducts, 
+    dealProduct as initialDealProduct, 
+    dealProduct2 as initialDealProduct2, 
+    dealProduct3 as initialDealProduct3,
+    editRequests as initialEditRequests,
+    orders as initialOrders
+} from '@/lib/mock-data';
 
-const allDealProducts = [dealProduct, dealProduct2, dealProduct3];
+const allInitialDeals = [initialDealProduct, initialDealProduct2, initialDealProduct3];
 
 interface AppStateContextType {
   cart: CartItem[];
   wishlist: WishlistItem[];
   orders: Order[];
+  products: Product[];
+  deals: DealProduct[];
+  editRequests: EditRequest[];
+  
   addToCart: (productId: string, quantity?: number, isDeal?: boolean) => void;
   removeFromCart: (productId: string) => void;
   increaseCartQuantity: (productId: string) => void;
   decreaseCartQuantity: (productId: string) => void;
   clearCart: () => void;
+  
   toggleWishlist: (productId: string) => void;
   isInWishlist: (productId: string) => boolean;
+  
   addOrder: (order: Order) => void;
+
+  addProduct: (product: Omit<Product, 'id' | 'slug' | 'createdAt'>) => void;
+  updateProduct: (productId: string, productData: Partial<Product>) => void;
+  deleteProduct: (productId: string) => void;
+
+  addDeal: (deal: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating'>) => void;
+  updateDeal: (dealId: string, dealData: Partial<DealProduct>) => void;
+  deleteDeal: (dealId: string) => void;
+  updateDealStockOnOrder: (cartProducts: any[]) => void;
+
+  updateEditRequestStatus: (requestId: string, status: 'Pending' | 'Approved' | 'Rejected') => void;
 }
 
 const AppStateContext = createContext<AppStateContextType | undefined>(undefined);
@@ -36,6 +60,33 @@ const useIsClient = () => {
 export function AppStateProvider({ children }: { children: ReactNode }) {
   const isClient = useIsClient();
   const { toast } = useToast();
+
+  const [products, setProducts] = useState<Product[]>(() => {
+    if (!isClient) return initialProducts;
+    try {
+      const item = window.localStorage.getItem('products');
+      return item ? JSON.parse(item) : initialProducts;
+    } catch (error) {
+      console.error(error);
+      return initialProducts;
+    }
+  });
+
+  const [deals, setDeals] = useState<DealProduct[]>(() => {
+    if (!isClient) return allInitialDeals;
+    try {
+      const item = window.localStorage.getItem('deals');
+      const dealsData = item ? JSON.parse(item) : allInitialDeals;
+      return dealsData.map((deal: any) => ({
+            ...deal,
+            createdAt: new Date(deal.createdAt),
+            offerEndsAt: new Date(deal.offerEndsAt),
+        }));
+    } catch (error) {
+      console.error(error);
+      return allInitialDeals;
+    }
+  });
 
   const [cart, setCart] = useState<CartItem[]>(() => {
     if (!isClient) return [];
@@ -60,39 +111,43 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   });
 
   const [orders, setOrders] = useState<Order[]>(() => {
-    if (!isClient) return [];
+    if (!isClient) return initialOrders;
     try {
         const item = window.localStorage.getItem('orders');
-        // Need to parse dates correctly from JSON
-        const ordersData = item ? JSON.parse(item) : [];
+        const ordersData = item ? JSON.parse(item) : initialOrders;
         return ordersData.map((order: any) => ({
             ...order,
             createdAt: new Date(order.createdAt),
         }));
     } catch (error) {
         console.error(error);
-        return [];
+        return initialOrders;
+    }
+  });
+
+  const [editRequests, setEditRequests] = useState<EditRequest[]>(() => {
+    if (!isClient) return initialEditRequests;
+    try {
+        const item = window.localStorage.getItem('editRequests');
+        const requestsData = item ? JSON.parse(item) : initialEditRequests;
+        return requestsData.map((req: any) => ({
+            ...req,
+            requestedAt: new Date(req.requestedAt),
+            updatedAt: new Date(req.updatedAt),
+        }));
+    } catch (error) {
+        console.error(error);
+        return initialEditRequests;
     }
   });
 
 
-  useEffect(() => {
-    if (isClient) {
-      window.localStorage.setItem('cart', JSON.stringify(cart));
-    }
-  }, [cart, isClient]);
-
-  useEffect(() => {
-    if (isClient) {
-      window.localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    }
-  }, [wishlist, isClient]);
-
-  useEffect(() => {
-    if (isClient) {
-        window.localStorage.setItem('orders', JSON.stringify(orders));
-    }
-  }, [orders, isClient]);
+  useEffect(() => { if (isClient) { window.localStorage.setItem('products', JSON.stringify(products)); }}, [products, isClient]);
+  useEffect(() => { if (isClient) { window.localStorage.setItem('deals', JSON.stringify(deals)); }}, [deals, isClient]);
+  useEffect(() => { if (isClient) { window.localStorage.setItem('cart', JSON.stringify(cart)); }}, [cart, isClient]);
+  useEffect(() => { if (isClient) { window.localStorage.setItem('wishlist', JSON.stringify(wishlist)); }}, [wishlist, isClient]);
+  useEffect(() => { if (isClient) { window.localStorage.setItem('orders', JSON.stringify(orders)); }}, [orders, isClient]);
+  useEffect(() => { if (isClient) { window.localStorage.setItem('editRequests', JSON.stringify(editRequests)); }}, [editRequests, isClient]);
 
   const addToCart = (productId: string, quantity: number = 1, isDeal: boolean = false) => {
     
@@ -140,7 +195,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   };
 
   const increaseCartQuantity = (productId: string) => {
-    const isDeal = allDealProducts.some(p => p.id === productId);
+    const isDeal = deals.some(p => p.id === productId);
     if(isDeal) {
         toast({
             variant: "destructive",
@@ -204,7 +259,73 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     return wishlist.some(item => item.productId === productId);
   };
 
-  const value = { cart, wishlist, orders, addToCart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, clearCart, toggleWishlist, isInWishlist, addOrder };
+  const addProduct = (productData: Omit<Product, 'id' | 'slug' | 'createdAt'>) => {
+    const newProduct: Product = {
+      ...productData,
+      id: `prod${Date.now()}`,
+      slug: productData.name.toLowerCase().replace(/\s+/g, '-'),
+      createdAt: new Date(),
+      images: ['product-placeholder-1', 'product-placeholder-2'], // default placeholder
+    };
+    setProducts(prev => [...prev, newProduct]);
+  };
+
+  const updateProduct = (productId: string, productData: Partial<Product>) => {
+    setProducts(prev => prev.map(p => p.id === productId ? { ...p, ...productData, slug: productData.name ? productData.name.toLowerCase().replace(/\s+/g, '-') : p.slug } : p));
+  };
+  
+  const deleteProduct = (productId: string) => {
+    setProducts(prev => prev.filter(p => p.id !== productId));
+  };
+
+  const addDeal = (dealData: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating'>) => {
+    const newDeal: DealProduct = {
+      ...dealData,
+      id: `deal${Date.now()}`,
+      slug: dealData.name.toLowerCase().replace(/\s+/g, '-'),
+      createdAt: new Date(),
+      images: [`product-deal-${Math.floor(Math.random() * 3) + 1}`],
+      sold: 0,
+      rating: Math.random() * 2 + 3, // 3 to 5 stars
+    };
+    setDeals(prev => [...prev, newDeal]);
+  };
+
+  const updateDeal = (dealId: string, dealData: Partial<DealProduct>) => {
+    setDeals(prev => prev.map(d => d.id === dealId ? { ...d, ...dealData, slug: dealData.name ? dealData.name.toLowerCase().replace(/\s+/g, '-') : d.slug } : d));
+  };
+
+  const deleteDeal = (dealId: string) => {
+    setDeals(prev => prev.filter(d => d.id !== dealId));
+  };
+
+  const updateDealStockOnOrder = (cartProducts: any[]) => {
+     setDeals(prevDeals => {
+        const newDeals = [...prevDeals];
+        cartProducts.forEach(p => {
+            if (p && 'discountPrice' in p) { // It's a deal product
+                const dealIndex = newDeals.findIndex(dp => dp.id === p.id);
+                if (dealIndex !== -1) {
+                    newDeals[dealIndex].sold += p.quantity;
+                }
+            }
+        });
+        return newDeals;
+     });
+  };
+
+  const updateEditRequestStatus = (requestId: string, status: 'Pending' | 'Approved' | 'Rejected') => {
+    setEditRequests(prev => prev.map(req => req.id === requestId ? { ...req, status, updatedAt: new Date() } : req));
+  };
+
+  const value = { 
+    cart, wishlist, orders, products, deals, editRequests,
+    addToCart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, clearCart, 
+    toggleWishlist, isInWishlist, addOrder,
+    addProduct, updateProduct, deleteProduct,
+    addDeal, updateDeal, deleteDeal, updateDealStockOnOrder,
+    updateEditRequestStatus,
+  };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }

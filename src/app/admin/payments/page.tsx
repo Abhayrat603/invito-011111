@@ -5,7 +5,7 @@ import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { orders } from "@/lib/mock-data";
+import { useAppState } from "@/components/providers/app-state-provider";
 import {
   Card,
   CardContent,
@@ -39,6 +39,7 @@ const orderStatusConfig = {
 
 export default function AdminPaymentsPage() {
     const router = useRouter();
+    const { orders } = useAppState();
 
     return (
         <MainLayout>
@@ -51,7 +52,7 @@ export default function AdminPaymentsPage() {
                     <div className="w-10"></div>
                 </header>
                 <main className="flex-grow p-4 space-y-4">
-                     {orders.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).map(order => {
+                     {orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map(order => {
                         const { color, text } = orderStatusConfig[order.status];
                         return (
                             <Card key={order.id} className="overflow-hidden">
@@ -60,7 +61,7 @@ export default function AdminPaymentsPage() {
                                         <div>
                                             <CardTitle className="text-base font-semibold">Order #{order.id}</CardTitle>
                                             <CardDescription className="text-xs">
-                                                {format(order.createdAt, "MMM d, yyyy 'at' h:mm a")}
+                                                {format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a")}
                                             </CardDescription>
                                         </div>
                                         <Badge className={cn("text-xs font-bold", color, text)}>

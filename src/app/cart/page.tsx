@@ -1,13 +1,12 @@
+
 "use client";
 
 import { AuthRedirect } from "@/components/auth-redirect";
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Trash2, Plus, Minus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Trash2, Plus, Minus } from "lucide-react";
 import { useAppState } from "@/components/providers/app-state-provider";
 import Image from "next/image";
-import { products as allProducts, dealProduct, dealProduct2, dealProduct3 } from "@/lib/mock-data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Link from "next/link";
 import { Product, DealProduct as DealProductType } from "@/lib/types";
@@ -16,11 +15,10 @@ const findImage = (id: string) => {
   return PlaceHolderImages.find(img => img.id === id);
 };
 
-const allItems: (Product | DealProductType)[] = [...allProducts, dealProduct, dealProduct2, dealProduct3];
-
 export default function CartPage() {
-    const router = useRouter();
-    const { cart, removeFromCart, increaseCartQuantity, decreaseCartQuantity } = useAppState();
+    const { cart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, products, deals } = useAppState();
+    
+    const allItems: (Product | DealProductType)[] = [...products, ...deals];
 
     const cartProducts = cart.map(cartItem => {
         const product = allItems.find(p => p.id === cartItem.productId);
@@ -39,7 +37,7 @@ export default function CartPage() {
 
           <main className="flex-grow p-4">
             {cartProducts.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full">
+                <div className="flex flex-col items-center justify-center h-full text-center">
                     <p className="text-muted-foreground text-lg mb-4">Your cart is empty.</p>
                     <Link href="/">
                       <Button>Continue Shopping</Button>

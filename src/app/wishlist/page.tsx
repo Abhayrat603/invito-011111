@@ -3,31 +3,30 @@
 
 import { AuthRedirect } from "@/components/auth-redirect";
 import { MainLayout } from "@/components/main-layout";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useAppState } from "@/components/providers/app-state-provider";
-import { products as allProducts } from "@/lib/mock-data";
 import { ProductCard } from "@/components/product-card";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function WishlistPage() {
-    const router = useRouter();
-    const { wishlist } = useAppState();
+    const { wishlist, products } = useAppState();
 
     const wishlistProducts = wishlist.map(wishlistItem => {
-        return allProducts.find(p => p.id === wishlistItem.productId);
+        return products.find(p => p.id === wishlistItem.productId);
     }).filter(p => p !== undefined);
 
   return (
     <AuthRedirect to="/login" condition="is-not-auth">
       <MainLayout>
         <div className="w-full max-w-md mx-auto bg-background text-foreground min-h-screen flex flex-col">
-          
-
           <main className="flex-grow p-4">
             {wishlistProducts.length === 0 ? (
-                <div className="flex items-center justify-center h-full">
-                    <p className="text-muted-foreground">Your wishlist is empty.</p>
+                <div className="flex flex-col h-full items-center justify-center text-center">
+                    <p className="text-lg text-muted-foreground mb-4">Your wishlist is empty.</p>
+                    <p className="text-sm text-muted-foreground mb-6">Explore our collections and add your favorite designs!</p>
+                    <Link href="/">
+                      <Button>Discover Invitations</Button>
+                    </Link>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 gap-4">

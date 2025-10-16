@@ -5,7 +5,7 @@ import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock, CheckCircle, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { editRequests } from "@/lib/mock-data";
+import { useAppState } from "@/components/providers/app-state-provider";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
@@ -48,13 +48,13 @@ const editStatusConfig = {
 export default function AdminRequestsPage() {
     const router = useRouter();
     const { toast } = useToast();
+    const { editRequests, updateEditRequestStatus } = useAppState();
 
-    const handleStatusChange = (requestId: string, newStatus: string) => {
-        // In a real app, you'd call an API to update the status
-        console.log(`Updating request ${requestId} to ${newStatus}`);
+    const handleStatusChange = (requestId: string, newStatus: 'Pending' | 'Approved' | 'Rejected') => {
+        updateEditRequestStatus(requestId, newStatus);
         toast({
             title: "Status Updated",
-            description: `Request ${requestId} has been set to ${newStatus}. (This is a simulation)`,
+            description: `Request ${requestId} has been set to ${newStatus}.`,
         });
     };
 
@@ -69,7 +69,7 @@ export default function AdminRequestsPage() {
                     <div className="w-10"></div>
                 </header>
                 <main className="flex-grow p-4 space-y-4">
-                    {editRequests.sort((a, b) => b.requestedAt.getTime() - a.requestedAt.getTime()).map(request => {
+                    {editRequests.sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime()).map(request => {
                         const { icon: Icon, color, text } = editStatusConfig[request.status];
                         return (
                             <Card key={request.id} className="overflow-hidden">
@@ -78,7 +78,7 @@ export default function AdminRequestsPage() {
                                         <div className="flex-grow overflow-hidden">
                                             <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
                                             <CardDescription className="text-xs">
-                                                Requested: {format(request.requestedAt, "MMM d, yyyy 'at' h:mm a")}
+                                                Requested: {format(new Date(request.requestedAt), "MMM d, yyyy 'at' h:mm a")}
                                             </CardDescription>
                                         </div>
                                         <Badge className={cn("text-xs font-bold", color, text)}>
@@ -94,7 +94,7 @@ export default function AdminRequestsPage() {
                                         <label className="text-xs font-medium text-muted-foreground">Change Status</label>
                                         <Select 
                                             defaultValue={request.status} 
-                                            onValueChange={(newStatus) => handleStatusChange(request.id, newStatus)}
+                                            onValueChange={(newStatus: 'Pending' | 'Approved' | 'Rejected') => handleStatusChange(request.id, newStatus)}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Change status..." />

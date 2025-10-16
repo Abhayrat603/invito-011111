@@ -22,6 +22,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { categories } from "@/lib/mock-data";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { useAppState } from "@/components/providers/app-state-provider";
 
 const formSchema = z.object({
   name: z.string().min(3, { message: "Product name must be at least 3 characters." }),
@@ -34,6 +35,7 @@ export default function AddProductPage() {
     const router = useRouter();
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { addProduct } = useAppState();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -46,9 +48,7 @@ export default function AddProductPage() {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true);
-        console.log("Adding new product:", values);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        addProduct(values);
         toast({
             title: "Product Added",
             description: `"${values.name}" has been successfully created.`,

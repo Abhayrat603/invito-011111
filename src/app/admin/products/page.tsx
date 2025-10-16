@@ -1,3 +1,4 @@
+
 "use client";
 
 import { MainLayout } from "@/components/main-layout";
@@ -6,7 +7,7 @@ import { ArrowLeft, Plus, Edit, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { products } from "@/lib/mock-data";
+import { useAppState } from "@/components/providers/app-state-provider";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -36,20 +37,30 @@ const findImage = (id: string) => {
 export default function AdminProductsPage() {
     const router = useRouter();
     const { toast } = useToast();
+    const { products, deleteProduct } = useAppState();
 
     const handleDelete = (productId: string, productName: string) => {
-        // In a real app, you'd call an API to delete the product
-        console.log("Deleting product:", productId);
+        deleteProduct(productId);
         toast({
             title: "Product Deleted",
-            description: `"${productName}" has been removed. (This is a simulation)`,
+            description: `"${productName}" has been removed.`,
         });
     };
 
     return (
         <MainLayout>
             <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
-                
+                 <header className="p-4 flex items-center border-b sticky top-0 bg-background z-10">
+                    <Button variant="ghost" size="icon" onClick={() => router.push('/admin')}>
+                        <ArrowLeft />
+                    </Button>
+                    <h1 className="text-xl font-bold text-center flex-grow">Manage Products</h1>
+                    <Link href="/admin/products/add">
+                        <Button variant="outline" size="icon">
+                            <Plus className="h-4 w-4"/>
+                        </Button>
+                    </Link>
+                </header>
                 <main className="flex-grow p-4">
                     <div className="rounded-lg border">
                         <Table>

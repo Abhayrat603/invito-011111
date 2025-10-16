@@ -5,15 +5,15 @@ import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { products } from '@/lib/mock-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { MainLayout } from '@/components/main-layout';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ChevronRight, Heart, Minus, Plus, Download, ChevronLeft, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Heart, Minus, Plus, Download, ShoppingCart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useAppState } from '@/components/providers/app-state-provider';
 import { useToast } from '@/hooks/use-toast';
+import type { Product } from '@/lib/types';
 
 const findImage = (id: string) => {
   return PlaceHolderImages.find(img => img.id === id);
@@ -24,7 +24,7 @@ export default function ProductDetailPage() {
   const params = useParams();
   const { slug } = params;
 
-  const { addToCart, toggleWishlist, isInWishlist } = useAppState();
+  const { products, addToCart, toggleWishlist, isInWishlist } = useAppState();
   const { toast } = useToast();
 
   const product = products.find(p => p.slug === slug);
@@ -44,22 +44,7 @@ export default function ProductDetailPage() {
 
   const handleBuyNow = () => {
     addToCart(product.id, quantity);
-    toast({
-        title: "Added to Cart",
-        description: `${quantity} x ${product.name} has been added to your cart.`
-    });
-
-    // Simulate downloading a zip file
-    toast({
-      title: "Downloading...",
-      description: "Your ZIP file will begin downloading shortly. (This is a simulation)",
-    });
-    const link = document.createElement("a");
-    link.href = '/placeholder.zip'; // A placeholder zip file in the public folder
-    link.download = `${product.slug}.zip`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    router.push('/cart');
   }
 
   const handleDownload = () => {
@@ -67,8 +52,12 @@ export default function ProductDetailPage() {
       title: "Downloading...",
       description: "Your file download will begin shortly. (This is a simulation)",
     });
+    // In a real app, you would have a secure download link from your backend
     const link = document.createElement("a");
-    link.href = findImage(product.images[0])?.imageUrl || '';
+    // Find the image URL from placeholder data; default to a placeholder
+    const imageUrl = findImage(product.images[0])?.imageUrl || `https://picsum.photos/seed/${product.id}/800/1200`;
+    link.href = imageUrl;
+    // Suggest a filename for the download
     link.download = `${product.slug}.jpg`;
     document.body.appendChild(link);
     link.click();

@@ -19,12 +19,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { categories, products } from "@/lib/mock-data";
+import { categories } from "@/lib/mock-data";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import type { Product } from "@/lib/types";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { useAppState } from "@/components/providers/app-state-provider";
 
 const findImage = (id: string) => {
   return PlaceHolderImages.find(img => img.id === id);
@@ -44,6 +45,7 @@ export default function EditProductPage() {
     const { slug } = params;
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { products, updateProduct } = useAppState();
     const [product, setProduct] = useState<Product | undefined>(undefined);
     const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
 
@@ -81,13 +83,35 @@ export default function EditProductPage() {
             });
             router.push('/admin/products');
         }
-    }, [slug, form, router, toast]);
+    }, [slug, form, router, toast, products]);
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        if (!product) return;
         setIsSubmitting(true);
-        console.log("Updating product:", product?.id, values);
-        // In a real app, you would update the image URL in your backend.
-        // For this mock, we'll just log it.
+        
+        // This is a mock update. We'll update the placeholder image system
+        // For a real app, you would upload the image and get a new URL
+        const imageId = `product-image-${product.id}`;
+        const existingImageIndex = PlaceHolderImages.findIndex(img => img.id === imageId);
+        if (existingImageIndex > -1) {
+            PlaceHolderImages[existingImageIndex].imageUrl = values.imageUrl;
+        } else {
+            PlaceHolderImages.push({
+                id: imageId,
+                description: values.name,
+                imageUrl: values.imageUrl,
+                imageHint: 'custom product'
+            })
+        }
+
+        updateProduct(product.id, {
+            name: values.name,
+            description: values.description,
+            price: values.price,
+            category: values.category,
+            images: [imageId, product.images[1] || ''],
+        });
+        
         toast({
             title: "Product Updated",
             description: `"${values.name}" has been successfully updated.`,

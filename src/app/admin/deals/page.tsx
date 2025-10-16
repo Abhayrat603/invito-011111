@@ -7,9 +7,9 @@ import { ArrowLeft, Plus, Edit, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { dealProduct, dealProduct2, dealProduct3 } from "@/lib/mock-data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useToast } from "@/hooks/use-toast";
+import { useAppState } from "@/components/providers/app-state-provider";
 import {
   Table,
   TableBody,
@@ -34,18 +34,16 @@ const findImage = (id: string) => {
   return PlaceHolderImages.find(img => img.id === id);
 };
 
-const allDeals = [dealProduct, dealProduct2, dealProduct3];
-
 export default function AdminDealsPage() {
     const router = useRouter();
     const { toast } = useToast();
+    const { deals, deleteDeal } = useAppState();
 
     const handleDelete = (dealId: string, dealName: string) => {
-        // In a real app, you'd call an API to delete the deal
-        console.log("Deleting deal:", dealId);
+        deleteDeal(dealId);
         toast({
             title: "Deal Deleted",
-            description: `"${dealName}" has been removed. (This is a simulation)`,
+            description: `"${dealName}" has been removed.`,
         });
     };
 
@@ -74,7 +72,7 @@ export default function AdminDealsPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {allDeals.map(deal => {
+                                {deals.map(deal => {
                                     const image = findImage(deal.images[0]);
                                     return (
                                         <TableRow key={deal.id}>

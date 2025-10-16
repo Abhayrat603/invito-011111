@@ -8,10 +8,11 @@ import { Search, ChevronLeft, ChevronRight, X, Quote } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MainLayout } from "@/components/main-layout";
-import { products, categories } from "@/lib/mock-data";
+import { categories } from "@/lib/mock-data";
 import { ProductCard } from "@/components/product-card";
 import { DealOfTheDayCard } from "@/components/deal-of-the-day-card";
 import { useAuth } from "@/components/providers/auth-provider";
+import { useAppState } from "@/components/providers/app-state-provider";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Loader2 } from "lucide-react";
@@ -20,7 +21,6 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { dealProduct, dealProduct2, dealProduct3 } from "@/lib/mock-data";
 import {
   Carousel,
   CarouselContent,
@@ -28,6 +28,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import type { Product } from "@/lib/types";
 
 const findImage = (id: string) => {
     return PlaceHolderImages.find(img => img.id === id);
@@ -55,10 +56,11 @@ const TestimonialCard = () => {
 
 export default function EcommerceHomePage() {
   const { user, loading } = useAuth();
+  const { products, deals } = useAppState();
   const router = useRouter();
   
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
 
   const [currentPage, setCurrentPage] = useState(0);
   const productsPerPage = 10;
@@ -66,8 +68,6 @@ export default function EcommerceHomePage() {
 
   const scrollViewportRef = useRef<HTMLDivElement>(null);
   
-  const dealProducts = [dealProduct, dealProduct2, dealProduct3];
-
   useEffect(() => {
     if (!loading && user && !user.emailVerified) {
       router.replace('/verify-email');
@@ -76,20 +76,6 @@ export default function EcommerceHomePage() {
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    let results = products;
-    if (query) {
-      const lowercasedQuery = query.toLowerCase();
-      results = results.filter(product =>
-        product.name.toLowerCase().includes(lowercasedQuery) ||
-        product.description.toLowerCase().includes(lowercasedQuery)
-      );
-    }
-    if (selectedCategory) {
-        results = results.filter(p => p.category === selectedCategory);
-    }
-
-    setFilteredProducts(results);
-    setCurrentPage(0); // Reset to first page on new search
   }
 
   useEffect(() => {
@@ -106,7 +92,7 @@ export default function EcommerceHomePage() {
     }
     setFilteredProducts(results);
     setCurrentPage(0);
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, products]);
 
   const handleCategorySelect = (categoryName: string | null) => {
     setSelectedCategory(prev => prev === categoryName ? null : categoryName);
@@ -138,7 +124,7 @@ export default function EcommerceHomePage() {
                         className="w-full max-w-xs mx-auto"
                       >
                         <CarouselContent>
-                          {dealProducts.map((product, index) => (
+                          {deals.map((product, index) => (
                             <CarouselItem key={index}>
                               <div className="p-1">
                                 <DealOfTheDayCard product={product} />

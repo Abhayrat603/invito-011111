@@ -1,24 +1,23 @@
+
 "use client";
 
 import { useRouter } from "next/navigation";
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useAppState } from "@/components/providers/app-state-provider";
-import { products as allProducts, dealProduct, dealProduct2, dealProduct3 } from "@/lib/mock-data";
 import { Product, DealProduct as DealProductType, Order } from "@/lib/types";
 import Image from "next/image";
-
-const allItems: (Product | DealProductType)[] = [...allProducts, dealProduct, dealProduct2, dealProduct3];
-const allDealProducts: DealProductType[] = [dealProduct, dealProduct2, dealProduct3];
 
 export default function CheckoutPage() {
     const router = useRouter();
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { cart, addOrder, clearCart, orders } = useAppState();
+    const { cart, addOrder, clearCart, orders, products, deals, updateDealStockOnOrder } = useAppState();
+    
+    const allItems: (Product | DealProductType)[] = [...products, ...deals];
 
     const cartProducts = cart.map(cartItem => {
         const product = allItems.find(p => p.id === cartItem.productId);
@@ -71,14 +70,7 @@ export default function CheckoutPage() {
         };
 
         // Decrease stock for deal products
-        cartProducts.forEach(p => {
-            if (p && 'discountPrice' in p) {
-                const deal = allDealProducts.find(dp => dp.id === p.id);
-                if (deal) {
-                    deal.sold += p.quantity;
-                }
-            }
-        });
+        updateDealStockOnOrder(cartProducts);
 
         // Add order to state and clear cart
         addOrder(newOrder);

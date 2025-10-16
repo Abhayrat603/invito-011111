@@ -1,3 +1,4 @@
+
 "use client";
 
 import { MainLayout } from "@/components/main-layout";
@@ -5,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock, CheckCircle, XCircle, FileText, ShoppingCart, History as HistoryIcon, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from 'next/link';
-import { editRequests } from "@/lib/mock-data";
 import { useAppState } from "@/components/providers/app-state-provider";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -60,10 +60,9 @@ const orderStatusConfig = {
 
 export default function HistoryPage() {
     const router = useRouter();
-    const { orders } = useAppState();
+    const { orders, editRequests } = useAppState();
     
     // Only delivered orders are shown in purchase history.
-    // The checkout logic currently sets all new orders to 'Delivered' status.
     const deliveredOrders = orders.filter(order => order.status === 'Delivered');
     const approvedRequests = editRequests.filter(request => request.status === 'Approved');
 
@@ -81,7 +80,7 @@ export default function HistoryPage() {
                             </div>
                         ) : (
                             <div className="space-y-4">
-                            {deliveredOrders.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).map(order => {
+                            {deliveredOrders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map(order => {
                                 const { color, text } = orderStatusConfig[order.status];
                                 return (
                                     <Card key={order.id} className="overflow-hidden">
@@ -90,7 +89,7 @@ export default function HistoryPage() {
                                                 <div>
                                                     <CardTitle className="text-base font-semibold">Order #{order.id}</CardTitle>
                                                     <CardDescription className="text-xs">
-                                                        {format(order.createdAt, "MMM d, yyyy 'at' h:mm a")}
+                                                        {format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a")}
                                                     </CardDescription>
                                                 </div>
                                                 <Badge className={cn("text-xs font-bold", color, text)}>
@@ -138,7 +137,7 @@ export default function HistoryPage() {
                             </div>
                         ) : (
                             <div className="space-y-4">
-                            {approvedRequests.sort((a, b) => b.requestedAt.getTime() - a.requestedAt.getTime()).map(request => {
+                            {approvedRequests.sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime()).map(request => {
                                 const { icon: Icon, color, text } = editStatusConfig[request.status];
                                 return (
                                     <Card key={request.id} className="overflow-hidden">
@@ -146,7 +145,7 @@ export default function HistoryPage() {
                                             <div className="flex-grow">
                                                 <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
                                                 <CardDescription className="text-xs">
-                                                    Requested: {format(request.requestedAt, "MMM d, yyyy 'at' h:mm a")}
+                                                    Requested: {format(new Date(request.requestedAt), "MMM d, yyyy 'at' h:mm a")}
                                                 </CardDescription>
                                             </div>
                                             <Badge className={cn("text-xs font-bold", color, text)}>

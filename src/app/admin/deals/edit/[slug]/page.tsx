@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { dealProduct, dealProduct2, dealProduct3 } from "@/lib/mock-data";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import type { DealProduct } from "@/lib/types";
@@ -26,8 +25,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-
-const allDeals = [dealProduct, dealProduct2, dealProduct3];
+import { useAppState } from "@/components/providers/app-state-provider";
 
 const formSchema = z.object({
   name: z.string().min(3, { message: "Deal name must be at least 3 characters." }),
@@ -46,6 +44,7 @@ export default function EditDealPage() {
     const { slug } = params;
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { deals, updateDeal } = useAppState();
     const [deal, setDeal] = useState<DealProduct | undefined>(undefined);
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -53,7 +52,7 @@ export default function EditDealPage() {
     });
 
     useEffect(() => {
-        const dealToEdit = allDeals.find(d => d.slug === slug);
+        const dealToEdit = deals.find(d => d.slug === slug);
         if (dealToEdit) {
             setDeal(dealToEdit);
             form.reset({
@@ -64,7 +63,7 @@ export default function EditDealPage() {
                 stock: dealToEdit.stock,
                 sold: dealToEdit.sold,
                 rating: dealToEdit.rating,
-                offerEndsAt: dealToEdit.offerEndsAt,
+                offerEndsAt: new Date(dealToEdit.offerEndsAt),
             });
         } else {
             toast({
@@ -73,13 +72,12 @@ export default function EditDealPage() {
             });
             router.push('/admin/deals');
         }
-    }, [slug, form, router, toast]);
+    }, [slug, form, router, toast, deals]);
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        if (!deal) return;
         setIsSubmitting(true);
-        console.log("Updating deal:", deal?.id, values);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        updateDeal(deal.id, values);
         toast({
             title: "Deal Updated",
             description: `"${values.name}" has been successfully updated.`,

@@ -1,10 +1,11 @@
+
 "use client";
 
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock, CheckCircle, XCircle, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { editRequests } from "@/lib/mock-data";
+import { useAppState } from "@/components/providers/app-state-provider";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
@@ -38,6 +39,7 @@ const editStatusConfig = {
 
 export default function RequestEditHistoryPage() {
     const router = useRouter();
+    const { editRequests } = useAppState();
 
     return (
         <MainLayout>
@@ -51,7 +53,7 @@ export default function RequestEditHistoryPage() {
                             </div>
                         ) : (
                             <div className="space-y-4">
-                            {editRequests.sort((a, b) => b.requestedAt.getTime() - a.requestedAt.getTime()).map(request => {
+                            {editRequests.sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime()).map(request => {
                                 const { icon: Icon, color, text } = editStatusConfig[request.status];
                                 return (
                                     <Card key={request.id} className="overflow-hidden">
@@ -59,7 +61,7 @@ export default function RequestEditHistoryPage() {
                                             <div className="flex-grow overflow-hidden">
                                                 <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
                                                 <CardDescription className="text-xs">
-                                                    Requested: {format(request.requestedAt, "MMM d, yyyy 'at' h:mm a")}
+                                                    Requested: {format(new Date(request.requestedAt), "MMM d, yyyy 'at' h:mm a")}
                                                 </CardDescription>
                                             </div>
                                             <Badge className={cn("text-xs font-bold", color, text)}>

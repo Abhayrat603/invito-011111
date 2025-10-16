@@ -24,6 +24,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useAppState } from "@/components/providers/app-state-provider";
 
 const formSchema = z.object({
   name: z.string().min(3, { message: "Deal name must be at least 3 characters." }),
@@ -32,12 +33,14 @@ const formSchema = z.object({
   discountPrice: z.coerce.number().min(0, { message: "Discount price cannot be negative." }),
   stock: z.coerce.number().int().min(0, { message: "Stock cannot be negative." }),
   offerEndsAt: z.date({ required_error: "Offer end date is required." }),
+  category: z.string().default("Deals"),
 });
 
 export default function AddDealPage() {
     const router = useRouter();
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { addDeal } = useAppState();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -52,9 +55,7 @@ export default function AddDealPage() {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true);
-        console.log("Adding new deal:", values);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        addDeal(values);
         toast({
             title: "Deal Added",
             description: `"${values.name}" has been successfully created.`,
