@@ -239,7 +239,7 @@ export default function EcommerceHomePage() {
                               </div>
 
                               {totalPages > 1 && (
-                                  <div className="flex justify-between items-center p-4 mt-4">
+                                  <div className="flex justify-center items-center p-4 mt-4 gap-4">
                                       <Button variant="outline" onClick={handlePrev} disabled={currentPage === 0}>
                                           <ChevronLeft className="mr-2 h-4 w-4" /> Previous
                                       </Button>
@@ -262,6 +262,34 @@ export default function EcommerceHomePage() {
                     <TestimonialCard />
                   </section>
                   
+                  <section className="px-4 mt-8">
+                      <h2 className="text-2xl font-headline text-primary text-left mb-6">New Arrivals</h2>
+                      {displayedProducts.length > 0 ? (
+                          <>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  {displayedProducts.map((product, index) => (
+                                  <ProductCard key={product.id} product={product} onSale={index % 2 !== 0} />
+                                  ))}
+                              </div>
+
+                              {totalPages > 1 && (
+                                  <div className="flex justify-center items-center p-4 mt-4 gap-4">
+                                      <Button variant="outline" onClick={handlePrev} disabled={currentPage === 0}>
+                                          <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+                                      </Button>
+                                      <Button variant="outline" onClick={handleNext} disabled={currentPage === totalPages - 1}>
+                                          Next <ChevronRight className="ml-2 h-4 w-4" />
+                                      </Button>
+                                  </div>
+                              )}
+                          </>
+                      ) : (
+                          <div className="text-center py-10">
+                              <p className="text-lg text-muted-foreground">{selectedCategory ? `No results found in ${selectedCategory}` : 'No results found.'}</p>
+                          </div>
+                      )}
+                  </section>
+
               </main>
           </div>
       </AuthRedirect>
