@@ -50,16 +50,16 @@ const CountdownTimer = ({ expiryDate }: { expiryDate: Date }) => {
 
     return (
         <div className="flex justify-center gap-2">
-            <div className="bg-muted p-2 rounded-lg text-center w-16">
-                <div className="text-xl font-bold text-foreground">{format(timeLeft.hours)}</div>
+            <div className="bg-muted p-2 rounded-lg text-center w-14">
+                <div className="text-lg font-bold text-foreground">{format(timeLeft.hours)}</div>
                 <div className="text-xs text-muted-foreground">Hours</div>
             </div>
-            <div className="bg-muted p-2 rounded-lg text-center w-16">
-                <div className="text-xl font-bold text-foreground">{format(timeLeft.minutes)}</div>
+            <div className="bg-muted p-2 rounded-lg text-center w-14">
+                <div className="text-lg font-bold text-foreground">{format(timeLeft.minutes)}</div>
                 <div className="text-xs text-muted-foreground">Min</div>
             </div>
-            <div className="bg-muted p-2 rounded-lg text-center w-16">
-                <div className="text-xl font-bold text-foreground">{format(timeLeft.seconds)}</div>
+            <div className="bg-muted p-2 rounded-lg text-center w-14">
+                <div className="text-lg font-bold text-foreground">{format(timeLeft.seconds)}</div>
                 <div className="text-xs text-muted-foreground">Sec</div>
             </div>
         </div>
@@ -144,5 +144,3 @@ export function DealOfTheDayCard({ product }: { product: DealProduct }) {
         </div>
     );
 }
-
-    
