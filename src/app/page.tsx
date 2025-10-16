@@ -55,7 +55,7 @@ const TestimonialCard = () => {
 };
 
 const PageFooter = () => (
-    <footer style={{ backgroundColor: '#FCF9EA' }} className="text-amber-950 p-6">
+    <footer style={{ backgroundColor: '#FCF9EA' }} className="text-amber-950 p-6 mt-8">
         <div className="grid grid-cols-1 gap-8 mb-6">
             <div>
                 <h3 className="font-bold mb-2">POPULAR CATEGORIES</h3>
@@ -107,7 +107,6 @@ export default function EcommerceHomePage() {
   const productsPerPage = 10;
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const scrollViewportRef = useRef<HTMLDivElement>(null);
   const mainContentRef = useRef<HTMLElement | null>(null);
   
   useEffect(() => {
@@ -171,32 +170,36 @@ export default function EcommerceHomePage() {
       <AuthRedirect to="/login" condition="is-not-auth">
         <div className="bg-background text-foreground">
              <div className="pb-4">
-                  <section className="px-4 my-6">
-                    <h2 className="text-2xl font-headline font-bold text-primary text-left mb-2">Deal of the Day</h2>
-                     <Carousel
-                        opts={{
-                          align: "start",
-                          loop: true,
-                        }}
-                        className="w-full max-w-xs mx-auto"
-                      >
-                        <CarouselContent>
-                          {deals.map((product, index) => (
-                            <CarouselItem key={index}>
-                              <div className="p-1">
-                                <DealOfTheDayCard product={product} />
-                              </div>
-                            </CarouselItem>
-                          ))}
-                        </CarouselContent>
-                        <CarouselPrevious className="h-8 w-8 -left-4 bg-background/50 hover:bg-background/80" />
-                        <CarouselNext className="h-8 w-8 -right-4 bg-background/50 hover:bg-background/80" />
-                      </Carousel>
-                  </section>
+                  {currentPage === 0 && !selectedCategory && !searchQuery && (
+                    <>
+                      <section className="px-4 my-6">
+                        <h2 className="text-2xl font-headline font-bold text-primary text-left mb-2">Deal of the Day</h2>
+                         <Carousel
+                            opts={{
+                              align: "start",
+                              loop: true,
+                            }}
+                            className="w-full max-w-xs mx-auto"
+                          >
+                            <CarouselContent>
+                              {deals.map((product, index) => (
+                                <CarouselItem key={index}>
+                                  <div className="p-1">
+                                    <DealOfTheDayCard product={product} />
+                                  </div>
+                                </CarouselItem>
+                              ))}
+                            </CarouselContent>
+                            <CarouselPrevious className="h-8 w-8 -left-4 bg-background/50 hover:bg-background/80" />
+                            <CarouselNext className="h-8 w-8 -right-4 bg-background/50 hover:bg-background/80" />
+                          </Carousel>
+                      </section>
+                    </>
+                  )}
                   
                   <h2 className="text-2xl font-headline font-bold text-primary text-left mb-2 px-4">Trending Invitation Card</h2>
                   <section className="mb-4">
-                      <ScrollArea className="w-full whitespace-nowrap" viewportRef={scrollViewportRef}>
+                      <ScrollArea className="w-full whitespace-nowrap">
                         <div className="flex w-max space-x-2 p-4">
                           {categories.map((category) => {
                             const image = findImage(category.imageId);
@@ -261,10 +264,12 @@ export default function EcommerceHomePage() {
                         </div>
                     )}
 
-                  <section className="px-4 mt-8 space-y-6">
-                    <h2 className="text-2xl font-headline font-bold text-primary text-left mb-6">Testimonial</h2>
-                    <TestimonialCard />
-                  </section>
+                  {currentPage === 0 && !selectedCategory && !searchQuery && (
+                    <section className="px-4 mt-8 space-y-6">
+                      <h2 className="text-2xl font-headline font-bold text-primary text-left mb-6">Testimonial</h2>
+                      <TestimonialCard />
+                    </section>
+                  )}
                   
               </div>
               <PageFooter />
