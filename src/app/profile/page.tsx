@@ -11,7 +11,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAppState } from "@/components/providers/app-state-provider";
 
 const ProfileMenuItem = ({ icon: Icon, text, href, onClick, isLogout = false, className }: { icon: React.ElementType, text: string, href?: string, onClick?: () => void, isLogout?: boolean, className?: string }) => {
@@ -96,6 +96,7 @@ export default function ProfilePage() {
             <div className="flex flex-col items-center">
                 <div className="relative mb-4">
                     <Avatar className="w-32 h-32 border-4 border-card object-cover">
+                       <AvatarImage src={user?.photoURL || undefined} alt={user?.displayName || 'User'} />
                        <AvatarFallback className="text-4xl bg-primary/20 text-primary">
                            {getUserInitials(user?.displayName)}
                        </AvatarFallback>

@@ -9,7 +9,7 @@ const firebaseConfig = {
   authDomain: "abhay-67783.firebaseapp.com",
   databaseURL: "https://abhay-67783-default-rtdb.firebaseio.com",
   projectId: "abhay-67783",
-  storageBucket: "abhay-67783.firebasestorage.app",
+  storageBucket: "abhay-67783.appspot.com",
   messagingSenderId: "880880220147",
   appId: "1:880880220147:web:fe02b389e8d28463a28486",
   measurementId: "G-2R4RJ2976X"

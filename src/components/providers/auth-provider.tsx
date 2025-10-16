@@ -5,9 +5,10 @@ import * as React from 'react';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendEmailVerification, sendPasswordResetEmail, updateProfile, type User, updateEmail, updatePassword, reload } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { app } from '@/lib/firebase';
+import { app, storage } from '@/lib/firebase';
 import { createSessionCookie, clearSessionCookie } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 interface AuthContextType {
   user: User | null;
@@ -21,6 +22,7 @@ interface AuthContextType {
   updateUserEmail: (email: string) => Promise<void>;
   updateUserPassword: (password: string) => Promise<void>;
   updateUserPhoneNumber: (phoneNumber: string) => Promise<void>;
+  updateUserProfilePicture: (image: Blob) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -96,10 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error("No user is signed in.");
     }
     await updateProfile(currentUser, profileData);
-    // After updating, we need a fresh user object with the updated info.
-    // We reload the user to get the latest profile data from Firebase Auth.
     await reload(currentUser);
-    // Create a new object to force a state update in React
     setUser(auth.currentUser ? { ...auth.currentUser } : null);
   };
   
@@ -117,17 +116,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
   
   const updateUserPhoneNumber = async (phoneNumber: string) => {
-    // This is a placeholder. In a real app, this would involve phone number verification.
-    // For now, we'll just show a success toast.
     console.log("Updating phone number to:", phoneNumber);
     if (!auth.currentUser) throw new Error("No user is signed in.");
-
-    // In a real Firebase app, you would use RecaptchaVerifier and link/update phone number.
-    // This is a simplified version for demonstration.
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate async operation
+    await new Promise(resolve => setTimeout(resolve, 1000));
   };
 
-  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset, updateUserProfile, updateUserEmail, updateUserPassword, updateUserPhoneNumber };
+  const updateUserProfilePicture = async (image: Blob) => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      throw new Error("No user is signed in to upload a profile picture.");
+    }
+
+    const filePath = `profile-pictures/${currentUser.uid}/${new Date().getTime()}`;
+    const storageRef = ref(storage, filePath);
+
+    const snapshot = await uploadBytes(storageRef, image);
+    const downloadURL = await getDownloadURL(snapshot.ref);
+
+    await updateUserProfile({ photoURL: downloadURL });
+  };
+
+
+  const value = { user, loading, signUp, signIn, signOut, sendVerificationEmail, sendPasswordReset, updateUserProfile, updateUserEmail, updateUserPassword, updateUserPhoneNumber, updateUserProfilePicture };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
