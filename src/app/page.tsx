@@ -37,7 +37,7 @@ const TestimonialCard = () => {
                 </Avatar>
                 <h3 className="text-xl font-bold text-foreground">ALAN DOE</h3>
                 <p className="text-sm text-muted-foreground mb-4">CEO & Founder Invision</p>
-                <Quote className="w-10 h-10 text-primary/50 my-2 transform -scale-y-100" />
+                <Quote className="w-10 h-10 text-primary/50 my-2" />
                 <p className="text-foreground/80 italic">
                     "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor dolor sit amet."
                 </p>
@@ -179,13 +179,13 @@ export default function EcommerceHomePage() {
                     <h2 className="text-2xl font-headline text-primary text-left mb-6">Deal of the Day</h2>
                      <ScrollArea>
                         <div className="flex space-x-4 pb-4">
-                            <div className="w-[250px] shrink-0">
+                            <div className="w-[300px] shrink-0">
                                 <DealOfTheDayCard product={dealProduct} />
                             </div>
-                            <div className="w-[250px] shrink-0">
+                            <div className="w-[300px] shrink-0">
                                 <DealOfTheDayCard product={dealProduct2} />
                             </div>
-                            <div className="w-[250px] shrink-0">
+                            <div className="w-[300px] shrink-0">
                                 <DealOfTheDayCard product={dealProduct3} />
                             </div>
                         </div>
@@ -268,3 +268,5 @@ export default function EcommerceHomePage() {
     </MainLayout>
   );
 }
+
+    
