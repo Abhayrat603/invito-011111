@@ -8,6 +8,7 @@ import { FirebaseClientProvider } from "@/firebase/client-provider";
 export const metadata: Metadata = {
   title: "Invite Designer",
   description: "Create and customize beautiful invitation cards for every occasion.",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
