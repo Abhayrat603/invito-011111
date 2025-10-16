@@ -14,6 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { useAppState } from '@/components/providers/app-state-provider';
 import { useToast } from '@/hooks/use-toast';
 import type { Product } from '@/lib/types';
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 const findImage = (id: string) => {
   return PlaceHolderImages.find(img => img.id === id);
@@ -70,10 +71,6 @@ export default function ProductDetailPage() {
 
   const handleToggleWishlist = () => {
     toggleWishlist(product.id);
-    toast({
-        title: isInWishlist(product.id) ? "Removed from Wishlist" : "Added to Wishlist",
-        description: `${product.name} has been ${isInWishlist(product.id) ? 'removed from' : 'added to'} your wishlist.`
-    });
   }
 
   const isLiked = isInWishlist(product.id);
@@ -140,9 +137,23 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="flex flex-wrap items-stretch gap-2">
-                <Button size="sm" className="flex-1 bg-amber-800 hover:bg-amber-900 h-11 min-w-[100px] text-xs px-2" onClick={handleDownload}>
-                    <Download className="mr-1.5 h-4 w-4" /> Download
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className='flex-1 min-w-[100px]'>
+                         <Button size="sm" className="w-full bg-amber-800 hover:bg-amber-900 h-11 text-xs px-2" onClick={handleDownload} disabled={!product.zipFileUrl}>
+                            <Download className="mr-1.5 h-4 w-4" /> Download
+                        </Button>
+                      </div>
+                    </TooltipTrigger>
+                     {!product.zipFileUrl && (
+                        <TooltipContent>
+                            <p>No download available for this item.</p>
+                        </TooltipContent>
+                     )}
+                  </Tooltip>
+                </TooltipProvider>
+
                 <Button size="sm" variant="outline" className="flex-1 h-11 min-w-[100px] text-xs px-2" onClick={handleBuyNow}>
                     <ShoppingCart className="mr-1.5 h-4 w-4" /> Buy now
                 </Button>

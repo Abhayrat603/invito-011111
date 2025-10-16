@@ -21,14 +21,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { categories } from "@/lib/mock-data";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppState } from "@/components/providers/app-state-provider";
+import Image from "next/image";
 
 const formSchema = z.object({
   name: z.string().min(3, { message: "Product name must be at least 3 characters." }),
   description: z.string().min(10, { message: "Description must be at least 10 characters." }),
   price: z.coerce.number().min(0, { message: "Price cannot be negative." }),
   category: z.string({ required_error: "Please select a category." }),
+  imageUrl: z.string().url({ message: "Please enter a valid URL." }),
   zipFileUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
 });
 
@@ -37,6 +39,7 @@ export default function AddProductPage() {
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { addProduct } = useAppState();
+    const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -44,9 +47,18 @@ export default function AddProductPage() {
             name: "",
             description: "",
             price: 0,
+            imageUrl: "",
             zipFileUrl: "",
         },
     });
+
+    const imageUrl = form.watch("imageUrl");
+
+    useEffect(() => {
+        if (imageUrl) {
+            setImagePreview(imageUrl);
+        }
+    }, [imageUrl]);
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true);
@@ -72,6 +84,22 @@ export default function AddProductPage() {
                 <main className="flex-grow p-4">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                             {imagePreview && (
+                                <div className="relative w-full aspect-square rounded-md overflow-hidden border bg-muted">
+                                    <Image src={imagePreview} alt="Product image preview" layout="fill" objectFit="cover" />
+                                </div>
+                            )}
+                             <FormField
+                                control={form.control}
+                                name="imageUrl"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Image URL</FormLabel>
+                                    <FormControl><Input placeholder="https://example.com/image.png" {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
                              <FormField
                                 control={form.control}
                                 name="name"
