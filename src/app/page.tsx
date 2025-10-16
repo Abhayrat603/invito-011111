@@ -270,7 +270,7 @@ export default function EcommerceHomePage() {
                   </section>
 
                   <section className="px-4 mt-8 space-y-6">
-                    <h2 className="text-2xl font-headline text-primary text-center mb-6">Testimonial</h2>
+                    <h2 className="text-2xl font-headline text-primary text-left mb-6">Testimonial</h2>
                     <TestimonialCard />
                   </section>
                   
@@ -280,5 +280,3 @@ export default function EcommerceHomePage() {
     </MainLayout>
   );
 }
-
-    
