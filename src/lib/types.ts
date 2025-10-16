@@ -33,6 +33,8 @@ export interface Product {
   zipFileUrl?: string;
   isPaid: boolean;
   size?: string;
+  fileTypes?: string[];
+  requiredSoftware?: string[];
 }
 
 export interface DealProduct extends Product {

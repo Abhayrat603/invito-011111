@@ -15,7 +15,9 @@
         "createdAt": { "type": "string", "format": "date-time" },
         "zipFileUrl": { "type": "string" },
         "isPaid": { "type": "boolean" },
-        "size": { "type": "string" }
+        "size": { "type": "string" },
+        "fileTypes": { "type": "array", "items": { "type": "string" } },
+        "requiredSoftware": { "type": "array", "items": { "type": "string" } }
       },
       "required": ["name", "slug", "description", "price", "images", "category", "createdAt", "isPaid"]
     },

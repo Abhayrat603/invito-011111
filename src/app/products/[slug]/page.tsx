@@ -174,20 +174,21 @@ export default function ProductDetailPage() {
             <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                     <p className="font-semibold text-foreground">File Type</p>
-                    <p className="text-muted-foreground">JPG, PDF</p>
+                    <p className="text-muted-foreground">{product.fileTypes?.join(', ') || 'N/A'}</p>
                 </div>
                 <div>
                     <p className="font-semibold text-foreground">Dimension</p>
-                    <p className="text-muted-foreground">{product.size || "10x4 inches"}</p>
+                    <p className="text-muted-foreground">{product.size || "N/A"}</p>
                 </div>
                 <div className="col-span-2">
                     <p className="font-semibold text-foreground">Required Software</p>
                     <div className="flex gap-2 flex-wrap mt-1 text-xs">
-                      <span className="text-primary underline cursor-pointer">CorelDRAW</span>
-                      <span className="text-muted-foreground">·</span>
-                      <span className="text-primary underline cursor-pointer">Photoshop</span>
-                      <span className="text-muted-foreground">·</span>
-                      <span className="text-primary underline cursor-pointer">Canva</span>
+                        {product.requiredSoftware?.map((software, index) => (
+                           <React.Fragment key={software}>
+                               <span className="text-primary underline cursor-pointer">{software}</span>
+                               {index < (product.requiredSoftware?.length || 0) - 1 && <span className="text-muted-foreground">·</span>}
+                           </React.Fragment>
+                        ))}
                     </div>
                 </div>
             </div>

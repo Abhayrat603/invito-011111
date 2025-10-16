@@ -35,6 +35,8 @@ const formSchema = z.object({
   zipFileUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   isPaid: z.boolean().default(true),
   size: z.string().optional(),
+  fileTypes: z.string().optional(),
+  requiredSoftware: z.string().optional(),
 });
 
 export default function AddProductPage() {
@@ -54,6 +56,8 @@ export default function AddProductPage() {
             zipFileUrl: "",
             isPaid: true,
             size: "",
+            fileTypes: "JPG, PDF",
+            requiredSoftware: "CorelDRAW, Photoshop, Canva",
         },
     });
 
@@ -200,8 +204,30 @@ export default function AddProductPage() {
                                 name="size"
                                 render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Size</FormLabel>
+                                    <FormLabel>Dimension</FormLabel>
                                     <FormControl><Input placeholder="e.g., 10x4 inches" {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="fileTypes"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>File Types</FormLabel>
+                                    <FormControl><Input placeholder="e.g., JPG, PDF, PNG" {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="requiredSoftware"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Required Software</FormLabel>
+                                    <FormControl><Input placeholder="e.g., Photoshop, Canva" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                                 )}

@@ -47,8 +47,8 @@ interface AppStateContextType {
   
   addOrder: (order: Omit<Order, 'id' | 'createdAt' | 'userId'>) => Promise<string>;
 
-  addProduct: (product: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'> & { imageUrl: string }) => void;
-  updateProduct: (productId: string, productData: Partial<Product> & { imageUrl?: string }) => void;
+  addProduct: (product: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images' | 'fileTypes' | 'requiredSoftware'> & { imageUrl: string; fileTypes?: string; requiredSoftware?: string; }) => void;
+  updateProduct: (productId: string, productData: Partial<Product> & { imageUrl?: string; fileTypes?: string; requiredSoftware?: string; }) => void;
   deleteProduct: (productId: string) => void;
 
   addDeal: (deal: Omit<DealProduct, 'id' | 'slug' | 'createdAt' | 'sold' | 'rating' | 'images' | 'isPaid'> & { imageUrl: string }) => void;
@@ -296,7 +296,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     return wishlist.some(item => item.productId === productId);
   }, [wishlist]);
 
-  const addProduct = useCallback(async (productData: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images'> & { imageUrl: string }) => {
+  const addProduct = useCallback(async (productData: Omit<Product, 'id' | 'slug' | 'createdAt' | 'images' | 'fileTypes' | 'requiredSoftware'> & { imageUrl: string; fileTypes?: string; requiredSoftware?: string; }) => {
     const slug = productData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     const newProductRef = doc(collection(db, 'products'));
     const imageId = `product-image-${newProductRef.id}`;
@@ -315,14 +315,17 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       slug: slug,
       createdAt: serverTimestamp(),
       images: [imageId, 'product-placeholder-2'],
+      fileTypes: productData.fileTypes?.split(',').map(s => s.trim()).filter(Boolean) || [],
+      requiredSoftware: productData.requiredSoftware?.split(',').map(s => s.trim()).filter(Boolean) || [],
     };
     await setDoc(newProductRef, newProduct);
   }, []);
 
-  const updateProduct = useCallback(async (productId: string, productData: Partial<Omit<Product, 'id'>> & { imageUrl?: string }) => {
+  const updateProduct = useCallback(async (productId: string, productData: Partial<Omit<Product, 'id'>> & { imageUrl?: string; fileTypes?: string; requiredSoftware?: string; }) => {
     const productRef = doc(db, 'products', productId);
     const { imageUrl, ...restOfProductData } = productData;
-    const updatedData: Partial<Product> = { ...restOfProductData };
+    
+    const updatedData: any = { ...restOfProductData };
     
     if (productData.name) {
         updatedData.slug = productData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -339,6 +342,13 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         }
         await setDoc(imageRef, imagePayload, { merge: true });
         updatedData.images = [imageId, 'product-placeholder-2'];
+    }
+
+    if (typeof productData.fileTypes === 'string') {
+        updatedData.fileTypes = productData.fileTypes.split(',').map(s => s.trim()).filter(Boolean);
+    }
+     if (typeof productData.requiredSoftware === 'string') {
+        updatedData.requiredSoftware = productData.requiredSoftware.split(',').map(s => s.trim()).filter(Boolean);
     }
 
     await updateDoc(productRef, updatedData);

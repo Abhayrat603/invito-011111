@@ -36,6 +36,8 @@ const formSchema = z.object({
   zipFileUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   isPaid: z.boolean().default(true),
   size: z.string().optional(),
+  fileTypes: z.string().optional(),
+  requiredSoftware: z.string().optional(),
 });
 
 export default function EditProductPage() {
@@ -83,6 +85,8 @@ export default function EditProductPage() {
                 zipFileUrl: productToEdit.zipFileUrl || '',
                 isPaid: productToEdit.isPaid,
                 size: productToEdit.size || "",
+                fileTypes: productToEdit.fileTypes?.join(', ') || "",
+                requiredSoftware: productToEdit.requiredSoftware?.join(', ') || "",
             });
             setImagePreview(currentImageUrl);
         } else if (products.length > 0) { // Only show not found if products have loaded
@@ -239,8 +243,30 @@ export default function EditProductPage() {
                                 name="size"
                                 render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Size</FormLabel>
+                                    <FormLabel>Dimension</FormLabel>
                                     <FormControl><Input placeholder="e.g., 10x4 inches" {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="fileTypes"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>File Types (comma-separated)</FormLabel>
+                                    <FormControl><Input placeholder="e.g., JPG, PDF, PNG" {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="requiredSoftware"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Required Software (comma-separated)</FormLabel>
+                                    <FormControl><Input placeholder="e.g., Photoshop, Canva" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                                 )}
