@@ -17,8 +17,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['"Montserrat"', 'sans-serif'],
-        headline: ['"Playfair Display"', 'serif'],
+        body: ['"Nunito"', 'sans-serif'],
+        headline: ['"Cormorant Garamond"', 'serif'],
         code: ['monospace'],
       },
       colors: {
