@@ -23,7 +23,6 @@ import { useAppState } from "@/components/providers/app-state-provider";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Menu item name must be at least 2 characters." }),
-  href: z.string().min(1, { message: "Link is required." }).refine(value => value.startsWith('/'), { message: "Link must be a relative path starting with /"}),
 });
 
 export default function AddMenuItemPage() {
@@ -36,7 +35,6 @@ export default function AddMenuItemPage() {
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
-            href: "/",
         },
     });
 
@@ -81,17 +79,6 @@ export default function AddMenuItemPage() {
                                 <FormItem>
                                     <FormLabel>Item Name</FormLabel>
                                     <FormControl><Input placeholder="E.g., Wedding Invitation" {...field} /></FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                                )}
-                            />
-                             <FormField
-                                control={form.control}
-                                name="href"
-                                render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Link (URL)</FormLabel>
-                                    <FormControl><Input placeholder="/products/wedding" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                                 )}

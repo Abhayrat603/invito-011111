@@ -24,7 +24,6 @@ import type { MenuItem } from "@/lib/types";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Menu item name must be at least 2 characters." }),
-  href: z.string().min(1, { message: "Link is required." }).refine(value => value.startsWith('/'), { message: "Link must be a relative path starting with /"}),
 });
 
 export default function EditMenuItemPage() {
@@ -46,7 +45,6 @@ export default function EditMenuItemPage() {
             setMenuItem(itemToEdit);
             form.reset({
                 name: itemToEdit.name,
-                href: itemToEdit.href,
             });
         } else if (menuItems.length > 0) { 
             toast({
@@ -109,17 +107,6 @@ export default function EditMenuItemPage() {
                                 render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Item Name</FormLabel>
-                                    <FormControl><Input {...field} /></FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                                )}
-                            />
-                             <FormField
-                                control={form.control}
-                                name="href"
-                                render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Link (URL)</FormLabel>
                                     <FormControl><Input {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>

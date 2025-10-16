@@ -69,7 +69,7 @@ interface AppStateContextType {
   updateTestimonial: (testimonial: Testimonial) => void;
   findImage: (id: string) => ImagePlaceholder | undefined;
 
-  addMenuItem: (item: Omit<MenuItem, 'id' | 'icon' | 'order'>) => void;
+  addMenuItem: (item: Omit<MenuItem, 'id' | 'icon' | 'order' | 'href'>) => void;
   updateMenuItem: (itemId: string, itemData: Partial<MenuItem>) => void;
   deleteMenuItem: (itemId: string) => void;
 }
@@ -504,11 +504,13 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     await setDoc(testimonialRef, testimonialData, { merge: true });
   }, []);
 
-  const addMenuItem = useCallback(async (item: Omit<MenuItem, 'id' | 'icon' | 'order'>) => {
+  const addMenuItem = useCallback(async (item: Omit<MenuItem, 'id' | 'icon' | 'order' | 'href'>) => {
+    const slug = item.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     const newMenuItem = {
       ...item,
+      href: `/${slug}`,
       icon: getIconForMenuItem(item.name),
-      order: menuItems.length, // Append to the end
+      order: menuItems.length,
     };
     await addDoc(collection(db, 'menuItems'), newMenuItem);
   }, [menuItems.length]);
@@ -518,6 +520,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     const updatedData: Partial<MenuItem> = { ...itemData };
     if (itemData.name) {
       updatedData.icon = getIconForMenuItem(itemData.name);
+      const slug = itemData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      updatedData.href = `/${slug}`;
     }
     await updateDoc(itemRef, updatedData);
   }, []);
