@@ -110,7 +110,6 @@ export default function EcommerceHomePage() {
   const mainContentRef = useRef<HTMLElement | null>(null);
   
   useEffect(() => {
-    // Assign the ref from the MainLayout to our local ref
     const mainElement = document.querySelector('main[data-main-layout-scroll]');
     if (mainElement) {
         mainContentRef.current = mainElement as HTMLElement;
@@ -198,40 +197,37 @@ export default function EcommerceHomePage() {
                   )}
                   
                   <h2 className="text-2xl font-headline font-bold text-primary text-left mb-2 px-4">Trending Invitation Card</h2>
-                  <section className="mb-4">
-                      <ScrollArea className="w-full whitespace-nowrap">
-                        <div className="flex w-max space-x-2 p-4">
-                          {categories.map((category) => {
-                            const image = findImage(category.imageId);
-                            const isSelected = selectedCategory === category.name;
-                            return (
-                              <figure 
-                                  key={category.name} 
-                                  className={cn(
-                                      "shrink-0 rounded-full bg-secondary/80 flex items-center p-1.5 pr-5 gap-2 cursor-pointer transition-all duration-300",
-                                      isSelected ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : "hover:bg-secondary"
-                                  )}
-                                  onClick={() => handleCategorySelect(category.name)}
-                              >
-                                <div className="relative h-10 w-10 shrink-0">
-                                  <Image
-                                    src={image?.imageUrl || `https://picsum.photos/seed/${category.id}/100`}
-                                    alt={category.name}
-                                    layout="fill"
-                                    objectFit="cover"
-                                    className="rounded-full"
-                                    data-ai-hint={image?.imageHint}
-                                  />
-                                </div>
-                                <figcaption className="text-sm font-medium text-foreground whitespace-nowrap">
-                                  {category.name}
-                                </figcaption>
-                              </figure>
-                            );
-                          })}
-                        </div>
-                        <ScrollBar orientation="horizontal" />
-                      </ScrollArea>
+                  <section className="mb-4 relative w-full overflow-hidden">
+                      <div className="flex w-max animate-marquee space-x-2 p-4">
+                        {[...categories, ...categories].map((category, index) => {
+                          const image = findImage(category.imageId);
+                          const isSelected = selectedCategory === category.name;
+                          return (
+                            <figure 
+                                key={`${category.id}-${index}`} 
+                                className={cn(
+                                    "shrink-0 rounded-full bg-secondary/80 flex items-center p-1.5 pr-5 gap-2 cursor-pointer transition-all duration-300",
+                                    isSelected ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : "hover:bg-secondary"
+                                )}
+                                onClick={() => handleCategorySelect(category.name)}
+                            >
+                              <div className="relative h-10 w-10 shrink-0">
+                                <Image
+                                  src={image?.imageUrl || `https://picsum.photos/seed/${category.id}/100`}
+                                  alt={category.name}
+                                  layout="fill"
+                                  objectFit="cover"
+                                  className="rounded-full"
+                                  data-ai-hint={image?.imageHint}
+                                />
+                              </div>
+                              <figcaption className="text-sm font-medium text-foreground whitespace-nowrap">
+                                {category.name}
+                              </figcaption>
+                            </figure>
+                          );
+                        })}
+                      </div>
                   </section>
                   
                    <section className="px-4 grid grid-cols-1 gap-4">
