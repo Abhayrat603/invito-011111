@@ -52,18 +52,15 @@ export default function CheckoutPage() {
             return;
         }
 
-        // In a real app, you would fetch an order_id from your server.
-        // This is a client-side simulation for testing purposes.
         const razorpayOptions = {
-            key: "rzp_test_YourKeyId", // IMPORTANT: Replace with your Razorpay Test Key ID
-            amount: total * 100, // amount in the smallest currency unit (paise for INR)
+            key: "rzp_test_YourKeyId", 
+            amount: total * 100, 
             currency: "INR",
             name: "Invite Designer",
             description: "Invitation Card Purchase",
             image: "https://i.ibb.co/L9LcfJ3/testimonial-alan.jpg",
-            // order_id: "order_XXXXXXXX", // This should be fetched from your server
             handler: async function (response: any) {
-                // This function is called after a successful payment.
+                // This function is ONLY called after a SUCCESSFUL payment.
                 try {
                     const orderData: Omit<Order, 'id' | 'createdAt' | 'userId'> = {
                         items: cartProducts.map(p => ({
@@ -75,6 +72,7 @@ export default function CheckoutPage() {
                         total: total,
                         status: 'Placed',
                     };
+
                     const newOrderId = await addOrder(orderData);
                     await updateDealStockOnOrder(cartProducts);
                     await clearCart();
@@ -83,6 +81,8 @@ export default function CheckoutPage() {
                         title: "Payment Successful!",
                         description: `Your order #${newOrderId} has been placed.`,
                     });
+
+                    // Redirect to the download/confirmation page
                     router.push(`/order-confirmation/${newOrderId}`);
 
                 } catch (error) {
@@ -92,6 +92,7 @@ export default function CheckoutPage() {
                         title: "Order Processing Failed",
                         description: "Your payment was successful, but we failed to create your order. Please contact support.",
                     });
+                     setIsSubmitting(false);
                 }
             },
             prefill: {
@@ -105,15 +106,28 @@ export default function CheckoutPage() {
             theme: {
                 color: "#694736",
             },
+            modal: {
+                ondismiss: function() {
+                    // This function is called when the user closes the payment window.
+                    // We consider this a failed/cancelled payment.
+                    toast({
+                        variant: "destructive",
+                        title: "Payment Cancelled",
+                        description: "The payment process was not completed.",
+                    });
+                    setIsSubmitting(false);
+                }
+            }
         };
 
         const razorpayInstance = new window.Razorpay(razorpayOptions);
         
         razorpayInstance.on('payment.failed', function (response: any) {
+            // This function is called when the payment fails.
             toast({
                 variant: "destructive",
                 title: "Payment Failed",
-                description: response.error.description || "Something went wrong.",
+                description: response.error.description || "Please try again later.",
             });
             setIsSubmitting(false);
         });
