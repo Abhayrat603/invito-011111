@@ -265,14 +265,16 @@ export default function EcommerceHomePage() {
                     )}
 
                   {currentPage === 0 && !selectedCategory && !searchQuery && (
-                    <section className="px-4 mt-8 space-y-6">
-                      <h2 className="text-2xl font-headline font-bold text-primary text-left mb-6">Testimonial</h2>
-                      <TestimonialCard />
-                    </section>
+                    <>
+                      <section className="px-4 mt-8 space-y-6">
+                        <h2 className="text-2xl font-headline font-bold text-primary text-left mb-6">Testimonial</h2>
+                        <TestimonialCard />
+                      </section>
+                      <PageFooter />
+                    </>
                   )}
                   
               </div>
-              <PageFooter />
           </div>
       </AuthRedirect>
     </MainLayout>
