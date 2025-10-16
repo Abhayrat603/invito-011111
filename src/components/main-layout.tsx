@@ -153,7 +153,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                         href="mailto:abhayrat603@gmail.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-primary text-primary-foreground rounded-full p-2.5 shadow-lg hover:bg-primary/90 flex items-center justify-center w-10 h-10"
+                        className="bg-transparent text-primary-foreground rounded-full p-2.5 shadow-lg flex items-center justify-center w-10 h-10"
                         aria-label="Send an email"
                     >
                         <Image src="https://i.ibb.co/WNxMRJ2v/vecteezy-gmail-png-icon-16716465.png" alt="Email" width={30} height={30} />
