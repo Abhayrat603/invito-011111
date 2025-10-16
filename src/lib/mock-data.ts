@@ -227,3 +227,22 @@ export const dealProduct2: DealProduct = {
   sold: 8,
   rating: 4.5,
 };
+
+const offerEndDate3 = new Date();
+offerEndDate3.setDate(offerEndDate3.getDate() + 2);
+
+export const dealProduct3: DealProduct = {
+  id: 'dealprod3',
+  slug: 'artisan-leather-journal',
+  name: 'Artisan Leather Journal',
+  description: 'A handcrafted leather journal, perfect for notes, sketches, and thoughts.',
+  price: 250,
+  discountPrice: 199,
+  images: ['product-deal-3'],
+  category: 'Stationery',
+  createdAt: new Date(),
+  offerEndsAt: offerEndDate3,
+  stock: 100,
+  sold: 45,
+  rating: 4.8,
+};

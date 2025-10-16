@@ -20,7 +20,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { dealProduct2 } from "@/lib/mock-data";
+import { dealProduct2, dealProduct3 } from "@/lib/mock-data";
 
 const findImage = (id: string) => {
     return PlaceHolderImages.find(img => img.id === id);
@@ -184,6 +184,9 @@ export default function EcommerceHomePage() {
                             </div>
                             <div className="w-[300px] shrink-0">
                                 <DealOfTheDayCard product={dealProduct2} />
+                            </div>
+                            <div className="w-[300px] shrink-0">
+                                <DealOfTheDayCard product={dealProduct3} />
                             </div>
                         </div>
                         <ScrollBar orientation="horizontal" />

@@ -205,6 +205,12 @@
       "imageHint": "watch wallet"
     },
     {
+      "id": "product-deal-3",
+      "description": "Handcrafted artisan leather journal",
+      "imageUrl": "https://picsum.photos/seed/journal/500/500",
+      "imageHint": "leather journal"
+    },
+    {
       "id": "testimonial-alan",
       "description": "Portrait of Alan Doe",
       "imageUrl": "https://picsum.photos/seed/alan-doe/200/200",
