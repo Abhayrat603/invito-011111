@@ -135,7 +135,7 @@ export default function EcommerceHomePage() {
                     <h2 className="text-2xl font-headline text-primary text-left mt-8 mb-2">Deal of the Day</h2>
                      <Carousel
                         plugins={[
-                            Autoplay({ delay: 2000, stopOnInteraction: true }),
+                            Autoplay({ delay: 4000, stopOnInteraction: true }),
                         ]}
                         opts={{
                           align: "start",
