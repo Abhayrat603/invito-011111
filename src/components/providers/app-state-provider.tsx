@@ -49,7 +49,7 @@ interface AppStateContextType {
   updateDealStockOnOrder: (cartProducts: any[]) => void;
 
   addEditRequest: (request: Omit<EditRequest, 'id' | 'status' | 'requestedAt' | 'updatedAt'>) => void;
-  updateEditRequestStatus: (requestId: string, status: 'Pending' | 'Approved' | 'Rejected') => void;
+  updateEditRequestStatus: (requestId: string, status: EditRequest['status']) => void;
 
   addUser: (user: AppUser) => void;
   addRating: (rating: Omit<AppRating, 'id' | 'createdAt'>) => void;
@@ -191,6 +191,10 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   useEffect(() => { if (isClient) { window.localStorage.setItem('appRatings', JSON.stringify(appRatings)); }}, [appRatings, isClient]);
 
   const addToCart = useCallback((productId: string, quantity: number = 1, isDeal: boolean = false) => {
+    let itemAdded = false;
+    let toastTitle = '';
+    let toastDescription = '';
+    
     setCart(prevCart => {
       const allItems = [...products, ...deals];
       const product = allItems.find(p => p.id === productId);
@@ -198,11 +202,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       if (isDeal) {
         const alreadyPurchased = orders.some(order => order.items.some(item => item.productId === productId));
         if (alreadyPurchased) {
-          toast({
-              variant: "destructive",
-              title: "Already Purchased",
-              description: "You can only buy a deal item once.",
-          });
+          toastTitle = "Already Purchased";
+          toastDescription = "You can only buy a deal item once.";
           return prevCart;
         }
       }
@@ -210,18 +211,14 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       const existingItem = prevCart.find(item => item.productId === productId);
       
       if (isDeal && existingItem) {
-        toast({
-            variant: "destructive",
-            title: "Already in Cart",
-            description: "Deal items can only be added to the cart once.",
-        });
+        toastTitle = "Already in Cart";
+        toastDescription = "Deal items can only be added to the cart once.";
         return prevCart;
       }
       
-      toast({
-          title: "Added to Cart",
-          description: `${quantity} x ${product?.name || 'item'} has been added to your cart.`
-      });
+      toastTitle = "Added to Cart";
+      toastDescription = `${quantity} x ${product?.name || 'item'} has been added to your cart.`;
+      itemAdded = true;
 
       if (existingItem) {
         return prevCart.map(item =>
@@ -232,6 +229,14 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       }
       return [...prevCart, { productId, quantity }];
     });
+
+    if (toastTitle) {
+        toast({
+            variant: itemAdded ? "default" : "destructive",
+            title: toastTitle,
+            description: toastDescription
+        });
+    }
   }, [orders, products, deals, toast]);
 
 
@@ -286,23 +291,29 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const toggleWishlist = useCallback((productId: string) => {
+    let toastTitle = '';
+    let toastDescription = '';
+    let isLiked = false;
+
     setWishlist(prevWishlist => {
       const product = products.find(p => p.id === productId);
       const existingItem = prevWishlist.find(item => item.productId === productId);
+      isLiked = !!existingItem;
+
       if (existingItem) {
-        toast({
-          title: "Removed from Wishlist",
-          description: `${product?.name} has been removed from your wishlist.`
-        });
+        toastTitle = "Removed from Wishlist";
+        toastDescription = `${product?.name} has been removed from your wishlist.`;
         return prevWishlist.filter(item => item.productId !== productId);
       } else {
-        toast({
-            title: "Added to Wishlist",
-            description: `${product?.name} has been added to your wishlist.`
-        });
+        toastTitle = "Added to Wishlist";
+        toastDescription = `${product?.name} has been added to your wishlist.`;
         return [...prevWishlist, { productId, addedAt: new Date() }];
       }
     });
+    
+    if (toastTitle) {
+      toast({ title: toastTitle, description: toastDescription });
+    }
   }, [products, toast]);
 
 
@@ -420,7 +431,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     });
   }, []);
   
-  const updateEditRequestStatus = useCallback((requestId: string, status: 'Pending' | 'Approved' | 'Rejected') => {
+  const updateEditRequestStatus = useCallback((requestId: string, status: EditRequest['status']) => {
     setEditRequests(prev => prev.map(req => req.id === requestId ? { ...req, status, updatedAt: new Date() } : req));
   }, []);
 

@@ -3,7 +3,7 @@
 
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock, CheckCircle, XCircle, User, Mail, Calendar, Edit, Timer } from "lucide-react";
+import { ArrowLeft, Clock, CheckCircle, XCircle, User, Mail, Calendar, Edit, Timer, CheckCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/components/providers/app-state-provider";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
+import type { EditRequest } from "@/lib/types";
 
 
 const editStatusConfig = {
@@ -44,6 +45,11 @@ const editStatusConfig = {
     color: "bg-red-500",
     text: "text-red-800 dark:text-red-200",
   },
+  Successful: {
+    icon: CheckCheck,
+    color: "bg-blue-500",
+    text: "text-blue-800 dark:text-blue-200",
+  },
 };
 
 export default function AdminRequestsPage() {
@@ -56,13 +62,16 @@ export default function AdminRequestsPage() {
         setIsClient(true);
     }, []);
 
-    const handleStatusChange = (requestId: string, newStatus: 'Pending' | 'Approved' | 'Rejected') => {
+    const handleStatusChange = (requestId: string, newStatus: EditRequest['status']) => {
         updateEditRequestStatus(requestId, newStatus);
         toast({
             title: "Status Updated",
             description: `Request ${requestId} has been set to ${newStatus}.`,
         });
     };
+    
+    // Filter out successful requests from the main view
+    const activeRequests = editRequests.filter(req => req.status !== 'Successful');
 
     return (
         <MainLayout>
@@ -75,7 +84,7 @@ export default function AdminRequestsPage() {
                     <div className="w-10"></div>
                 </header>
                 <main className="flex-grow p-4 space-y-4">
-                    {editRequests.sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime()).map(request => {
+                    {activeRequests.sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime()).map(request => {
                         const { icon: Icon, color, text } = editStatusConfig[request.status];
                         return (
                             <Card key={request.id} className="overflow-hidden">
@@ -117,7 +126,7 @@ export default function AdminRequestsPage() {
                                         <label className="text-xs font-medium text-muted-foreground">Change Status</label>
                                         <Select 
                                             defaultValue={request.status} 
-                                            onValueChange={(newStatus: 'Pending' | 'Approved' | 'Rejected') => handleStatusChange(request.id, newStatus)}
+                                            onValueChange={(newStatus: EditRequest['status']) => handleStatusChange(request.id, newStatus)}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Change status..." />
@@ -126,6 +135,7 @@ export default function AdminRequestsPage() {
                                                 <SelectItem value="Pending">Pending</SelectItem>
                                                 <SelectItem value="Approved">Approved</SelectItem>
                                                 <SelectItem value="Rejected">Rejected</SelectItem>
+                                                <SelectItem value="Successful">Successful</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>

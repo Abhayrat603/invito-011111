@@ -79,7 +79,7 @@ export interface EditRequest {
   productId: string;
   requestDetails: string;
   turnaroundTime: 'Urgent' | '1 Day' | '2 Days';
-  status: 'Pending' | 'Approved' | 'Rejected';
+  status: 'Pending' | 'Approved' | 'Rejected' | 'Successful';
   requestedAt: Date;
   updatedAt: Date;
 }

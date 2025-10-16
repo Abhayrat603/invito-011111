@@ -4,7 +4,7 @@ import { MainLayout } from "@/components/main-layout";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Loader2, Shield, Users, ShoppingCart, CreditCard, Edit, Tags, Star } from "lucide-react";
+import { Loader2, Shield, Users, ShoppingCart, CreditCard, Edit, Tags, Star, History } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
 
@@ -78,6 +78,12 @@ export default function AdminPage() {
                 icon={Edit}
                 title="Edit Requests"
                 description="Manage user customization requests"
+            />
+            <AdminCard 
+                href="/admin/requests/successful"
+                icon={History}
+                title="Successful Requests"
+                description="View completed edit requests"
             />
              <AdminCard 
                 href="/admin/ratings"
