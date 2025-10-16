@@ -66,7 +66,7 @@ export default function AdminRequestsPage() {
         updateEditRequestStatus(requestId, newStatus);
         toast({
             title: "Status Updated",
-            description: `Request ${requestId} has been set to ${newStatus}.`,
+            description: `Request has been set to ${newStatus}.`,
         });
     };
     
@@ -84,65 +84,71 @@ export default function AdminRequestsPage() {
                     <div className="w-10"></div>
                 </header>
                 <main className="flex-grow p-4 space-y-4">
-                    {activeRequests.sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime()).map(request => {
-                        const { icon: Icon, color, text } = editStatusConfig[request.status];
-                        return (
-                            <Card key={request.id} className="overflow-hidden">
-                                <CardHeader className="p-4">
-                                    <div className="flex items-start justify-between gap-4">
-                                        <div className="flex-grow overflow-hidden">
-                                            <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
-                                            <CardDescription className="text-xs">
-                                                Requested: {isClient ? format(new Date(request.requestedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
-                                            </CardDescription>
+                    {activeRequests.length === 0 ? (
+                         <div className="text-center text-muted-foreground mt-20">
+                            <p>No active requests found.</p>
+                        </div>
+                    ) : (
+                        activeRequests.sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime()).map(request => {
+                            const { icon: Icon, color, text } = editStatusConfig[request.status];
+                            return (
+                                <Card key={request.id} className="overflow-hidden">
+                                    <CardHeader className="p-4">
+                                        <div className="flex items-start justify-between gap-4">
+                                            <div className="flex-grow overflow-hidden">
+                                                <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
+                                                <CardDescription className="text-xs">
+                                                    Requested: {isClient ? format(new Date(request.requestedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
+                                                </CardDescription>
+                                            </div>
+                                            <Badge className={cn("text-xs font-bold", color, text)}>
+                                                <Icon className="h-3 w-3 mr-1.5" />
+                                                {request.status}
+                                            </Badge>
                                         </div>
-                                        <Badge className={cn("text-xs font-bold", color, text)}>
-                                            <Icon className="h-3 w-3 mr-1.5" />
-                                            {request.status}
-                                        </Badge>
-                                    </div>
-                                </CardHeader>
-                                <Separator />
-                                <CardContent className="p-4 space-y-4">
-                                    <div>
-                                        <h4 className="text-sm font-semibold mb-2 flex items-center"><User className="h-4 w-4 mr-2 text-primary" />Requester Details</h4>
-                                        <div className="text-sm text-muted-foreground space-y-1 pl-6">
-                                            <p><strong>Name:</strong> {request.userName}</p>
-                                            <p><strong>Email:</strong> {request.userEmail}</p>
+                                    </CardHeader>
+                                    <Separator />
+                                    <CardContent className="p-4 space-y-4">
+                                        <div>
+                                            <h4 className="text-sm font-semibold mb-2 flex items-center"><User className="h-4 w-4 mr-2 text-primary" />Requester Details</h4>
+                                            <div className="text-sm text-muted-foreground space-y-1 pl-6">
+                                                <p><strong>Name:</strong> {request.userName}</p>
+                                                <p><strong>Email:</strong> {request.userEmail}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <Separator />
-                                    <div>
-                                        <h4 className="text-sm font-semibold mb-2 flex items-center"><Edit className="h-4 w-4 mr-2 text-primary" />Request Details</h4>
-                                        <p className="text-sm text-foreground/80 pl-6">{request.requestDetails}</p>
-                                    </div>
-                                    <Separator />
-                                     <div>
-                                        <h4 className="text-sm font-semibold mb-2 flex items-center"><Timer className="h-4 w-4 mr-2 text-primary" />Turnaround Time</h4>
-                                        <p className="text-sm text-foreground/80 pl-6">{request.turnaroundTime}</p>
-                                    </div>
-                                    <Separator />
-                                    <div>
-                                        <label className="text-xs font-medium text-muted-foreground">Change Status</label>
-                                        <Select 
-                                            defaultValue={request.status} 
-                                            onValueChange={(newStatus: EditRequest['status']) => handleStatusChange(request.id, newStatus)}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Change status..." />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="Pending">Pending</SelectItem>
-                                                <SelectItem value="Approved">Approved</SelectItem>
-                                                <SelectItem value="Rejected">Rejected</SelectItem>
-                                                <SelectItem value="Successful">Successful</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )
-                    })}
+                                        <Separator />
+                                        <div>
+                                            <h4 className="text-sm font-semibold mb-2 flex items-center"><Edit className="h-4 w-4 mr-2 text-primary" />Request Details</h4>
+                                            <p className="text-sm text-foreground/80 pl-6">{request.requestDetails}</p>
+                                        </div>
+                                        <Separator />
+                                         <div>
+                                            <h4 className="text-sm font-semibold mb-2 flex items-center"><Timer className="h-4 w-4 mr-2 text-primary" />Turnaround Time</h4>
+                                            <p className="text-sm text-foreground/80 pl-6">{request.turnaroundTime}</p>
+                                        </div>
+                                        <Separator />
+                                        <div>
+                                            <label className="text-xs font-medium text-muted-foreground">Change Status</label>
+                                            <Select 
+                                                defaultValue={request.status} 
+                                                onValueChange={(newStatus: EditRequest['status']) => handleStatusChange(request.id, newStatus)}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Change status..." />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="Pending">Pending</SelectItem>
+                                                    <SelectItem value="Approved">Approved</SelectItem>
+                                                    <SelectItem value="Rejected">Rejected</SelectItem>
+                                                    <SelectItem value="Successful">Successful</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )
+                        })
+                    )}
                 </main>
             </div>
         </MainLayout>

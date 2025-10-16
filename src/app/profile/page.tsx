@@ -123,7 +123,7 @@ export default function ProfilePage() {
                         <ProfileMenuItem icon={Download} text="Download Report" href="/profile/report" />
                     </div>
                     <div className="mb-2">
-                        <ProfileMenuItem icon={Edit} text="Request For Edit" href="/request-edit" />
+                        <ProfileMenuItem icon={Edit} text="My Edit Requests" href="/profile/edit-requests" />
                     </div>
                     <div className="mb-2">
                         <ProfileMenuItem icon={HelpCircle} text="Help Center" href="/help-center" />

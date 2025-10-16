@@ -3,7 +3,7 @@
 
 import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock, CheckCircle, XCircle, FileText, ShoppingCart, History as HistoryIcon, Eye } from "lucide-react";
+import { ArrowLeft, Clock, CheckCircle, XCircle, FileText, ShoppingCart, History as HistoryIcon, Eye, CheckCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from 'next/link';
 import { useAppState } from "@/components/providers/app-state-provider";
@@ -36,6 +36,11 @@ const editStatusConfig = {
     icon: XCircle,
     color: "bg-red-500",
     text: "text-red-800",
+  },
+  Successful: {
+    icon: CheckCheck,
+    color: "bg-blue-500",
+    text: "text-blue-800",
   },
 };
 
@@ -70,7 +75,7 @@ export default function HistoryPage() {
     
     // Only delivered orders are shown in purchase history.
     const deliveredOrders = orders.filter(order => order.status === 'Delivered');
-    const approvedRequests = editRequests.filter(request => request.status === 'Approved');
+    const successfulRequests = editRequests.filter(request => request.status === 'Successful');
 
     return (
         <MainLayout>
@@ -136,14 +141,14 @@ export default function HistoryPage() {
                     </section>
                     
                     <section>
-                        <h2 className="text-lg font-semibold flex items-center mb-4"><FileText className="h-5 w-5 mr-2 text-primary"/> Edit Request History</h2>
-                        {approvedRequests.length === 0 ? (
+                        <h2 className="text-lg font-semibold flex items-center mb-4"><FileText className="h-5 w-5 mr-2 text-primary"/> Successful Edit History</h2>
+                        {successfulRequests.length === 0 ? (
                             <div className="text-center text-muted-foreground mt-10">
-                                <p>You have no approved edit requests.</p>
+                                <p>You have no successful edit requests.</p>
                             </div>
                         ) : (
                             <div className="space-y-4">
-                            {approvedRequests.sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime()).map(request => {
+                            {successfulRequests.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).map(request => {
                                 const { icon: Icon, color, text } = editStatusConfig[request.status];
                                 return (
                                     <Card key={request.id} className="overflow-hidden">
@@ -151,7 +156,7 @@ export default function HistoryPage() {
                                             <div className="flex-grow">
                                                 <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
                                                 <CardDescription className="text-xs">
-                                                    Requested: {isClient ? format(new Date(request.requestedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
+                                                    Completed: {isClient ? format(new Date(request.updatedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
                                                 </CardDescription>
                                             </div>
                                             <Badge className={cn("text-xs font-bold", color, text)}>

@@ -50,12 +50,14 @@ export default function SuccessfulRequestsPage() {
                 </header>
                 <main className="flex-grow p-4 space-y-4">
                     {successfulRequests.length === 0 ? (
-                        <div className="text-center text-muted-foreground mt-10">
+                        <div className="text-center text-muted-foreground mt-20">
                             <p>No successful requests found.</p>
                         </div>
                     ) : (
                         successfulRequests.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).map(request => {
-                            const { icon: Icon, color, text } = editStatusConfig[request.status];
+                            const config = editStatusConfig[request.status];
+                            if (!config) return null;
+                            const { icon: Icon, color, text } = config;
                             return (
                                 <Card key={request.id} className="overflow-hidden">
                                     <CardHeader className="p-4">
