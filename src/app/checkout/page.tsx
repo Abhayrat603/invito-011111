@@ -19,12 +19,20 @@ declare global {
     }
 }
 
-const loadRazorpayScript = () => {
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.async = true;
-    document.body.appendChild(script);
+const loadRazorpayScript = (src: string) => {
+    return new Promise((resolve) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = () => {
+            resolve(true);
+        };
+        script.onerror = () => {
+            resolve(false);
+        };
+        document.body.appendChild(script);
+    });
 };
+
 
 export default function CheckoutPage() {
     const router = useRouter();
@@ -34,7 +42,7 @@ export default function CheckoutPage() {
     const { cart, addOrder, clearCart, products, deals, updateDealStockOnOrder } = useAppState();
     
     useEffect(() => {
-        loadRazorpayScript();
+        loadRazorpayScript("https://checkout.razorpay.com/v1/checkout.js");
     }, []);
 
     const allItems: (Product | DealProductType)[] = [...products, ...deals];
@@ -55,11 +63,11 @@ export default function CheckoutPage() {
 
         const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
 
-        if (!razorpayKey || razorpayKey === 'rzp_test_12345678901234') {
+        if (!razorpayKey) {
              toast({
                 variant: "destructive",
                 title: "Razorpay Not Configured",
-                description: "Please add a valid Razorpay test key to your .env file."
+                description: "Razorpay Key ID is not configured. Please add it to your environment variables."
             });
             setIsSubmitting(false);
             return;
