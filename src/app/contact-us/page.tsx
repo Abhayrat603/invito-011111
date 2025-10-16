@@ -63,11 +63,6 @@ export default function ContactUsPage() {
                         </form>
                     </InfoCard>
 
-                    <InfoCard icon={Phone} title="Call Us">
-                        <p>Our design support team is available to assist you. Give us a call for any immediate inquiries.</p>
-                        <a href="tel:+918463062603" className="font-semibold text-primary hover:underline">+91 8463062603</a>
-                    </InfoCard>
-
                     <InfoCard icon={Mail} title="Email Us">
                         <p>For general inquiries, support, or design questions, you can email us directly. We aim to respond within 24 hours.</p>
                         <a href="mailto:abhayrat603@gmail.com" className="font-semibold text-primary hover:underline">abhayrat603@gmail.com</a>

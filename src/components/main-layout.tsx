@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ShoppingBag, Heart, User, Menu as MenuIcon, MapPin, Phone, Mail, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
+import { Home, ShoppingBag, Heart, User, Menu as MenuIcon, MapPin, Mail, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -85,7 +85,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                     <div>
                         <h3 className="font-bold mb-2">CONTACT</h3>
                         <ul className="space-y-2 text-sm text-amber-950/70">
-                           <li className="flex items-start"><Phone className="h-4 w-4 mr-2 mt-1 shrink-0"/>+91 8463062603</li>
                             <li className="flex items-start"><Mail className="h-4 w-4 mr-2 mt-1 shrink-0"/>abhayrat603@gmail.com</li>
                         </ul>
                     </div>
