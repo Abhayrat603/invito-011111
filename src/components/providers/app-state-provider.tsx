@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { createContext, useContext, ReactNode, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, ReactNode, useCallback, useMemo, useEffect, useState } from 'react';
 import type { CartItem, WishlistItem, Order, Product, DealProduct, EditRequest, AppUser, AppRating, AppSettings, Testimonial, ImagePlaceholder, MenuItem } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from './auth-provider';
@@ -99,9 +99,27 @@ const convertTimestamps = (data: any[], fields: string[]) => {
     });
 }
 
+const defaultMenuItems = [
+    { name: "Wedding Invitation" },
+    { name: "Birthday Invitation" },
+    { name: "Engagement Invitation" },
+    { name: "Anniversary Invitation" },
+    { name: "Housewarming Invitation" },
+    { name: "Baby Shower Invitation" },
+    { name: "Graduation Invitation" },
+    { name: "Corporate Invitation" },
+    { name: "Party Invitation" },
+    { name: "E-Invite / Digital Invitation" },
+    { name: "Save-the-Date Card" },
+    { name: "Formal Invitation" },
+    { name: "Casual Invitation" },
+    { name: "Handmade Invitation" },
+];
+
 export function AppStateProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
   const { user } = useAuth();
+  const [isMenuInitialized, setIsMenuInitialized] = useState(false);
 
   const productsQuery = useMemo(() => collection(db, 'products'), []);
   const { data: productsData } = useCollection(productsQuery);
@@ -119,7 +137,14 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const { data: appRatingsData } = useCollection(appRatingsQuery);
   const appRatings: AppRating[] = appRatingsData ? convertTimestamps(appRatingsData, ['createdAt']) as AppRating[] : [];
 
-  const editRequestsQuery = useMemo(() => collection(db, 'editRequests'), []);
+  const editRequestsQuery = useMemo(() => {
+    if (!user) return null;
+    if (user.email === 'abhayrat603@gmail.com') {
+      return collection(db, 'editRequests');
+    }
+    return query(collection(db, 'editRequests'), where('userId', '==', user.uid));
+  }, [user]);
+
   const { data: editRequestsData } = useCollection(editRequestsQuery);
   const editRequests: EditRequest[] = editRequestsData ? convertTimestamps(editRequestsData, ['requestedAt', 'updatedAt']) as EditRequest[] : [];
   
@@ -136,8 +161,42 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const images: ImagePlaceholder[] = imagesData as ImagePlaceholder[] || [];
 
   const menuItemsQuery = useMemo(() => collection(db, 'menuItems'), []);
-  const { data: menuItemsData } = useCollection(menuItemsQuery);
+  const { data: menuItemsData, loading: menuItemsLoading } = useCollection(menuItemsQuery);
   const menuItems: MenuItem[] = menuItemsData as MenuItem[] || [];
+
+  const addMenuItem = useCallback(async (item: Omit<MenuItem, 'id' | 'icon' | 'order' | 'href'>) => {
+    const slug = item.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const newMenuItem = {
+      name: item.name,
+      href: `/${slug}`,
+      icon: getIconForMenuItem(item.name),
+      order: menuItems.length,
+    };
+    await addDoc(collection(db, 'menuItems'), newMenuItem);
+  }, [menuItems.length]);
+
+  useEffect(() => {
+    const initializeMenu = async () => {
+      if (!menuItemsLoading && menuItems.length === 0 && !isMenuInitialized) {
+        setIsMenuInitialized(true);
+        const batch = writeBatch(db);
+        let order = 0;
+        for (const item of defaultMenuItems) {
+            const slug = item.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+            const newMenuItemDoc = doc(collection(db, 'menuItems'));
+            const newMenuItem = {
+              name: item.name,
+              href: `/${slug}`,
+              icon: getIconForMenuItem(item.name),
+              order: order++,
+            };
+            batch.set(newMenuItemDoc, newMenuItem);
+        }
+        await batch.commit();
+      }
+    };
+    initializeMenu();
+  }, [menuItems, menuItemsLoading, isMenuInitialized]);
 
   const cartCollectionRef = useMemo(() => user ? collection(db, `users/${user.uid}/cart`) : null, [user]);
   const { data: cartData } = useCollection(cartCollectionRef);
@@ -180,12 +239,14 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     const product = allProductItems.find(p => p.id === productId);
 
     if (isDeal) {
-        const userHasPurchasedDeal = orders.some(order => order.items.some(item => item.productId === productId));
+        const userHasPurchasedDeal = orders.some(order => 
+            order.items.some(item => item.productId === productId)
+        );
         if (userHasPurchasedDeal) {
           toast({ variant: "destructive", title: "Already Purchased", description: "You can only buy a deal item once." });
           return;
         }
-        if (!querySnapshot.empty) {
+        if (existingItemDoc) {
             toast({ variant: "destructive", title: "Already in Cart", description: "Deal items can only be added to the cart once." });
             return;
         }
@@ -504,24 +565,13 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     await setDoc(testimonialRef, testimonialData, { merge: true });
   }, []);
 
-  const addMenuItem = useCallback(async (item: Omit<MenuItem, 'id' | 'icon' | 'order' | 'href'>) => {
-    const slug = item.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-    const newMenuItem = {
-      ...item,
-      href: `/${slug}`,
-      icon: getIconForMenuItem(item.name),
-      order: menuItems.length,
-    };
-    await addDoc(collection(db, 'menuItems'), newMenuItem);
-  }, [menuItems.length]);
-
   const updateMenuItem = useCallback(async (itemId: string, itemData: Partial<MenuItem>) => {
     const itemRef = doc(db, 'menuItems', itemId);
     const updatedData: Partial<MenuItem> = { ...itemData };
     if (itemData.name) {
-      updatedData.icon = getIconForMenuItem(itemData.name);
       const slug = itemData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
       updatedData.href = `/${slug}`;
+      updatedData.icon = getIconForMenuItem(itemData.name);
     }
     await updateDoc(itemRef, updatedData);
   }, []);
