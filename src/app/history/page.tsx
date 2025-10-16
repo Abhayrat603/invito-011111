@@ -5,7 +5,8 @@ import { MainLayout } from "@/components/main-layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock, CheckCircle, XCircle, FileText, ShoppingCart, History as HistoryIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { editRequests, orders } from "@/lib/mock-data";
+import { editRequests } from "@/lib/mock-data";
+import { useAppState } from "@/components/providers/app-state-provider";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
@@ -58,7 +59,10 @@ const orderStatusConfig = {
 
 export default function HistoryPage() {
     const router = useRouter();
+    const { orders } = useAppState();
     
+    // Only delivered orders are shown in purchase history.
+    // The checkout logic currently sets all new orders to 'Delivered' status.
     const deliveredOrders = orders.filter(order => order.status === 'Delivered');
     const approvedRequests = editRequests.filter(request => request.status === 'Approved');
 

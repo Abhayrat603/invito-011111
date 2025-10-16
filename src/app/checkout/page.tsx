@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useAppState } from "@/components/providers/app-state-provider";
 import { products as allProducts, dealProduct, dealProduct2, dealProduct3 } from "@/lib/mock-data";
-import { Product, DealProduct as DealProductType } from "@/lib/types";
+import { Product, DealProduct as DealProductType, Order } from "@/lib/types";
 import Image from "next/image";
 
 const allItems: (Product | DealProductType)[] = [...allProducts, dealProduct, dealProduct2, dealProduct3];
@@ -18,7 +18,7 @@ export default function CheckoutPage() {
     const router = useRouter();
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { cart } = useAppState();
+    const { cart, addOrder, clearCart } = useAppState();
 
     const cartProducts = cart.map(cartItem => {
         const product = allItems.find(p => p.id === cartItem.productId);
@@ -38,13 +38,30 @@ export default function CheckoutPage() {
         // Simulate API call to Razorpay
         await new Promise(resolve => setTimeout(resolve, 2000));
         
+        // Create a new order object
+        const newOrder: Order = {
+            id: `ord${Date.now()}`,
+            items: cartProducts.map(p => ({
+                productId: p!.id,
+                productName: p!.name,
+                quantity: p!.quantity,
+                price: p!.displayPrice,
+            })),
+            total: total,
+            status: 'Delivered', // Simulating instant delivery for digital goods
+            createdAt: new Date(),
+        };
+
+        // Add order to state and clear cart
+        addOrder(newOrder);
+        clearCart();
+        
         toast({
             title: "Payment Successful",
             description: `Your payment of ₹${total.toFixed(2)} has been processed.`,
         });
         
         setIsSubmitting(false);
-        // Here you would typically clear the cart
         router.push("/history");
     };
 

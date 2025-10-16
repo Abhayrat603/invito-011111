@@ -2,18 +2,21 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import type { CartItem, WishlistItem } from '@/lib/types';
+import type { CartItem, WishlistItem, Order } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 
 interface AppStateContextType {
   cart: CartItem[];
   wishlist: WishlistItem[];
+  orders: Order[];
   addToCart: (productId: string, quantity?: number) => void;
   removeFromCart: (productId: string) => void;
   increaseCartQuantity: (productId: string) => void;
   decreaseCartQuantity: (productId: string) => void;
+  clearCart: () => void;
   toggleWishlist: (productId: string) => void;
   isInWishlist: (productId: string) => boolean;
+  addOrder: (order: Order) => void;
 }
 
 const AppStateContext = createContext<AppStateContextType | undefined>(undefined);
@@ -53,6 +56,23 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     }
   });
 
+  const [orders, setOrders] = useState<Order[]>(() => {
+    if (!isClient) return [];
+    try {
+        const item = window.localStorage.getItem('orders');
+        // Need to parse dates correctly from JSON
+        const ordersData = item ? JSON.parse(item) : [];
+        return ordersData.map((order: any) => ({
+            ...order,
+            createdAt: new Date(order.createdAt),
+        }));
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+  });
+
+
   useEffect(() => {
     if (isClient) {
       window.localStorage.setItem('cart', JSON.stringify(cart));
@@ -64,6 +84,12 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       window.localStorage.setItem('wishlist', JSON.stringify(wishlist));
     }
   }, [wishlist, isClient]);
+
+  useEffect(() => {
+    if (isClient) {
+        window.localStorage.setItem('orders', JSON.stringify(orders));
+    }
+  }, [orders, isClient]);
 
   const addToCart = (productId: string, quantity: number = 1) => {
     setCart(prevCart => {
@@ -113,6 +139,14 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  const addOrder = (order: Order) => {
+    setOrders(prevOrders => [order, ...prevOrders]);
+  };
+
   const toggleWishlist = (productId: string) => {
     setWishlist(prevWishlist => {
       const existingItem = prevWishlist.find(item => item.productId === productId);
@@ -127,7 +161,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     return wishlist.some(item => item.productId === productId);
   };
 
-  const value = { cart, wishlist, addToCart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, toggleWishlist, isInWishlist };
+  const value = { cart, wishlist, orders, addToCart, removeFromCart, increaseCartQuantity, decreaseCartQuantity, clearCart, toggleWishlist, isInWishlist, addOrder };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }
