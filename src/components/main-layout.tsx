@@ -165,7 +165,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                         className="rounded-full shadow-lg flex items-center justify-center w-12 h-12"
                         aria-label="Chat on WhatsApp"
                     >
-                        <Image src="https://i.ibb.co/Z1WdFS2/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" width={48} height={48} />
+                        <Image src="https://i.ibb.co/Z1WdFS2/vecteezy-whatsapp-logo-png-whatsapp-icon-png-whatsapp-transparent-18930748.png" alt="WhatsApp" width={52} height={52} />
                     </Link>
                 </div>
             )}
