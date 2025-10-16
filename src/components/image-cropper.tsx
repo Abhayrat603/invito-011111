@@ -2,12 +2,11 @@
 "use client"
 
 import React, { useState, useCallback } from 'react';
-import Cropper from 'react-easy-crop';
+import Cropper, { type Area } from 'react-easy-crop';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import getCroppedImg from '@/lib/crop-image';
-import type { Area } from 'react-easy-crop';
 import { Crop } from 'lucide-react';
 
 interface ImageCropperProps {
@@ -24,15 +23,17 @@ const ImageCropper: React.FC<ImageCropperProps> = ({ image, onCropComplete, onCl
 
   const imageSrc = React.useMemo(() => URL.createObjectURL(image), [image]);
 
-  const onCropCompleteCallback = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
+  const onCropCompleteCallback = useCallback((_croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
   const handleCrop = async () => {
     if (croppedAreaPixels) {
       try {
-        const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
-        onCropComplete(croppedImage);
+        const croppedImageBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
+        if (croppedImageBlob) {
+          onCropComplete(croppedImageBlob);
+        }
       } catch (e) {
         console.error(e);
       }
@@ -54,6 +55,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({ image, onCropComplete, onCl
             onCropChange={setCrop}
             onZoomChange={setZoom}
             onCropComplete={onCropCompleteCallback}
+            cropShape="round"
           />
         </div>
         <div className="space-y-2">
@@ -68,7 +70,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({ image, onCropComplete, onCl
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={handleCrop}>Save Picture</Button>
+          <Button onClick={handleCrop} disabled={!croppedAreaPixels}>Save Picture</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
