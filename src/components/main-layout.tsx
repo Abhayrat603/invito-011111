@@ -105,7 +105,7 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
   return (
     <div className="w-full max-w-md mx-auto bg-background text-foreground min-h-screen flex flex-col">
        {showHeader && (
-         <header className="p-4 flex items-center justify-between gap-4 border-b sticky top-0 bg-background z-10">
+         <header className="px-4 py-2 flex items-center justify-between gap-4 border-b sticky top-0 bg-background z-10">
             <Link href="/" className="flex items-center gap-2">
                 <div className="bg-[#694736] text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-lg">
                     I
@@ -242,3 +242,5 @@ export function MainLayout({ children, onSearch }: { children: React.ReactNode, 
     </div>
   );
 }
+
+    
