@@ -13,12 +13,18 @@ import { Product, DealProduct as DealProductType, Order } from "@/lib/types";
 import Image from "next/image";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
+declare global {
+    interface Window {
+        Razorpay: any;
+    }
+}
+
 export default function CheckoutPage() {
     const router = useRouter();
     const { toast } = useToast();
     const { user } = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { cart, addOrder, clearCart, orders, products, deals, updateDealStockOnOrder } = useAppState();
+    const { cart, addOrder, clearCart, products, deals, updateDealStockOnOrder } = useAppState();
     
     const allItems: (Product | DealProductType)[] = [...products, ...deals];
 
@@ -29,24 +35,95 @@ export default function CheckoutPage() {
             return { ...product, quantity: cartItem.quantity, displayPrice: price };
         }
         return null;
-    }).filter(p => p !== null);
+    }).filter((p): p is NonNullable<typeof p> => p !== null);
 
-    const total = cartProducts.reduce((acc, p) => acc + (p?.displayPrice || 0) * (p?.quantity || 0), 0);
+    const total = cartProducts.reduce((acc, p) => acc + (p.displayPrice * p.quantity), 0);
 
     const handlePayment = async () => {
-        // This function is now a placeholder.
-        // A real payment integration would be required here.
-        toast({
-            variant: "destructive",
-            title: "Payment Gateway Not Configured",
-            description: "This is a placeholder. A real payment gateway like Razorpay or Stripe must be integrated to process payments."
+        setIsSubmitting(true);
+
+        if (!user) {
+            toast({
+                variant: "destructive",
+                title: "Not logged in",
+                description: "You must be logged in to make a purchase."
+            });
+            setIsSubmitting(false);
+            return;
+        }
+
+        // In a real app, you would fetch an order_id from your server.
+        // This is a client-side simulation for testing purposes.
+        const razorpayOptions = {
+            key: "rzp_test_YourKeyId", // IMPORTANT: Replace with your Razorpay Test Key ID
+            amount: total * 100, // amount in the smallest currency unit (paise for INR)
+            currency: "INR",
+            name: "Invite Designer",
+            description: "Invitation Card Purchase",
+            image: "https://i.ibb.co/L9LcfJ3/testimonial-alan.jpg",
+            // order_id: "order_XXXXXXXX", // This should be fetched from your server
+            handler: async function (response: any) {
+                // This function is called after a successful payment.
+                try {
+                    const orderData: Omit<Order, 'id' | 'createdAt' | 'userId'> = {
+                        items: cartProducts.map(p => ({
+                            productId: p.id,
+                            productName: p.name,
+                            quantity: p.quantity,
+                            price: p.displayPrice
+                        })),
+                        total: total,
+                        status: 'Placed',
+                    };
+                    const newOrderId = await addOrder(orderData);
+                    await updateDealStockOnOrder(cartProducts);
+                    await clearCart();
+                    
+                    toast({
+                        title: "Payment Successful!",
+                        description: `Your order #${newOrderId} has been placed.`,
+                    });
+                    router.push(`/order-confirmation/${newOrderId}`);
+
+                } catch (error) {
+                    console.error("Error processing order after payment:", error);
+                    toast({
+                        variant: "destructive",
+                        title: "Order Processing Failed",
+                        description: "Your payment was successful, but we failed to create your order. Please contact support.",
+                    });
+                }
+            },
+            prefill: {
+                name: user.displayName || "Valued Customer",
+                email: user.email || "",
+                contact: user.phoneNumber || "",
+            },
+            notes: {
+                address: "Invite Designer Corporate Office",
+            },
+            theme: {
+                color: "#694736",
+            },
+        };
+
+        const razorpayInstance = new window.Razorpay(razorpayOptions);
+        
+        razorpayInstance.on('payment.failed', function (response: any) {
+            toast({
+                variant: "destructive",
+                title: "Payment Failed",
+                description: response.error.description || "Something went wrong.",
+            });
+            setIsSubmitting(false);
         });
+
+        razorpayInstance.open();
     };
 
     return (
         <MainLayout>
             <div className="w-full max-w-md mx-auto bg-background text-foreground flex flex-col min-h-screen">
-                
                 <main className="flex-grow p-4">
                     <div className="space-y-6">
                         <div>
@@ -68,13 +145,23 @@ export default function CheckoutPage() {
 
                         <div>
                             <h2 className="text-lg font-semibold mb-2">Payment Details</h2>
-                             <Alert variant="destructive">
-                                <AlertTriangle className="h-4 w-4" />
-                                <AlertTitle>Action Required: Payment Gateway</AlertTitle>
-                                <AlertDescription>
-                                    This checkout is for demonstration purposes only. To accept real payments, you must integrate a payment provider like Razorpay or Stripe. This involves creating an account with the provider, getting API keys, and implementing both client-side and server-side code.
-                                </AlertDescription>
-                            </Alert>
+                            <div className="bg-card p-4 rounded-lg border space-y-4">
+                               <Alert>
+                                    <AlertTriangle className="h-4 w-4" />
+                                    <AlertTitle>Test Mode Enabled</AlertTitle>
+                                    <AlertDescription>
+                                        You are currently in a test payment environment. No real money will be charged.
+                                    </AlertDescription>
+                                </Alert>
+                                 <div className="flex justify-center items-center p-4 rounded-lg bg-muted/50">
+                                   <Image src="https://razorpay.com/assets/razorpay-glyph.svg" alt="Razorpay" width={100} height={40}/>
+                                </div>
+                                <Button className="w-full h-12" onClick={handlePayment} disabled={isSubmitting || cartProducts.length === 0}>
+                                    {isSubmitting ? (
+                                        <Loader2 className="animate-spin mr-2"/>
+                                    ) : `Pay ₹${total.toFixed(2)}`}
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </main>
