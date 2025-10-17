@@ -8,6 +8,18 @@ import { FirebaseClientProvider } from "@/firebase/client-provider";
 export const metadata: Metadata = {
   title: "Invite Designer",
   description: "Create and customize beautiful invitation cards for every occasion.",
+  manifest: "/manifest.json",
+  themeColor: "#694736",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Invite Designer",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+  },
 };
 
 export default function RootLayout({

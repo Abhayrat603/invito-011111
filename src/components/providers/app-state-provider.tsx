@@ -461,7 +461,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         id: newDealRef.id,
         slug: dealData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
         createdAt: serverTimestamp(),
-        offerEndsAt: Timestamp.fromDate(new Date(dealData.offerEndsAt)),
+        offerEndsAt: dealData.offerEndsAt instanceof Timestamp ? dealData.offerEndsAt : Timestamp.fromDate(dealData.offerEndsAt instanceof Date ? dealData.offerEndsAt : new Date(dealData.offerEndsAt)),
         images: [imageId],
         sold: 0,
         rating: Math.random() * 2 + 3,

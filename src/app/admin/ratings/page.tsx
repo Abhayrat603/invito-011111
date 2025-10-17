@@ -14,6 +14,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { format } from "date-fns";
+import { toDate } from "@/lib/utils";
 import { useState, useEffect } from "react";
 
 const StarRating = ({ rating }: { rating: number }) => {
@@ -51,7 +52,7 @@ export default function AdminRatingsPage() {
                     <div className="w-10"></div>
                 </header>
                 <main className="flex-grow p-4 space-y-4">
-                    {appRatings.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map(rating => (
+                    {appRatings.sort((a, b) => toDate(b.createdAt).getTime() - toDate(a.createdAt).getTime()).map(rating => (
                         <Card key={rating.id}>
                             <CardHeader>
                                 <div className="flex items-center justify-between">
@@ -62,7 +63,7 @@ export default function AdminRatingsPage() {
                                     <StarRating rating={rating.rating} />
                                 </div>
                                 <CardDescription className="pt-1">
-                                    {isClient ? format(new Date(rating.createdAt), "PPP 'at' h:mm a") : '...'}
+                                    {isClient ? format(toDate(rating.createdAt), "PPP 'at' h:mm a") : '...'}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-2 text-sm">

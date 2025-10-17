@@ -103,9 +103,23 @@ export default function EditProductPage() {
         setIsSubmitting(true);
         
         try {
-            await updateProduct(product.id, {
-                ...values,
-            });
+            const updates: any = {
+                name: values.name,
+                description: values.description,
+                price: values.price,
+                category: values.category,
+                isPaid: values.isPaid,
+                imageUrl: values.imageUrl,
+                size: values.size,
+                zipFileUrl: values.zipFileUrl,
+            };
+            if (values.fileTypes) {
+                updates.fileTypes = values.fileTypes.split(',').map(s => s.trim()).filter(s => s);
+            }
+            if (values.requiredSoftware) {
+                updates.requiredSoftware = values.requiredSoftware.split(',').map(s => s.trim()).filter(s => s);
+            }
+            await updateProduct(product.id, updates);
             toast({
                 title: "Product Updated",
                 description: `"${values.name}" has been successfully updated.`,

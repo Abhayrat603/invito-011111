@@ -301,6 +301,7 @@ export const editRequests: EditRequest[] = [
 export const orders: Order[] = [
     {
         id: 'ord1',
+        userId: 'user1',
         items: [
             { productId: 'prod9', productName: 'Shop Visiting Card', quantity: 2, price: 10 },
             { productId: 'prod2', productName: 'Modern Birthday Bash', quantity: 1, price: 4.50 },
@@ -311,6 +312,7 @@ export const orders: Order[] = [
     },
     {
         id: 'ord2',
+        userId: 'user1',
         items: [
             { productId: 'prod7', productName: 'Elegant Anniversary', quantity: 1, price: 6.50 },
         ],
@@ -320,6 +322,7 @@ export const orders: Order[] = [
     },
     {
         id: 'ord3',
+        userId: 'user1',
         items: [
             { productId: 'prod1', productName: 'Classic Wedding', quantity: 50, price: 5.99 },
             { productId: 'prod10', productName: 'Rustic Wedding Suite', quantity: 50, price: 6.25 },

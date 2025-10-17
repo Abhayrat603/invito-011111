@@ -18,7 +18,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn, toDate } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -154,7 +154,7 @@ export default function ReportPage() {
                                                     <div>
                                                         <CardTitle className="text-base font-semibold">Order #{order.id}</CardTitle>
                                                         <CardDescription className="text-xs">
-                                                            {isClient && order.createdAt ? format(new Date(order.createdAt.toString()), "MMM d, yyyy 'at' h:mm a") : '...'}
+                                                            {isClient && order.createdAt ? format(toDate(order.createdAt), "MMM d, yyyy 'at' h:mm a") : '...'}
                                                         </CardDescription>
                                                     </div>
                                                     <Badge className={cn("text-xs font-bold", orderStatusConfig[order.status].color, orderStatusConfig[order.status].text)}>

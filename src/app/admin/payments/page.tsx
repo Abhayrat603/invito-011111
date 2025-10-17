@@ -16,7 +16,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn, toDate } from "@/lib/utils";
 import { useState, useEffect } from "react";
 
 const orderStatusConfig = {
@@ -59,7 +59,7 @@ export default function AdminPaymentsPage() {
                     <div className="w-10"></div>
                 </header>
                 <main className="flex-grow p-4 space-y-4">
-                     {orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map(order => {
+                     {orders.sort((a, b) => toDate(b.createdAt).getTime() - toDate(a.createdAt).getTime()).map(order => {
                         const { color, text } = orderStatusConfig[order.status];
                         return (
                             <Card key={order.id} className="overflow-hidden">
@@ -68,7 +68,7 @@ export default function AdminPaymentsPage() {
                                         <div>
                                             <CardTitle className="text-base font-semibold">Order #{order.id}</CardTitle>
                                             <CardDescription className="text-xs">
-                                                {isClient ? format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a") : '...'}
+                                                {isClient ? format(toDate(order.createdAt), "MMM d, yyyy 'at' h:mm a") : '...'}
                                             </CardDescription>
                                         </div>
                                         <Badge className={cn("text-xs font-bold", color, text)}>
