@@ -11,6 +11,10 @@ import { MainLayout } from "@/components/main-layout";
 import { categories } from "@/lib/mock-data";
 import { ProductCard } from "@/components/product-card";
 import { DealOfTheDayCard } from "@/components/deal-of-the-day-card";
+import { HeroSection } from "@/components/hero-section";
+import { ProductShowcase } from "@/components/product-showcase";
+import { TestimonialsCarousel } from "@/components/testimonials-carousel";
+import { ModernFooter } from "@/components/modern-footer";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useAppState } from "@/components/providers/app-state-provider";
 import { useRouter } from "next/navigation";
@@ -159,6 +163,7 @@ export default function EcommerceHomePage() {
              <div className="pb-4">
                   {currentPage === 0 && !selectedCategory && !searchQuery && (
                     <>
+                      <HeroSection />
                       <section className="px-4 my-6">
                         <h2 className="text-2xl font-headline font-bold text-primary text-left mb-2">Deal of the Day</h2>
                          <Carousel
@@ -250,11 +255,26 @@ export default function EcommerceHomePage() {
 
                   {currentPage === 0 && !selectedCategory && !searchQuery && (
                     <>
-                      <section className="px-4 mt-8 space-y-6">
-                        <h2 className="text-2xl font-headline font-bold text-primary text-left mb-6">Testimonial</h2>
-                        <TestimonialCard />
-                      </section>
-                      <PageFooter />
+                      <ProductShowcase 
+                        products={products.slice(0, 8).map(p => ({
+                          id: p.id,
+                          name: p.name,
+                          description: p.description,
+                          price: p.price,
+                          originalPrice: p.originalPrice,
+                          rating: 4.5,
+                          reviews: Math.floor(Math.random() * 100) + 10,
+                          image: findImage(p.imageId)?.imageUrl || `https://picsum.photos/seed/${p.id}/300/200`,
+                          category: p.category,
+                          isNew: Math.random() > 0.7,
+                          isBestseller: Math.random() > 0.8,
+                          discount: p.originalPrice ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100) : undefined
+                        }))}
+                        title="Featured Invitations"
+                        subtitle="Discover our most popular and trending invitation designs"
+                      />
+                      <TestimonialsCarousel />
+                      <ModernFooter />
                     </>
                   )}
                   
