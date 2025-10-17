@@ -1,4 +1,3 @@
-
 "use client";
 
 import { MainLayout } from "@/components/main-layout";
@@ -61,7 +60,7 @@ export default function AboutUsPage() {
                     <div className="p-6 md:p-8 space-y-8">
                         <div className="text-center">
                             <p className="text-lg text-foreground/80 leading-relaxed">
-                                At Invite Designer, we believe every great event starts with a beautiful invitation. It's the first glimpse your guests have of the special day you're planning, setting the tone and building anticipation. We are a passionate team of designers, artists, and creators dedicated to providing stunning, customizable digital and print invitations crafted with exceptional quality and boundless creativity. Our platform is more than just a store; it’s a space where your vision for the perfect event comes to life.
+                                At Invite Designer, we believe every great event starts with a beautiful invitation. It's the first glimpse your guests have of the special day you're planning, setting the tone and building anticipation. We are a passionate team of designers, artists, and creators dedicated to providing stunning, customizable digital and print invitations crafted with exceptional quality and boundless creativity. Our platform is more than just a store; it's a space where your vision for the perfect event comes to life.
                             </p>
                         </div>
                         
@@ -80,7 +79,7 @@ export default function AboutUsPage() {
 
                          <InfoCard icon={Award} title="Commitment to Quality">
                             <div className="text-foreground/80 space-y-3 leading-relaxed">
-                                <p>We are relentlessly passionate about quality. It’s a non-negotiable aspect of our work. From the initial spark of a design concept to the final digital template or printed card, every detail is meticulously considered and refined. We partner with a curated network of talented independent designers and artists who share our unwavering commitment to excellence. This ensures that every piece from Invite Designer is not just a product, but a work of art that you can be proud to share with your loved ones.</p>
+                                <p>We are relentlessly passionate about quality. It's a non-negotiable aspect of our work. From the initial spark of a design concept to the final digital template or printed card, every detail is meticulously considered and refined. We partner with a curated network of talented independent designers and artists who share our unwavering commitment to excellence. This ensures that every piece from Invite Designer is not just a product, but a work of art that you can be proud to share with your loved ones.</p>
                             </div>
                         </InfoCard>
 
@@ -98,4 +97,6 @@ export default function AboutUsPage() {
                     </div>
                 </main>
             </div>
-        </
+        </MainLayout>
+    );
+}

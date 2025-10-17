@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -127,4 +126,10 @@ export default function EditPasswordPage() {
                     </form>
                   </Form>
                 </CardContent>
-              </
+              </Card>
+          </main>
+        </div>
+      </MainLayout>
+    </AuthRedirect>
+  );
+}

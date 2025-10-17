@@ -9,16 +9,28 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAppState } from "@/components/providers/app-state-provider";
 import { getIconByName } from "@/lib/icon-map";
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
+
+// Force dynamic rendering to avoid SSR issues with Sheet components
+export const dynamic = 'force-dynamic';
 
 
 export function MenuPageContent() {
     const pathname = usePathname();
     const { menuItems } = useAppState();
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const sortedMenuItems = useMemo(() => {
         return [...menuItems].sort((a, b) => a.order - b.order);
     }, [menuItems]);
+
+    if (!isMounted) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="w-full h-full bg-background text-foreground flex flex-col">
