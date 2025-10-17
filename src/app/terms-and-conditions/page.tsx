@@ -79,4 +79,6 @@ export default function TermsAndConditionsPage() {
                     </TermCard>
                 </main>
             </div>
-        </MainLayout
+        </MainLayout>
+    );
+}

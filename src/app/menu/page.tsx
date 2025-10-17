@@ -64,8 +64,21 @@ export function MenuPageContent() {
 
 
 export default function MenuPage() {
-    // This default export is now only for direct navigation, 
-    // which shouldn't happen with the new sheet-based layout.
-    // We keep it for completeness.
-    return <MenuPageContent />;
+    // Render a simple fallback when navigated directly to /menu,
+    // avoiding the Sheet context-only components used inside MenuPageContent.
+    return (
+        <div className="w-full h-full bg-background text-foreground flex flex-col">
+            <header className="p-4 border-b">
+                <h1 className="text-2xl font-bold text-primary">Menu</h1>
+            </header>
+            <main className="p-6 space-y-4">
+                <p className="text-muted-foreground">
+                    Open the menu from the bottom navigation on the home page.
+                </p>
+                <Link href="/">
+                    <Button>Go to Home</Button>
+                </Link>
+            </main>
+        </div>
+    );
 }
