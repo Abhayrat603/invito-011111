@@ -7,7 +7,7 @@ import { ArrowLeft, Clock, CheckCircle, XCircle, User, Mail, Calendar, Edit, Tim
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/components/providers/app-state-provider";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, toDate } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -89,7 +89,7 @@ export default function AdminRequestsPage() {
                             <p>No active requests found.</p>
                         </div>
                     ) : (
-                        activeRequests.sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime()).map(request => {
+                        activeRequests.sort((a, b) => toDate(b.requestedAt).getTime() - toDate(a.requestedAt).getTime()).map(request => {
                             const { icon: Icon, color, text } = editStatusConfig[request.status];
                             return (
                                 <Card key={request.id} className="overflow-hidden">
@@ -98,7 +98,7 @@ export default function AdminRequestsPage() {
                                             <div className="flex-grow overflow-hidden">
                                                 <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
                                                 <CardDescription className="text-xs">
-                                                    Requested: {isClient ? format(new Date(request.requestedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
+                                                    Requested: {isClient ? format(toDate(request.requestedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
                                                 </CardDescription>
                                             </div>
                                             <Badge className={cn("text-xs font-bold", color, text)}>

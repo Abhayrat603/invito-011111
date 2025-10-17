@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Link from 'next/link';
 import { useAppState } from "@/components/providers/app-state-provider";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, toDate } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -91,7 +91,7 @@ export default function HistoryPage() {
                             </div>
                         ) : (
                             <div className="space-y-4">
-                            {deliveredOrders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map(order => {
+                            {deliveredOrders.sort((a, b) => toDate(b.createdAt).getTime() - toDate(a.createdAt).getTime()).map(order => {
                                 const { color, text } = orderStatusConfig[order.status];
                                 return (
                                     <Card key={order.id} className="overflow-hidden">
@@ -100,7 +100,7 @@ export default function HistoryPage() {
                                                 <div>
                                                     <CardTitle className="text-base font-semibold">Order #{order.id}</CardTitle>
                                                     <CardDescription className="text-xs">
-                                                        {isClient ? format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a") : '...'}
+                                                        {isClient ? format(toDate(order.createdAt), "MMM d, yyyy 'at' h:mm a") : '...'}
                                                     </CardDescription>
                                                 </div>
                                                 <Badge className={cn("text-xs font-bold", color, text)}>
@@ -148,7 +148,7 @@ export default function HistoryPage() {
                             </div>
                         ) : (
                             <div className="space-y-4">
-                            {successfulRequests.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).map(request => {
+                            {successfulRequests.sort((a, b) => toDate(b.updatedAt).getTime() - toDate(a.updatedAt).getTime()).map(request => {
                                 const { icon: Icon, color, text } = editStatusConfig[request.status];
                                 return (
                                     <Card key={request.id} className="overflow-hidden">
@@ -156,7 +156,7 @@ export default function HistoryPage() {
                                             <div className="flex-grow">
                                                 <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
                                                 <CardDescription className="text-xs">
-                                                    Completed: {isClient ? format(new Date(request.updatedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
+                                                    Completed: {isClient ? format(toDate(request.updatedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
                                                 </CardDescription>
                                             </div>
                                             <Badge className={cn("text-xs font-bold", color, text)}>

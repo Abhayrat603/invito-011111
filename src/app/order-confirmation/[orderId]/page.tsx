@@ -10,6 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
+import { toDate } from '@/lib/utils';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
@@ -67,7 +68,7 @@ export default function OrderConfirmationPage() {
                         <CardContent>
                              <div className="text-sm text-muted-foreground">
                                 <p>Order ID: <strong>{order.id}</strong></p>
-                                <p>Date: {isClient ? format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a") : '...'}</p>
+                                <p>Date: {isClient ? format(toDate(order.createdAt), "MMM d, yyyy 'at' h:mm a") : '...'}</p>
                             </div>
                         </CardContent>
                     </Card>

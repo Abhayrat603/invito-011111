@@ -46,14 +46,16 @@ Here is some information about our store:
 
 Keep your answers helpful and relevant to an invitation design service.`;
     
-    const response = await ai.generate({
-        model: 'googleai/gemini-2.5-flash',
-        system: systemPrompt,
-        history: history,
-        prompt: message,
+    const { text } = await ai.generate({
+        model: 'googleai/gemini-2.0-flash-exp',
+        messages: [
+            { role: 'system', content: [{ text: systemPrompt }] },
+            ...history,
+            { role: 'user', content: [{ text: message }] }
+        ],
     });
 
-    return response.text;
+    return text;
   }
 );
 

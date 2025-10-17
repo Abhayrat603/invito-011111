@@ -7,7 +7,7 @@ import { ArrowLeft, User, Mail, Edit, Timer, CheckCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/components/providers/app-state-provider";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, toDate } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -54,9 +54,8 @@ export default function SuccessfulRequestsPage() {
                             <p>No successful requests found.</p>
                         </div>
                     ) : (
-                        successfulRequests.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).map(request => {
-                            const config = editStatusConfig[request.status];
-                            if (!config) return null;
+                        successfulRequests.sort((a, b) => toDate(b.updatedAt).getTime() - toDate(a.updatedAt).getTime()).map(request => {
+                            const config = editStatusConfig['Successful'];
                             const { icon: Icon, color, text } = config;
                             return (
                                 <Card key={request.id} className="overflow-hidden">
@@ -65,7 +64,7 @@ export default function SuccessfulRequestsPage() {
                                             <div className="flex-grow overflow-hidden">
                                                 <CardTitle className="text-base font-semibold truncate">{request.productName}</CardTitle>
                                                 <CardDescription className="text-xs">
-                                                    Completed: {isClient ? format(new Date(request.updatedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
+                                                    Completed: {isClient ? format(toDate(request.updatedAt), "MMM d, yyyy 'at' h:mm a") : '...'}
                                                 </CardDescription>
                                             </div>
                                             <Badge className={cn("text-xs font-bold", color, text)}>
