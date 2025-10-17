@@ -127,4 +127,10 @@ export default function EditPasswordPage() {
                     </form>
                   </Form>
                 </CardContent>
-              </
+              </Card>
+          </main>
+        </div>
+      </MainLayout>
+    </AuthRedirect>
+  );
+}
