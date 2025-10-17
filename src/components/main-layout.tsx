@@ -55,6 +55,7 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export function MainLayout({ children, onSearch, mainRef }: { children: React.ReactNode, onSearch?: (query: string) => void, mainRef?: React.RefObject<HTMLDivElement> }) {
   const pathname = usePathname();
+  const isHindi = pathname.startsWith('/hi');
   const { user, signOut } = useAuth();
   const { cart, wishlist } = useAppState();
   const [isFabMenuOpen, setIsFabMenuOpen] = useState(false);
@@ -117,6 +118,9 @@ export function MainLayout({ children, onSearch, mainRef }: { children: React.Re
               <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(prev => !prev)}>
                   <Search className="h-5 w-5" />
               </Button>
+              <Link href={isHindi ? "/" : "/hi"} className="text-xs font-medium px-2 py-1 rounded-full border border-border hover:bg-accent">
+                  {isHindi ? "EN" : "हिंदी"}
+              </Link>
             </div>
          </header>
       )}
