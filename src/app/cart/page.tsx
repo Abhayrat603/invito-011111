@@ -42,7 +42,7 @@ export default function CartPage() {
                 <div className="space-y-4">
                     {cartProducts.map(product => {
                         if (!product) return null;
-                        const image = findImage(product.images[0]);
+                        const image = product.images && product.images.length > 0 ? findImage(product.images[0]) : undefined;
                         return (
                              <div key={product.id} className="flex items-center gap-4 bg-card p-3 rounded-lg border">
                                 <div className="relative w-20 h-20 rounded-md overflow-hidden bg-emerald-100/50 p-1">
