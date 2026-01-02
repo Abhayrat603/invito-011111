@@ -44,7 +44,6 @@ export default function AddProductPage() {
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { addProduct } = useAppState();
-    const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -63,12 +62,7 @@ export default function AddProductPage() {
 
     const imageUrl = form.watch("imageUrl");
     const isPaid = form.watch("isPaid");
-
-    useEffect(() => {
-        if (imageUrl) {
-            setImagePreview(imageUrl);
-        }
-    }, [imageUrl]);
+    const isUrlPotentiallyValid = imageUrl && imageUrl.startsWith('https');
 
     useEffect(() => {
         if (!isPaid) {
@@ -110,9 +104,9 @@ export default function AddProductPage() {
                 <main className="flex-grow p-4">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                             {imagePreview && (
+                             {isUrlPotentiallyValid && (
                                 <div className="relative w-full aspect-square rounded-md overflow-hidden border bg-muted">
-                                    <Image src={imagePreview} alt="Product image preview" layout="fill" objectFit="cover" />
+                                    <Image src={imageUrl} alt="Product image preview" layout="fill" objectFit="cover" />
                                 </div>
                             )}
                              <FormField

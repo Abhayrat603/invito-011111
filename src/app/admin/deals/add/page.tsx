@@ -44,7 +44,6 @@ export default function AddDealPage() {
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { addDeal } = useAppState();
-    const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -60,12 +59,7 @@ export default function AddDealPage() {
     });
 
     const imageUrl = form.watch("imageUrl");
-
-    useEffect(() => {
-        if (imageUrl) {
-            setImagePreview(imageUrl);
-        }
-    }, [imageUrl]);
+    const isUrlPotentiallyValid = imageUrl && imageUrl.startsWith('https');
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true);
@@ -101,9 +95,9 @@ export default function AddDealPage() {
                 <main className="flex-grow p-4">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            {imagePreview && (
+                            {isUrlPotentiallyValid && (
                                 <div className="relative w-full aspect-square rounded-md overflow-hidden border bg-muted">
-                                    <Image src={imagePreview} alt="Deal image preview" layout="fill" objectFit="cover" />
+                                    <Image src={imageUrl} alt="Deal image preview" layout="fill" objectFit="cover" />
                                 </div>
                             )}
                              <FormField

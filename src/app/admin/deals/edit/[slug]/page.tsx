@@ -49,19 +49,13 @@ export default function EditDealPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { deals, updateDeal, findImage } = useAppState();
     const [deal, setDeal] = useState<DealProduct | undefined>(undefined);
-    const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
-
+    
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
 
     const imageUrl = form.watch("imageUrl");
-
-    useEffect(() => {
-        if(imageUrl) {
-            setImagePreview(imageUrl);
-        }
-    }, [imageUrl]);
+    const isUrlPotentiallyValid = imageUrl && imageUrl.startsWith('https');
 
     useEffect(() => {
         const dealToEdit = deals.find(d => d.slug === slug);
@@ -81,7 +75,6 @@ export default function EditDealPage() {
                 imageUrl: currentImageUrl,
                 zipFileUrl: dealToEdit.zipFileUrl || '',
             });
-            setImagePreview(currentImageUrl);
         } else if (deals.length > 0) { // Only show not found if deals have loaded
             toast({
                 variant: "destructive",
@@ -139,9 +132,9 @@ export default function EditDealPage() {
                 <main className="flex-grow p-4">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            {imagePreview && (
+                            {isUrlPotentiallyValid && (
                                 <div className="relative w-full aspect-square rounded-md overflow-hidden border bg-muted">
-                                    <Image src={imagePreview} alt="Deal image preview" layout="fill" objectFit="cover" />
+                                    <Image src={imageUrl} alt="Deal image preview" layout="fill" objectFit="cover" />
                                 </div>
                             )}
                              <FormField

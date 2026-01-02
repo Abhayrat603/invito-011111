@@ -48,7 +48,6 @@ export default function EditProductPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { products, updateProduct, findImage } = useAppState();
     const [product, setProduct] = useState<Product | undefined>(undefined);
-    const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -56,12 +55,7 @@ export default function EditProductPage() {
     
     const imageUrl = form.watch("imageUrl");
     const isPaid = form.watch("isPaid");
-
-    useEffect(() => {
-        if(imageUrl) {
-            setImagePreview(imageUrl);
-        }
-    }, [imageUrl]);
+    const isUrlPotentiallyValid = imageUrl && imageUrl.startsWith('https');
 
     useEffect(() => {
         if (!isPaid) {
@@ -88,7 +82,6 @@ export default function EditProductPage() {
                 fileTypes: productToEdit.fileTypes?.join(', ') || "",
                 requiredSoftware: productToEdit.requiredSoftware?.join(', ') || "",
             });
-            setImagePreview(currentImageUrl);
         } else if (products.length > 0) { // Only show not found if products have loaded
             toast({
                 variant: "destructive",
@@ -147,9 +140,9 @@ export default function EditProductPage() {
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                             
-                            {imagePreview && (
+                            {isUrlPotentiallyValid && (
                                 <div className="relative w-full aspect-square rounded-md overflow-hidden border bg-muted">
-                                    <Image src={imagePreview} alt="Product image preview" layout="fill" objectFit="cover" />
+                                    <Image src={imageUrl} alt="Product image preview" layout="fill" objectFit="cover" />
                                 </div>
                             )}
 
