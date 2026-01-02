@@ -68,7 +68,7 @@ export default function AdminProductsPage() {
                             </TableHeader>
                             <TableBody>
                                 {products.map(product => {
-                                    const image = findImage(product.images[0]);
+                                    const image = product.images && product.images.length > 0 ? findImage(product.images[0]) : undefined;
                                     return (
                                         <TableRow key={product.id}>
                                             <TableCell className="font-medium">
