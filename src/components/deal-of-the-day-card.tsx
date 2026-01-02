@@ -10,58 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAppState } from './providers/app-state-provider';
 import type { DealProduct } from '@/lib/types';
 import { ShoppingCart } from 'lucide-react';
-
-interface Countdown {
-    hours: number;
-    minutes: number;
-    seconds: number;
-}
-
-const CountdownTimer = ({ expiryDate }: { expiryDate: Date }) => {
-    const calculateTimeLeft = () => {
-        const difference = +expiryDate - +new Date();
-        let timeLeft: Countdown = { hours: 0, minutes: 0, seconds: 0 };
-
-        if (difference > 0) {
-            timeLeft = {
-                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                minutes: Math.floor((difference / 1000 / 60) % 60),
-                seconds: Math.floor((difference / 1000) % 60)
-            };
-        }
-        return timeLeft;
-    };
-
-    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setTimeLeft(calculateTimeLeft());
-        }, 1000);
-
-        return () => clearTimeout(timer);
-    });
-
-    const format = (num: number) => num.toString().padStart(2, '0');
-
-    return (
-        <div className="flex justify-center gap-2">
-            <div className="bg-muted p-2 rounded-lg text-center w-14">
-                <div className="text-lg font-bold text-foreground">{format(timeLeft.hours)}</div>
-                <div className="text-xs text-muted-foreground">Hours</div>
-            </div>
-            <div className="bg-muted p-2 rounded-lg text-center w-14">
-                <div className="text-lg font-bold text-foreground">{format(timeLeft.minutes)}</div>
-                <div className="text-xs text-muted-foreground">Min</div>
-            </div>
-            <div className="bg-muted p-2 rounded-lg text-center w-14">
-                <div className="text-lg font-bold text-foreground">{format(timeLeft.seconds)}</div>
-                <div className="text-xs text-muted-foreground">Sec</div>
-            </div>
-        </div>
-    );
-};
-
+import { Badge } from '@/components/ui/badge';
 
 export function DealOfTheDayCard({ product }: { product: DealProduct }) {
     const { addToCart, findImage } = useAppState();
@@ -87,48 +36,37 @@ export function DealOfTheDayCard({ product }: { product: DealProduct }) {
     };
 
     const productImage = product.images && product.images.length > 0 ? findImage(product.images[0]) : undefined;
-    const progressValue = (product.sold / product.stock) * 100;
-
+    
     return (
         <Link href={`/deals/${product.slug}`} passHref>
-            <div className="bg-card text-card-foreground rounded-xl shadow-sm overflow-hidden border h-full flex flex-col">
-                <div className="p-4 flex flex-col items-center">
-                    <Image
-                        src={productImage?.imageUrl || `https://picsum.photos/seed/${product.id}/200`}
-                        alt={product.name}
-                        width={200}
-                        height={200}
-                        className="object-contain"
-                        data-ai-hint="deal product"
-                    />
-                </div>
-                <div className="p-4 space-y-3 flex flex-col flex-grow">
-                    <h3 className="font-semibold text-base leading-tight truncate">{product.name}</h3>
-                    <p className="text-xs text-muted-foreground line-clamp-2">{product.description}</p>
-                    <div className="flex items-baseline gap-2">
-                        <span className="text-xl font-bold text-destructive">₹{product.discountPrice.toFixed(2)}</span>
-                        <span className="text-sm text-muted-foreground line-through">₹{product.price.toFixed(2)}</span>
+            <div className="bg-card text-card-foreground rounded-xl shadow-sm overflow-hidden border h-full flex flex-col group cursor-pointer">
+                <div className="relative overflow-hidden">
+                    <div className="aspect-[3/4] p-4 flex items-center justify-center">
+                        <Image
+                            src={productImage?.imageUrl || `https://picsum.photos/seed/${product.id}/400/533`}
+                            alt={product.name}
+                            width={400}
+                            height={533}
+                            className="object-contain w-full h-full rounded-md transition-transform duration-300 group-hover:scale-105"
+                            data-ai-hint="deal product"
+                        />
                     </div>
-                    <div className="flex items-center gap-2">
-                        <Button className="w-full bg-red-600 hover:bg-red-700 text-white" onClick={handleAddToCart}>
-                            <ShoppingCart className="mr-2 h-4 w-4" />
-                            Add to Cart
-                        </Button>
-                        <Button variant="outline" className="w-full">
-                            View
-                        </Button>
-                    </div>
-                    <div className="space-y-2 mt-auto">
-                        <div className="flex justify-between text-xs font-medium text-muted-foreground">
-                            <span>Already Sold: <span className="text-foreground font-bold">{product.sold}</span></span>
-                            <span>Available: <span className="text-foreground font-bold">{product.stock - product.sold}</span></span>
+                     <Badge variant="destructive" className="absolute top-4 left-4 z-10 text-base px-4 py-1.5 shadow-lg">
+                        DEAL
+                    </Badge>
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                        <h3 className="font-bold text-lg text-white leading-tight truncate">{product.name}</h3>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-xl font-bold text-white">₹{product.discountPrice.toFixed(2)}</span>
+                            <span className="text-sm text-white/80 line-through">₹{product.price.toFixed(2)}</span>
                         </div>
-                        <Progress value={progressValue} className="h-2" />
                     </div>
-                    <div className="text-center space-y-2 pt-2">
-                        <p className="text-sm font-semibold text-foreground">HURRY UP! OFFER ENDS IN:</p>
-                        <CountdownTimer expiryDate={new Date(product.offerEndsAt as any)} />
-                    </div>
+                </div>
+                <div className="p-4 space-y-3 bg-card flex flex-col flex-grow">
+                     <Button className="w-full" onClick={handleAddToCart}>
+                        <ShoppingCart className="mr-2 h-4 w-4" />
+                        Add to Cart
+                    </Button>
                 </div>
             </div>
         </Link>
