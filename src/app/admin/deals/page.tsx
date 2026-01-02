@@ -68,7 +68,7 @@ export default function AdminDealsPage() {
                             </TableHeader>
                             <TableBody>
                                 {deals.map(deal => {
-                                    const image = findImage(deal.images[0]);
+                                    const image = deal.images && deal.images.length > 0 ? findImage(deal.images[0]) : undefined;
                                     return (
                                         <TableRow key={deal.id}>
                                             <TableCell className="font-medium">

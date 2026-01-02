@@ -1,0 +1,73 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+        return request.auth != null && request.auth.token.email == "abhayrat603@gmail.com";
+    }
+
+    // Publicly readable collections
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /deals/{dealId} {
+        allow read: if true;
+        allow write: if isAdmin();
+    }
+
+    match /settings/{docId} {
+        allow read: if true;
+        allow write: if isAdmin();
+    }
+    
+    match /images/{imageId} {
+        allow read: if true;
+        allow write: if isAdmin();
+    }
+    
+    match /menuItems/{itemId} {
+        allow read: if true;
+        allow write: if isAdmin();
+    }
+    
+    match /appRatings/{ratingId} {
+        allow read: if true;
+        allow create: if request.auth != null; // Any authenticated user can create
+        allow update, delete: if isAdmin() || isOwner(resource.data.userId);
+    }
+
+    // User-specific collections
+    match /users/{userId} {
+      allow read, update: if isOwner(userId) || isAdmin();
+      allow create: if request.auth != null; // Any authenticated user can create their own profile
+    }
+
+    match /users/{userId}/cart/{cartItemId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    match /users/{userId}/wishlist/{wishlistItemId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Authenticated access collections
+    match /orders/{orderId} {
+        allow read, update: if isOwner(resource.data.userId) || isAdmin();
+        allow create: if request.auth != null; // Allow any authenticated user to create an order
+    }
+
+    match /editRequests/{requestId} {
+        allow read, update: if isOwner(resource.data.userId) || isAdmin();
+        allow create: if request.auth != null;
+    }
+  }
+}

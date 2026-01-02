@@ -67,7 +67,7 @@ export default function EditDealPage() {
         const dealToEdit = deals.find(d => d.slug === slug);
         if (dealToEdit) {
             setDeal(dealToEdit);
-            const image = findImage(dealToEdit.images[0]);
+            const image = dealToEdit.images && dealToEdit.images.length > 0 ? findImage(dealToEdit.images[0]) : undefined;
             const currentImageUrl = image?.imageUrl || `https://picsum.photos/seed/${dealToEdit.id}/500`;
             form.reset({
                 name: dealToEdit.name,

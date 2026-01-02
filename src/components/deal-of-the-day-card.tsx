@@ -82,22 +82,22 @@ export function DealOfTheDayCard({ product }: { product: DealProduct }) {
         addToCart(product.id, 1, true);
     };
 
-    const productImage = findImage(product.images[0]);
+    const productImage = product.images && product.images.length > 0 ? findImage(product.images[0]) : undefined;
     const progressValue = (product.sold / product.stock) * 100;
 
     return (
         <div className="bg-card text-card-foreground rounded-xl shadow-sm overflow-hidden border">
             <div className="p-4 flex flex-col items-center">
-                {productImage && (
+                
                     <Image
-                        src={productImage.imageUrl}
+                        src={productImage?.imageUrl || `https://picsum.photos/seed/${product.id}/200`}
                         alt={product.name}
                         width={200}
                         height={200}
                         className="object-contain"
                         data-ai-hint="old spice product"
                     />
-                )}
+                
             </div>
             <div className="p-4 space-y-3">
                 <h3 className="font-semibold text-base leading-tight truncate">{product.name}</h3>

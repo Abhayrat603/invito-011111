@@ -106,7 +106,7 @@ export default function DealDetailPage() {
   }
 
   const isLiked = isInWishlist(deal.id);
-  const mainImage = findImage(deal.images[0]);
+  const mainImage = deal.images && deal.images.length > 0 ? findImage(deal.images[0]) : undefined;
   const progressValue = (deal.sold / deal.stock) * 100;
 
 

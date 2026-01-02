@@ -14,6 +14,7 @@ import { useAppState } from '@/components/providers/app-state-provider';
 import { useToast } from '@/hooks/use-toast';
 import type { Product } from '@/lib/types';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import React from 'react';
 
 export default function ProductDetailPage() {
   const router = useRouter();
@@ -82,8 +83,8 @@ export default function ProductDetailPage() {
   }
 
   const isLiked = isInWishlist(product.id);
-  const mainImage = findImage(product.images[0]);
-  const thumbnailImage = findImage(product.images[1] || product.images[0]);
+  const mainImage = product.images && product.images.length > 0 ? findImage(product.images[0]) : undefined;
+  const thumbnailImage = product.images && product.images.length > 1 ? findImage(product.images[1]) : mainImage;
 
   return (
     <MainLayout>

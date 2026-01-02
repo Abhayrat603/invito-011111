@@ -1,8 +1,11 @@
-
 {
   "name": "Invite Designer",
-  "short_name": "InviteDesigner",
+  "short_name": "Invite",
   "description": "Create and customize beautiful invitation cards for every occasion.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FCF9EA",
+  "theme_color": "#694736",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -14,10 +17,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "theme_color": "#694736",
-  "background_color": "#FCF9EA",
-  "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait"
+  ]
 }

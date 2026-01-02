@@ -73,7 +73,7 @@ export default function EditProductPage() {
         const productToEdit = products.find(p => p.slug === slug);
         if (productToEdit) {
             setProduct(productToEdit);
-            const image = findImage(productToEdit.images[0]);
+            const image = productToEdit.images && productToEdit.images.length > 0 ? findImage(productToEdit.images[0]) : undefined;
             const currentImageUrl = image?.imageUrl || `https://picsum.photos/seed/${productToEdit.id}/500`;
             
             form.reset({
