@@ -80,55 +80,57 @@ export function DealOfTheDayCard({ product }: { product: DealProduct }) {
         e.stopPropagation();
         e.preventDefault();
         addToCart(product.id, 1, true);
+        toast({
+            title: "Added to Cart",
+            description: `${product.name} has been added to your cart.`,
+        });
     };
 
     const productImage = product.images && product.images.length > 0 ? findImage(product.images[0]) : undefined;
     const progressValue = (product.sold / product.stock) * 100;
 
     return (
-        <div className="bg-card text-card-foreground rounded-xl shadow-sm overflow-hidden border">
-            <div className="p-4 flex flex-col items-center">
-                
+        <Link href={`/deals/${product.slug}`} passHref>
+            <div className="bg-card text-card-foreground rounded-xl shadow-sm overflow-hidden border h-full flex flex-col">
+                <div className="p-4 flex flex-col items-center">
                     <Image
                         src={productImage?.imageUrl || `https://picsum.photos/seed/${product.id}/200`}
                         alt={product.name}
                         width={200}
                         height={200}
                         className="object-contain"
-                        data-ai-hint="old spice product"
+                        data-ai-hint="deal product"
                     />
-                
-            </div>
-            <div className="p-4 space-y-3">
-                <h3 className="font-semibold text-base leading-tight truncate">{product.name}</h3>
-                <p className="text-xs text-muted-foreground line-clamp-2">{product.description}</p>
-                <div className="flex items-baseline gap-2">
-                    <span className="text-xl font-bold text-destructive">₹{product.discountPrice.toFixed(2)}</span>
-                    <span className="text-sm text-muted-foreground line-through">₹{product.price.toFixed(2)}</span>
                 </div>
-                 <div className="flex items-center gap-2">
-                    <Button className="w-full bg-red-600 hover:bg-red-700 text-white" onClick={handleAddToCart}>
-                        <ShoppingCart className="mr-2 h-4 w-4" />
-                        Add to Cart
-                    </Button>
-                     <Link href={`/deals/${product.slug}`} passHref className="w-full">
-                         <Button variant="outline" className="w-full">
+                <div className="p-4 space-y-3 flex flex-col flex-grow">
+                    <h3 className="font-semibold text-base leading-tight truncate">{product.name}</h3>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{product.description}</p>
+                    <div className="flex items-baseline gap-2">
+                        <span className="text-xl font-bold text-destructive">₹{product.discountPrice.toFixed(2)}</span>
+                        <span className="text-sm text-muted-foreground line-through">₹{product.price.toFixed(2)}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Button className="w-full bg-red-600 hover:bg-red-700 text-white" onClick={handleAddToCart}>
+                            <ShoppingCart className="mr-2 h-4 w-4" />
+                            Add to Cart
+                        </Button>
+                        <Button variant="outline" className="w-full">
                             View
                         </Button>
-                    </Link>
-                </div>
-                <div className="space-y-2">
-                    <div className="flex justify-between text-xs font-medium text-muted-foreground">
-                        <span>Already Sold: <span className="text-foreground font-bold">{product.sold}</span></span>
-                        <span>Available: <span className="text-foreground font-bold">{product.stock - product.sold}</span></span>
                     </div>
-                    <Progress value={progressValue} className="h-2" />
-                </div>
-                <div className="text-center space-y-2 pt-2">
-                    <p className="text-sm font-semibold text-foreground">HURRY UP! OFFER ENDS IN:</p>
-                    <CountdownTimer expiryDate={new Date(product.offerEndsAt as any)} />
+                    <div className="space-y-2 mt-auto">
+                        <div className="flex justify-between text-xs font-medium text-muted-foreground">
+                            <span>Already Sold: <span className="text-foreground font-bold">{product.sold}</span></span>
+                            <span>Available: <span className="text-foreground font-bold">{product.stock - product.sold}</span></span>
+                        </div>
+                        <Progress value={progressValue} className="h-2" />
+                    </div>
+                    <div className="text-center space-y-2 pt-2">
+                        <p className="text-sm font-semibold text-foreground">HURRY UP! OFFER ENDS IN:</p>
+                        <CountdownTimer expiryDate={new Date(product.offerEndsAt as any)} />
+                    </div>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }
