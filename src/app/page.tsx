@@ -141,7 +141,7 @@ export default function EcommerceHomePage() {
     setSelectedCategory(prev => prev === categoryName ? null : categoryName);
   }
 
-  if (loading || (user && !user.emailVerified)) {
+  if (loading) {
     return (
         <div className="flex items-center justify-center min-h-screen">
             <Loader2 className="h-8 w-8 animate-spin" />
@@ -154,7 +154,6 @@ export default function EcommerceHomePage() {
 
   return (
     <MainLayout onSearch={handleSearch} mainRef={mainContentRef}>
-      <AuthRedirect to="/login" condition="is-not-auth">
         <div className="bg-background text-foreground">
              <div className="pb-4">
                   {currentPage === 0 && !selectedCategory && !searchQuery && (
@@ -260,7 +259,6 @@ export default function EcommerceHomePage() {
                   
               </div>
           </div>
-      </AuthRedirect>
     </MainLayout>
   );
 }
