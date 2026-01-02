@@ -32,7 +32,7 @@ export function ProductCard({ product }: { product: Product }) {
         toggleWishlist(product.id);
     };
 
-    const productImage = findImage(product.images[0]);
+    const productImage = product.images && product.images.length > 0 ? findImage(product.images[0]) : undefined;
 
     return (
         <div className="group/card bg-amber-50/20 text-card-foreground rounded-xl shadow-sm overflow-hidden border relative transition-all hover:shadow-lg">
@@ -50,16 +50,16 @@ export function ProductCard({ product }: { product: Product }) {
             <Link href={`/products/${product.slug}`} passHref>
               <div className="p-4 cursor-pointer">
                   <div className="bg-emerald-100/50 rounded-lg p-3 flex flex-col items-center">
-                      {productImage && (
+                      
                           <Image
-                              src={productImage.imageUrl}
+                              src={productImage?.imageUrl || `https://picsum.photos/seed/${product.id}/500`}
                               alt={product.name}
                               width={500}
                               height={500}
                               className="object-cover rounded-md shadow-sm"
                               data-ai-hint="wedding invitation card"
                           />
-                      )}
+                      
                   </div>
               </div>
             </Link>
