@@ -3,7 +3,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { AuthRedirect } from "@/components/auth-redirect";
 import { Search, ChevronLeft, ChevronRight, X, Quote } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -28,6 +27,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import type { Product } from "@/lib/types";
+import Autoplay from "embla-carousel-autoplay";
 
 const TestimonialCard = () => {
     const { testimonial } = useAppState();
@@ -103,16 +103,9 @@ export default function EcommerceHomePage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const mainContentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!loading && user && !user.emailVerified) {
-      router.replace('/verify-email');
-    }
-  }, [user, loading, router]);
-  
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  }
+  const plugin = useRef(
+    Autoplay({ delay: 3000, stopOnInteraction: true })
+  );
 
   useEffect(() => {
     let results = products;
@@ -153,7 +146,7 @@ export default function EcommerceHomePage() {
   const displayedProducts = filteredProducts.slice(currentPage * productsPerPage, (currentPage + 1) * productsPerPage);
 
   return (
-    <MainLayout onSearch={handleSearch} mainRef={mainContentRef}>
+    <MainLayout mainRef={mainContentRef}>
         <div className="bg-background text-foreground">
              <div className="pb-4">
                   {currentPage === 0 && !selectedCategory && !searchQuery && (
@@ -161,11 +154,14 @@ export default function EcommerceHomePage() {
                       <section className="px-4 my-6">
                         <h2 className="text-2xl font-headline font-bold text-primary text-left mb-2">Deal of the Day</h2>
                          <Carousel
+                            plugins={[plugin.current]}
                             opts={{
                               align: "start",
                               loop: true,
                             }}
                             className="w-full max-w-xs mx-auto"
+                            onMouseEnter={plugin.current.stop}
+                            onMouseLeave={plugin.current.reset}
                           >
                             <CarouselContent>
                               {deals.map((product, index) => (
@@ -176,8 +172,6 @@ export default function EcommerceHomePage() {
                                 </CarouselItem>
                               ))}
                             </CarouselContent>
-                            <CarouselPrevious className="h-8 w-8 -left-4 bg-background/50 hover:bg-background/80" />
-                            <CarouselNext className="h-8 w-8 -right-4 bg-background/50 hover:bg-background/80" />
                           </Carousel>
                       </section>
                     </>
