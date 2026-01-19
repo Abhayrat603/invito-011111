@@ -148,7 +148,7 @@ export function MainLayout({ children, onSearch, mainRef }: { children: React.Re
         <SheetContent side="left" className="p-0 w-full max-w-md">
           <SheetTitle className="sr-only">Menu</SheetTitle>
           <SheetDescription className="sr-only">The main navigation menu for the application.</SheetDescription>
-          <MenuPageContent />
+          <MenuPageContent isInSheet={true} />
         </SheetContent>
 
         <nav className="fixed bottom-0 left-0 right-0 bg-card border-t max-w-md mx-auto z-40">

@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -12,7 +11,7 @@ import { getIconByName } from "@/lib/icon-map";
 import { useMemo } from "react";
 
 
-export function MenuPageContent() {
+export function MenuPageContent({ isInSheet = false }: { isInSheet?: boolean }) {
     const pathname = usePathname();
     const { menuItems } = useAppState();
 
@@ -24,11 +23,13 @@ export function MenuPageContent() {
         <div className="w-full h-full bg-background text-foreground flex flex-col">
             <header className="p-4 flex justify-between items-center border-b">
               <h1 className="text-2xl font-bold text-primary">Menu</h1>
-              <SheetClose asChild>
-                <Button variant="ghost" size="icon">
-                    <X className="h-6 w-6" />
-                </Button>
-              </SheetClose>
+              {isInSheet && (
+                <SheetClose asChild>
+                    <Button variant="ghost" size="icon">
+                        <X className="h-6 w-6" />
+                    </Button>
+                </SheetClose>
+              )}
             </header>
 
             <main className="flex-grow p-4 overflow-y-auto">
@@ -36,22 +37,30 @@ export function MenuPageContent() {
                 <ul className="flex-grow space-y-1">
                     {sortedMenuItems.map((item) => {
                         const Icon = getIconByName(item.icon);
+                        const linkContent = (
+                             <Link href={item.href} passHref>
+                                <div className={cn(
+                                    "flex justify-between items-center py-3 px-3 rounded-md transition-colors",
+                                    pathname === item.href ? "bg-primary/10 text-primary font-semibold" : "hover:bg-accent"
+                                )}>
+                                    <div className="flex items-center overflow-hidden">
+                                        <Icon className="h-5 w-5 mr-3 text-primary/80 shrink-0" />
+                                        <span className="text-sm truncate">{item.name}</span>
+                                    </div>
+                                    <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
+                                </div>
+                            </Link>
+                        );
+
                         return (
                             <li key={item.id}>
-                                <SheetClose asChild>
-                                    <Link href={item.href} passHref>
-                                        <div className={cn(
-                                            "flex justify-between items-center py-3 px-3 rounded-md transition-colors",
-                                            pathname === item.href ? "bg-primary/10 text-primary font-semibold" : "hover:bg-accent"
-                                        )}>
-                                            <div className="flex items-center overflow-hidden">
-                                                <Icon className="h-5 w-5 mr-3 text-primary/80 shrink-0" />
-                                                <span className="text-sm truncate">{item.name}</span>
-                                            </div>
-                                            <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
-                                        </div>
-                                    </Link>
-                                </SheetClose>
+                                {isInSheet ? (
+                                    <SheetClose asChild>
+                                        {linkContent}
+                                    </SheetClose>
+                                ) : (
+                                    linkContent
+                                )}
                             </li>
                         )
                     })}
@@ -66,6 +75,6 @@ export function MenuPageContent() {
 export default function MenuPage() {
     // This default export is now only for direct navigation, 
     // which shouldn't happen with the new sheet-based layout.
-    // We keep it for completeness.
-    return <MenuPageContent />;
+    // We render it without sheet functionality to prevent build errors.
+    return <MenuPageContent isInSheet={false} />;
 }
