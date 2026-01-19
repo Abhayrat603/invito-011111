@@ -13,7 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MenuPageContent } from "@/app/menu/page";
+import { MenuPageContent } from "@/components/menu-page-content";
 import { cn } from "@/lib/utils";
 import { useAppState } from "./providers/app-state-provider";
 import { useState, useEffect, useRef } from "react";
