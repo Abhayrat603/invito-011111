@@ -106,4 +106,5 @@ export default function EditPhonePage() {
         </div>
       </MainLayout>
     </AuthRedirect>
-  
+  );
+}
