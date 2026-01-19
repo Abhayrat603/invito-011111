@@ -13,7 +13,8 @@ import {
     FileText,
     Info,
     LayoutGrid,
-    LucideIcon
+    LucideIcon,
+    Edit
 } from 'lucide-react';
 
 export const iconMap: { [key: string]: LucideIcon } = {
@@ -29,7 +30,8 @@ export const iconMap: { [key: string]: LucideIcon } = {
     Mail,
     FileText,
     Info,
-    LayoutGrid
+    LayoutGrid,
+    Edit
 };
 
 export const getIconByName = (name: string): LucideIcon => {
